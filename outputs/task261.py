@@ -1,0 +1,1 @@
+p=lambda g:[[w>>2for w in v]for v in g[-1:]+g[:-1]]
