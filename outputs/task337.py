@@ -1,0 +1,1 @@
+p=lambda g:[[5if v==8else 8if v==5else v for v in u]for u in g]

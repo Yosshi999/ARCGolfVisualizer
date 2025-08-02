@@ -1,0 +1,1 @@
+p=lambda g:[[5if v==7else v for v in u]for u in g]

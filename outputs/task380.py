@@ -1,0 +1,1 @@
+p=lambda g:[[g[j][2-i]for j in range(3)]for i in range(3)]

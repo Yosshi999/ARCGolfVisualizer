@@ -1,0 +1,1 @@
+p=lambda g:[[0]*len(g[0])]+[[u/4for u in v]for v in g[:-1]]
