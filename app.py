@@ -42,6 +42,24 @@ def index():
         overall_score += score
     return render_template('index.html', tasks_info=tasks_info, overall_score=overall_score)
 
+def collect_hints(problem):
+    hints = []
+    # all input has same dimensions
+    in_dimensions = set()
+    for p in problem:
+        in_dimensions.add((len(p["input"]), len(p["input"][0])))
+    if len(in_dimensions) == 1:
+        in_dim = in_dimensions.pop()
+        hints.append(f"All inputs have the same dimensions: {in_dim[0]}x{in_dim[1]}")
+    # all output has same dimensions
+    out_dimensions = set()
+    for p in problem:
+        out_dimensions.add((len(p["output"]), len(p["output"][0])))
+    if len(out_dimensions) == 1:
+        out_dim = out_dimensions.pop()
+        hints.append(f"All outputs have the same dimensions: {out_dim[0]}x{out_dim[1]}")
+    return hints
+
 @app.route('/problem/<task>')
 def problem(task):
     if task not in problems:
@@ -51,7 +69,8 @@ def problem(task):
         code = sub.read_text()
     else:
         code = ""
-    return render_template('problem.html', task=task, problem=problems[task], code=code)
+    hints = collect_hints(problems[task])
+    return render_template('problem.html', task=task, problem=problems[task], code=code, hints=hints)
 
 @app.post('/submit')
 def submit():
