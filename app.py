@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, send_file
 import json
 from pathlib import Path
 import importlib.util
@@ -109,3 +109,18 @@ def submit():
     # everything is fine, save the submission
     sub.write_bytes(code.encode("utf-8"))
     return jsonify({"success": True, "size": len(code), "score": max(1, 2500 - len(code))})
+
+@app.route('/download')
+def download():
+    import zipfile
+    from io import BytesIO
+
+    zip_buffer = BytesIO()
+    with zipfile.ZipFile(zip_buffer, 'w', zipfile.ZIP_DEFLATED) as zip_file:
+        for task in task_names:
+            sub = SUBMISSION / f"{task}.py"
+            if sub.exists():
+                zip_file.write(sub, arcname=f"{task}.py")
+    
+    zip_buffer.seek(0)
+    return send_file(zip_buffer, as_attachment=True, download_name='submission.zip', mimetype='application/zip')
