@@ -120,6 +120,7 @@
                     })
                 })
                 inputGrid.style.gridTemplateColumns = `repeat(${grid.input[0].length}, 1fr)`;
+                inputGrid.style.gridTemplateRows = `repeat(${grid.input.length}, 1fr)`;
                 inputGrid.innerHTML = inputHtml;
                 grid.output.forEach((row, rowIndex) => {
                     row.forEach((cell, colIndex) => {
@@ -127,6 +128,7 @@
                     })
                 })
                 outputGrid.style.gridTemplateColumns = `repeat(${grid.output[0].length}, 1fr)`;
+                outputGrid.style.gridTemplateRows = `repeat(${grid.output.length}, 1fr)`;
                 outputGrid.innerHTML = outputHtml;
 
                 problemIdx.value = currentIndex;
