@@ -3,6 +3,7 @@ import json
 from pathlib import Path
 import importlib.util
 import copy
+from datetime import datetime
 
 app = Flask(__name__)
 PROBLEM = Path(__file__).parent / 'problems'
@@ -28,9 +29,10 @@ def index():
     tasks_info = []
     overall_score = 0
     for i, task in enumerate(task_names):
-        sub = SUBMISSION / f"{task}.py"
-        if sub.exists():
+        subs = SUBMISSION / f"{task}"
+        if subs.exists() and any(subs.glob("*.py")):
             exists = True
+            sub = sorted(subs.glob("*.py"))[0]  # shortest submission
             with open(sub, 'rb') as f:
                 code = len(f.read())
             score = max(1, 2500 - code)
@@ -75,8 +77,9 @@ def collect_hints(problem):
 def problem(task):
     if task not in problems:
         return jsonify({"error": "Task not found"}), 404
-    sub = SUBMISSION / f"{task}.py"
-    if sub.exists():
+    subs = SUBMISSION / task
+    if subs.exists() and any(subs.glob("*.py")):
+        sub = sorted(subs.glob("*.py"))[0]  # shortest submission
         code = sub.read_text()
     else:
         code = ""
@@ -96,14 +99,12 @@ def submit():
             "error_type": "task_not_found",
             "error_message": "Task not found",
         }), 404
-    sub = SUBMISSION / f"{task}.py"
-    if sub.exists():
+    subs = SUBMISSION / f"{task}"
+    if subs.exists() and any(subs.glob("*.py")):
+        sub = sorted(subs.glob("*.py"))[0]  # shortest submission
         old_code = sub.read_text()
-        if len(old_code) <= len(code):
-            return jsonify({
-                "success": False,
-                "error_type": "length",
-            })
+    else:
+        old_code = None
 
     mismatch = []
     try:
@@ -137,8 +138,9 @@ def submit():
         })
     
     # everything is fine, save the submission
-    sub.write_bytes(code.encode("utf-8"))
-    return jsonify({"success": True, "size": len(code), "score": max(1, 2500 - len(code))})
+    new_sub = SUBMISSION / task / f"{len(code):03d}_{datetime.now().strftime('%Y%m%d%H%M%S')}.py"
+    new_sub.write_bytes(code.encode("utf-8"))
+    return jsonify({"success": True, "size": len(code), "score": max(1, 2500 - len(code)), "shortest": old_code is None or len(code) < len(old_code)})
 
 @app.route('/download')
 def download():
@@ -148,8 +150,9 @@ def download():
     zip_buffer = BytesIO()
     with zipfile.ZipFile(zip_buffer, 'w', zipfile.ZIP_DEFLATED) as zip_file:
         for task in task_names:
-            sub = SUBMISSION / f"{task}.py"
-            if sub.exists():
+            subs = SUBMISSION / task
+            if subs.exists() and any(subs.glob("*.py")):
+                sub = sorted(subs.glob("*.py"))[0]  # shortest submission
                 zip_file.write(sub, arcname=f"{task}.py")
     
     zip_buffer.seek(0)

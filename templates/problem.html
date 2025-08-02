@@ -264,11 +264,13 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        alert('Submission successful! size: ' + data.size + ', score: ' + data.score);
+                        if (data.shortest) {
+                            alert('Submission successful! size: ' + data.size + ', score: ' + data.score);
+                        } else {
+                            alert('Not the shortest but the submission has been saved. size: ' + data.size);
+                        }
                     } else {
-                        if (data.error_type === "length") {
-                            alert('Shorter code is already submitted.');
-                        } else if (data.error_type === "test") {
+                        if (data.error_type === "test") {
                             alert('Submission failed at: ' + data.mismatch[0].index);
                             failedData.splice(0);
                             data.mismatch.forEach((m) => {
