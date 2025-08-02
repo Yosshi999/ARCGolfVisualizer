@@ -8,6 +8,10 @@ app = Flask(__name__)
 PROBLEM = Path(__file__).parent / 'problems'
 SUBMISSION = Path(__file__).parent / 'outputs'
 SUBMISSION.mkdir(exist_ok=True)
+summaries = []
+for line in Path("claude_summary.tsv").read_text(encoding="utf-8").strip().split("\n")[1:]:
+    func, hardness = line.split("\t")
+    summaries.append((func, int(hardness)))
 
 problems = {}
 for p in sorted(PROBLEM.glob('*.json')):
@@ -17,12 +21,13 @@ for p in sorted(PROBLEM.glob('*.json')):
 
 task_names = list(problems.keys())
 print(f"found tasks: {len(task_names)}")
+assert len(task_names) == len(summaries), "Number of tasks does not match number of summaries."
 
 @app.route('/')
 def index():
     tasks_info = []
     overall_score = 0
-    for task in task_names:
+    for i, task in enumerate(task_names):
         sub = SUBMISSION / f"{task}.py"
         if sub.exists():
             exists = True
@@ -36,10 +41,16 @@ def index():
         tasks_info.append({
             "name": task,
             "exists": exists,
+            "summary": summaries[i][0],
+            "hardness": summaries[i][1],
             "size": code,
             "score": score,
         })
         overall_score += score
+    # Sort tasks based on the query parameter
+    sort_by = request.args.get('sort', 'name')
+    other = "score" if sort_by == "hardness" else "hardness"
+    tasks_info.sort(key=lambda v: (v[sort_by], v[other]))
     return render_template('index.html', tasks_info=tasks_info, overall_score=overall_score)
 
 def collect_hints(problem):

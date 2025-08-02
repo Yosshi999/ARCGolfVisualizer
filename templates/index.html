@@ -37,9 +37,11 @@
                         <table class="table table-striped">
                             <thead>
                                 <tr>
-                                    <th>Task</th>
+                                    <th>Task <a href="/?sort=name">▼</a></th>
+                                    <th>Summary</th>
+                                    <th>Hardness <a href="/?sort=hardness">▼</a></th>
                                     <th>Size</th>
-                                    <th>Score</th>
+                                    <th>Score <a href="/?sort=score">▼</a></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -48,6 +50,8 @@
                                     <td>
                                         <a href="/problem/{{ task.name }}">{{ task.name }}</a>
                                     </td>
+                                    <td> {{ task.summary }} </td>
+                                    <td> {{ task.hardness }} </td>
                                     <td>
                                         {% if task.exists %}
                                             {{ task.size }} bytes
