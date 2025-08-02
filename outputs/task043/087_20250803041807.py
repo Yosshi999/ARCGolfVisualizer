@@ -1,0 +1,1 @@
+p=lambda g:[[2if g[0][j]and g[i][-1]else g[i][j] for j in range(10)]for i in range(10)]
