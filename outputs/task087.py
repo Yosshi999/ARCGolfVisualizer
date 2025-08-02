@@ -1,0 +1,1 @@
+p=lambda g:[v[::-1]for v in g[::-1]]
