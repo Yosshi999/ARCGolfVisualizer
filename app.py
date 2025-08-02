@@ -81,7 +81,7 @@ def problem(task):
     else:
         code = ""
     hints = collect_hints(problems[task])
-    return render_template('problem.html', task=task, problem=problems[task], code=code, hints=hints)
+    return render_template('problem.html', task=task, problem=problems[task], code=code, hints=hints, summary=summaries[task_names.index(task)][0], hardness=summaries[task_names.index(task)][1])
 
 @app.post('/submit')
 def submit():
