@@ -1,0 +1,1 @@
+p=lambda g:[[[v,13-v][252%v>0]for v in u]for u in g]

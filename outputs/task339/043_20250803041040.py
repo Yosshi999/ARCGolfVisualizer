@@ -1,0 +1,1 @@
+p=lambda g:[[w for v in g for w in v if w]]
