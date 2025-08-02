@@ -27,35 +27,51 @@
     align-items: center;
     justify-content: center;
 }
+{% for i in range(10) %}
+.legend .cell-{{ i }}::before {
+    content: '{{ i }}';
+    position: absolute;
+}
+{% endfor %}
 .cell-0 {
     background-color: rgb(0, 0, 0);
+    color: white;
 }
 .cell-1 {
     background-color: rgb(30, 147, 255);
+    color: black;
 }
 .cell-2 {
     background-color: rgb(250, 61, 49);
+    color: black;
 }
 .cell-3 {
     background-color: rgb(78, 204, 48);
+    color: black;
 }
 .cell-4 {
     background-color: rgb(255, 221, 0);
+    color: black;
 }
 .cell-5 {
     background-color: rgb(153, 153, 153);
+    color: black;
 }
 .cell-6 {
     background-color: rgb(229, 59, 163);
+    color: black;
 }
 .cell-7 {
     background-color: rgb(255, 133, 28);
+    color: black;
 }
 .cell-8 {
     background-color: rgb(136, 216, 241);
+    color: black;
 }
 .cell-9 {
     background-color: rgb(147, 17, 49);
+    color: white;
 }
         </style>
     </head>
@@ -81,24 +97,60 @@
                 <div id="detail-page" class="p-4">
                     <h2 class="mb-4">{{ task }}</h2>
 
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <button class=""nav-button prev" id="prevBtn" onclick="changeGrid(-1)">
-                            <i class="bi bi-arrow-left"></i>
-                        </button>
-                        <input type="text" class="form-control w-25 mx-2" id="problemIdx" />
-                        / {{ problem | length }}
-                        <button class=""nav-button next" id="nextBtn" onclick="changeGrid(1)">
-                            <i class="bi bi-arrow-right"></i>
-                        </button>
+                    <div class="mb-4">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="showLegend">
+                            <label class="form-check-label" for="showLegend">
+                                Show Legend
+                            </label>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <button class=""nav-button prev" id="prevBtn" onclick="changeGrid(-1)">
+                                <i class="bi bi-arrow-left"></i>
+                            </button>
+                            <input type="text" class="form-control w-25 mx-2" id="problemIdx" />
+                            / {{ problem | length }}
+                            <button class=""nav-button next" id="nextBtn" onclick="changeGrid(1)">
+                                <i class="bi bi-arrow-right"></i>
+                            </button>
+                        </div>
+                        <div class="grid-container">
+                            <div>
+                                <span>input</span>
+                                <div class="color-grid m-4" id="input-grid"></div>
+                            </div>
+                            <div>
+                                <span>expected</span>
+                                <div class="color-grid m-4" id="output-grid"></div>
+                            </div>
+                            <div>
+                                <span>actual</span>
+                                <div class="color-grid m-4" id="actual-grid"></div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="grid-container">
-                        <div class="color-grid m-4" id="input-grid"></div>
-                        <div class="color-grid m-4" id="output-grid"></div>
+
+                    <div class="mb-4">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <label for="submission" class="form-label">Submission</label>
+                            <div id="submission-length" class="text-muted">{{ code | length }}</div>
+                        </div>
+                        <textarea class="form-control" id="submission" rows="10">{{ code }}</textarea>
+                        <button class="btn btn-primary mt-2" onclick="submitBtn()">Submit</button>
                     </div>
                 </div>
             </div>
         </div>
         <script>
+            document.getElementById('showLegend').addEventListener('change', function() {
+                const legend = document.querySelector('.grid-container');
+                if (this.checked) {
+                    legend.classList.add('legend');
+                } else {
+                    legend.classList.remove('legend');
+                }
+            });
+
             const gridData = {{ problem | tojson }};
             const inputGrid = document.getElementById('input-grid');
             const outputGrid = document.getElementById('output-grid');
@@ -154,6 +206,47 @@
             });
 
             updateDisplay();
+
+
+            const textLength = document.getElementById('submission-length');
+            const submission = document.getElementById('submission');
+            submission.addEventListener('input', (e) => {
+                textLength.textContent = e.target.value.length;
+            });
+
+            function submitBtn() {
+                const code = submission.value;
+                if (code.trim() === '') {
+                    alert('Please enter your code before submitting.');
+                    return;
+                }
+                fetch('/submit', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ task: '{{ task }}', code: code })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Submission successful! size: ' + data.size + ', score: ' + data.score);
+                    } else {
+                        if (data.error_type === "length") {
+                            alert('Shorter code is already submitted.');
+                        } else if (data.error_type === "test") {
+                            alert('Submission failed at: ' + data.mismatch[0].index);
+
+                        } else {
+                            alert('An error occurred: ' + data.error_message);
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while submitting your code.');
+                });
+            }
         </script>
     </body>
 </html>
