@@ -1,10 +1,17 @@
 from flask import Flask, render_template, request, jsonify, send_file
+from flask_httpauth import HTTPBasicAuth
+from werkzeug.security import generate_password_hash, check_password_hash
 import json
 from pathlib import Path
 import importlib.util
 import copy
 
 app = Flask(__name__)
+auth = HTTPBasicAuth()
+users = {
+    "tsg": generate_password_hash("uouofishlife"),
+}
+
 PROBLEM = Path(__file__).parent / 'problems'
 SUBMISSION = Path(__file__).parent / 'outputs'
 SUBMISSION.mkdir(exist_ok=True)
@@ -18,7 +25,13 @@ for p in sorted(PROBLEM.glob('*.json')):
 task_names = list(problems.keys())
 print(f"found tasks: {len(task_names)}")
 
+@auth.verify_password
+def verify_password(username, password):
+    if username in users and check_password_hash(users.get(username), password):
+        return username
+
 @app.route('/')
+@auth.login_required
 def index():
     tasks_info = []
     overall_score = 0
@@ -43,6 +56,7 @@ def index():
     return render_template('index.html', tasks_info=tasks_info, overall_score=overall_score)
 
 @app.route('/problem/<task>')
+@auth.login_required
 def problem(task):
     if task not in problems:
         return jsonify({"error": "Task not found"}), 404
@@ -54,6 +68,7 @@ def problem(task):
     return render_template('problem.html', task=task, problem=problems[task], code=code)
 
 @app.post('/submit')
+@auth.login_required
 def submit():
     data = request.json
     task: str = data["task"]
@@ -111,6 +126,7 @@ def submit():
     return jsonify({"success": True, "size": len(code), "score": max(1, 2500 - len(code))})
 
 @app.route('/download')
+@auth.login_required
 def download():
     import zipfile
     from io import BytesIO
