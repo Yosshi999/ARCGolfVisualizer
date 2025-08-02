@@ -104,6 +104,12 @@
                                 Show Legend
                             </label>
                         </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="onlyFailed">
+                            <label class="form-check-label" for="onlyFailed">
+                                Show Only Failed Tests
+                            </label>
+                        </div>
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <button class=""nav-button prev" id="prevBtn" onclick="changeGrid(-1)">
                                 <i class="bi bi-arrow-left"></i>
@@ -152,6 +158,7 @@
             });
 
             const gridData = {{ problem | tojson }};
+            const failedData = [];
             const inputGrid = document.getElementById('input-grid');
             const outputGrid = document.getElementById('output-grid');
             const problemIdx = document.getElementById('problemIdx');
@@ -160,9 +167,10 @@
             let currentIndex = 0;
 
             function updateDisplay() {
-                const grid = gridData[currentIndex];
+                const useData = document.getElementById('onlyFailed').checked ? failedData : gridData;
+                const grid = useData[currentIndex];
                 prevBtn.disabled = currentIndex === 0;
-                nextBtn.disabled = currentIndex === gridData.length - 1;
+                nextBtn.disabled = currentIndex === useData.length - 1;
 
                 let inputHtml = '';
                 let outputHtml = '';
@@ -183,12 +191,27 @@
                 outputGrid.style.gridTemplateRows = `repeat(${grid.output.length}, 1fr)`;
                 outputGrid.innerHTML = outputHtml;
 
+                if (grid.actual) {
+                    let actualHtml = '';
+                    grid.actual.forEach((row, rowIndex) => {
+                        row.forEach((cell, colIndex) => {
+                            actualHtml += `<div class="cell cell-${cell}"></div>`;
+                        })
+                    })
+                    document.getElementById('actual-grid').style.gridTemplateColumns = `repeat(${grid.actual[0].length}, 1fr)`;
+                    document.getElementById('actual-grid').style.gridTemplateRows = `repeat(${grid.actual.length}, 1fr)`;
+                    document.getElementById('actual-grid').innerHTML = actualHtml;
+                } else {
+                    document.getElementById('actual-grid').innerHTML = '<div class="cell">N/A</div>';
+                }
+
                 problemIdx.value = currentIndex;
             }
 
             function changeGrid(direction) {
+                const useData = document.getElementById('onlyFailed').checked ? failedData : gridData;
                 const newIndex = currentIndex + direction;
-                if (newIndex < 0 || newIndex >= gridData.length) {
+                if (newIndex < 0 || newIndex >= useData.length) {
                     return; // Out of bounds
                 }
                 currentIndex = newIndex;
@@ -196,8 +219,9 @@
             }
 
             problemIdx.addEventListener('change', (e) => {
+                const useData = document.getElementById('onlyFailed').checked ? failedData : gridData;
                 const idx = parseInt(e.target.value, 10);
-                if (isNaN(idx) || idx < 0 || idx >= gridData.length) {
+                if (isNaN(idx) || idx < 0 || idx >= useData.length) {
                     e.target.value = currentIndex; // Reset to current index if invalid
                 } else {
                     currentIndex = idx;
@@ -236,7 +260,17 @@
                             alert('Shorter code is already submitted.');
                         } else if (data.error_type === "test") {
                             alert('Submission failed at: ' + data.mismatch[0].index);
-
+                            failedData.splice(0);
+                            data.mismatch.forEach((m) => {
+                                failedData.push({
+                                    input: gridData[m.index].input,
+                                    output: gridData[m.index].output,
+                                    actual: m.output
+                                });
+                            })
+                            currentIndex = 0;
+                            document.getElementById('onlyFailed').checked = true;
+                            updateDisplay();
                         } else {
                             alert('An error occurred: ' + data.error_message);
                         }
