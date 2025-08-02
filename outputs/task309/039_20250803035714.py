@@ -1,0 +1,1 @@
+p=lambda g:[[v&13for v in u]for u in g]
