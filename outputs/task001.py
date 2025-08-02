@@ -1,1 +1,1 @@
-def p(g):return[[a&b for a in v for b in w]for v in g for w in g]
+p=lambda g:[[a&b for a in v for b in w]for v in g for w in g]
