@@ -1,0 +1,1 @@
+p=lambda g:[[(sum(g[i])|sum(sum(g,[])[j::9]))%13for j in range(9)]for i in range(9)]
