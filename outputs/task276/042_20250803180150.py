@@ -1,0 +1,1 @@
+p=lambda g:[[v%2*5+2for v in u]for u in g]
