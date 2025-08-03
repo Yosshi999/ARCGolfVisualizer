@@ -1,0 +1,1 @@
+f=lambda v,g:[w for w in v for _ in[0]*sum(1 for r in g for b in r if b)];p=lambda g:[f(v,g)for v in f(g,g)]
