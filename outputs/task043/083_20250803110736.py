@@ -1,0 +1,1 @@
+a=range(10);p=lambda g:[[2if g[0][j]and g[i][-1]else g[i][j] for j in a]for i in a]
