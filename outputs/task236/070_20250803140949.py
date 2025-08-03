@@ -1,0 +1,1 @@
+p=lambda g:[[((a^b)%3>0)*3for a,b in zip(v,w)]for v,w in zip(g,g[5:])]
