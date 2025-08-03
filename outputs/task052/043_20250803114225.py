@@ -1,0 +1,1 @@
+p=lambda g:[[5*(v[:2]==v[1:])]*3for v in g]
