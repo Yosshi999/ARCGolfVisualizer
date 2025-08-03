@@ -1,0 +1,1 @@
+p=lambda g:[[x]for i in[10,8,6,4,2]for x in range(10)if i==sum(g,[]).count(x)]

@@ -1,0 +1,1 @@
+def p(g):return[*map(list,zip(*[[x for i in[10,8,6,4,2]for x in range(10) if sum(x==a for v in g for a in v)==i]]))]
