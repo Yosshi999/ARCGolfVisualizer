@@ -24,17 +24,24 @@ task_names = list(problems.keys())
 print(f"found tasks: {len(task_names)}")
 assert len(task_names) == len(summaries), "Number of tasks does not match number of summaries."
 
+def get_shortest_submission(task):
+    subs = SUBMISSION / task
+    if not subs.exists():
+        return None
+    py_files = list(subs.glob("*.py"))
+    if not py_files:
+        return None
+    return min(py_files, key=lambda x: int(x.stem.split('_')[0]))  # shortest submission
+
 @app.route('/')
 def index():
     tasks_info = []
     overall_score = 0
     for i, task in enumerate(task_names):
-        subs = SUBMISSION / f"{task}"
-        if subs.exists() and any(subs.glob("*.py")):
+        shortest_sub = get_shortest_submission(task)
+        if shortest_sub:
             exists = True
-            sub = sorted(subs.glob("*.py"))[0]  # shortest submission
-            with open(sub, 'rb') as f:
-                code = len(f.read())
+            code = shortest_sub.stat().st_size
             score = max(1, 2500 - code)
         else:
             exists = False
@@ -77,12 +84,8 @@ def collect_hints(problem):
 def problem(task):
     if task not in problems:
         return jsonify({"error": "Task not found"}), 404
-    subs = SUBMISSION / task
-    if subs.exists() and any(subs.glob("*.py")):
-        sub = sorted(subs.glob("*.py"))[0]  # shortest submission
-        code = sub.read_text()
-    else:
-        code = ""
+    shortest_sub = get_shortest_submission(task)
+    code = shortest_sub.read_text() if shortest_sub else ""
     hints = collect_hints(problems[task])
     return render_template('problem.html', task=task, problem=problems[task], code=code, hints=hints, summary=summaries[task_names.index(task)][0], hardness=summaries[task_names.index(task)][1])
 
@@ -99,12 +102,7 @@ def submit():
             "error_type": "task_not_found",
             "error_message": "Task not found",
         }), 404
-    subs = SUBMISSION / f"{task}"
-    if subs.exists() and any(subs.glob("*.py")):
-        sub = sorted(subs.glob("*.py"))[0]  # shortest submission
-        old_code = sub.read_text()
-    else:
-        old_code = None
+    old_code = get_shortest_submission(task).read_text() if get_shortest_submission(task) else None
 
     mismatch = []
     try:
@@ -151,10 +149,8 @@ def download():
     zip_buffer = BytesIO()
     with zipfile.ZipFile(zip_buffer, 'w', zipfile.ZIP_DEFLATED) as zip_file:
         for task in task_names:
-            subs = SUBMISSION / task
-            if subs.exists() and any(subs.glob("*.py")):
-                sub = sorted(subs.glob("*.py"))[0]  # shortest submission
-                zip_file.write(sub, arcname=f"{task}.py")
-    
+            if (shortest_sub := get_shortest_submission(task)) is not None:
+                zip_file.write(shortest_sub, arcname=f"{task}.py")
+
     zip_buffer.seek(0)
     return send_file(zip_buffer, as_attachment=True, download_name='submission.zip', mimetype='application/zip')
