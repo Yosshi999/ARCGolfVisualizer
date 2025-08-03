@@ -1,0 +1,1 @@
+p=lambda g:[[g[6][0]if w else 0for w in v]for v in g[:6]]+[g[0]]
