@@ -1,0 +1,1 @@
+p=lambda g:[[3*(a+b>0)for a,b in zip(v,w)]for v,w in zip(g,g[5:])]

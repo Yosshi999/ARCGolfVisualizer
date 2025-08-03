@@ -1,0 +1,1 @@
+p=lambda g:list(sorted([sorted(v)for v in g]))

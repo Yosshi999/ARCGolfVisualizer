@@ -1,0 +1,1 @@
+p=lambda g:[[v[0]*(w>0)for w in v]for v in g]
