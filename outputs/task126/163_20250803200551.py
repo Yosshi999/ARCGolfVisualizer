@@ -1,0 +1,6 @@
+def p(g):
+ for i in range(len(g)-1):
+  for j in range(len(g[0])-2):
+   if len(set(g[i][j:j+3]+[g[i+1][j],g[i+1][j+2]]))==1and g[i][j]>0:
+    g[-1][j+1]=4
+ return g
