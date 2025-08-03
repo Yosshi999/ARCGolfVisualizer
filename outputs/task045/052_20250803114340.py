@@ -1,0 +1,1 @@
+p=lambda g:[v if v[0]-v[9] else [v[0]]*10for v in g]
