@@ -1,0 +1,1 @@
+p=lambda g:[[a+b for a,b in zip(v,w)]for v,w in zip(g,g[6:])]

@@ -1,0 +1,1 @@
+p=lambda g:(g+[v for v in g[1:-1][::-1]])*2+g[:1]

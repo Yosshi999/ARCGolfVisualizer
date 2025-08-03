@@ -1,0 +1,1 @@
+p=lambda g:[[a if a else b if b else c if c else 0for a,b,c in zip(v,v[5:],v[10:])]for v in g]

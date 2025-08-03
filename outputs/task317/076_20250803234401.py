@@ -1,0 +1,1 @@
+p=lambda g:[[w&1for w in v[1::3]for e in[0]*3]for v in g[1::3]for _ in[0]*3]
