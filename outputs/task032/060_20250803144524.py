@@ -1,0 +1,1 @@
+p=lambda g:[*map(list,zip(*[[*sorted(v)]for v in zip(*g)]))]

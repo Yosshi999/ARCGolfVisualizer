@@ -1,0 +1,1 @@
+p=lambda g:[[any(v!=v[::-1]for v in g)*6+1]]
