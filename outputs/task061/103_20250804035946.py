@@ -1,0 +1,1 @@
+p=lambda g:[[c if(c:=g[i][j])else i*j%max(sum(g,[]))+1for j in range(len(g[0]))]for i in range(len(g))]

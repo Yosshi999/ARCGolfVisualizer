@@ -1,0 +1,1 @@
+p=lambda g:[[g[i][j]*(sum(v>0for u in g[max(0,i-1):i+2]for v in u[max(j-1,0):j+2])>1)for j in range(len(g[0]))]for i in range(len(g))]

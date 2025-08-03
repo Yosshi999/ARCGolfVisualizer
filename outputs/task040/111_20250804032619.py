@@ -1,0 +1,1 @@
+p=lambda g:[[g[i+5*f][j] if g[i+5*f][j]!=3else g[9*f][j//5*9]for j in range(10)]for f in[0,1]for i in range(5)]

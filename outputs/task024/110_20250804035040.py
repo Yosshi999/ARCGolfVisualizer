@@ -1,0 +1,1 @@
+p=lambda g:[[max(s)if(s:=set(v)&{1,3})else 2 if any(w[i]==2for w in g)else 0for i in range(len(v))]for v in g]
