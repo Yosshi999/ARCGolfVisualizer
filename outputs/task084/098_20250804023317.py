@@ -1,0 +1,1 @@
+def p(g):r=range(n:=len(g)-1);return[g[0][:1]+[2*(i+1==n-j)for j in r]for i in r]+[g[0][:1]+[4]*n]

@@ -1,0 +1,1 @@
+p=lambda g:[[a for a,b in zip(x,map(sum,zip(*g)))if b][:3]for x in g if sum(x)][:3]

@@ -1,0 +1,1 @@
+p=lambda g:[[(0,c:=g[i][j],4)[(c>0)*(1+min(i,j)%2)]for j in range(len(g[0]))]for i in range(len(g))]

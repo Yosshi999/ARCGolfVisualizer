@@ -1,0 +1,1 @@
+p=lambda g:[[[a,c,0,b][(a<1)*(3+(b<1)*~c)]for a,b,c in zip(v,v[5:],v[10:])]for v in g]

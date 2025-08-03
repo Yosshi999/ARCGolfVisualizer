@@ -1,0 +1,1 @@
+p=lambda g:[[[v[i],2][0<i<len(v)-1and v[i-1]*v[i+1]]for i in range(len(v))]for v in g]

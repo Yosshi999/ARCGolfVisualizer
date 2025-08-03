@@ -1,0 +1,1 @@
+p=lambda g:[[x[j]for j in range(len(x))if sum(v[j]for v in g)]for x in g if sum(x)]

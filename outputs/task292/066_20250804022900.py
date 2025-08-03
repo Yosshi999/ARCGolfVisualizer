@@ -1,0 +1,1 @@
+p=lambda g:[[v[i]*((i%3<1)*.5+1)for i in range(len(v))]for v in g]

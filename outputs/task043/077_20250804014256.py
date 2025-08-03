@@ -1,0 +1,1 @@
+a=range(10);p=lambda g:[[[g[i][j],2][g[0][j]*g[i][9]>0]for j in a]for i in a]

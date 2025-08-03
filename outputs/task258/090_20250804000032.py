@@ -1,0 +1,1 @@
+p=lambda g:[[2if 0<i<len(v)-1 and v[i-1]*v[i+1]else v[i]for i in range(len(v))]for v in g]

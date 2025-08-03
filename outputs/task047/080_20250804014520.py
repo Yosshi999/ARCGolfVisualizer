@@ -1,0 +1,1 @@
+a=range(9);p=lambda g:[[(sum(g[i])|sum(v[j]for v in g))%13for j in a]for i in a]
