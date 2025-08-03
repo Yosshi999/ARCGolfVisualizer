@@ -1,0 +1,1 @@
+p=lambda g:[[(a|b)&8^8for a,b in zip(v,v[4:])]for v in g]

@@ -1,0 +1,1 @@
+p=lambda g:[[dict(zip(a:=g[l:=len(g)//2],a[l:]))[x]for x in v]for v in g]

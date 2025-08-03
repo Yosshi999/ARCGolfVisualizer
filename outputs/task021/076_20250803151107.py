@@ -1,0 +1,1 @@
+p=lambda g:[[c:=g[0][0]]*-~sum(c!=v for v in g[0])]*-~sum(c!=v[0]for v in g)
