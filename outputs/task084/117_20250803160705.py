@@ -1,0 +1,1 @@
+p=lambda g:[[g[i][j]if i+1!=len(g)-j else 2 for j in range(len(g))]for i in range(len(g)-1)]+[[g[0][0]]+[4]*~-len(g)]
