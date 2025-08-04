@@ -1,0 +1,1 @@
+r=range;p=lambda g:a if (a:=[[max(g[i][j],2)if g[i+1][j]==2 or g[i-1][j-1]-g[i][j-1]==3 else g[i][j]for j in r(len(g[0]))]for i in r(len(g)-1)]+[g[-1]])==g else p(a)
