@@ -1,0 +1,1 @@
+p=lambda g:[v:=g[:len(g)//2],[l[:len(l)//2]for l in g]][v*2!=g*(len(g)>3)]
