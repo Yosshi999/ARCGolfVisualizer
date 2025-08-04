@@ -1,0 +1,1 @@
+def p(g):n=len(g[0]);s=sum(v>0for v in g[0]);return[g[0][:1]*(s+i)+[0]*(n-s-i)for i in range(n//2)]

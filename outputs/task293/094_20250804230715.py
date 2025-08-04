@@ -1,0 +1,1 @@
+p=lambda g:[[v[j]if 0in v or g[0][j]<1else v[0]^v[j]^g[0][j]for j in range(len(v))]for v in g]

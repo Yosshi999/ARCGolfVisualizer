@@ -1,0 +1,1 @@
+p=lambda g:[[sum(set(sum(g,[])))-w for w in v if w]for v in g if sum(v)]

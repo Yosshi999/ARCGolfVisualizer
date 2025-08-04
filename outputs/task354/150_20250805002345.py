@@ -1,0 +1,1 @@
+p=lambda g:[[v[j]if v[j]!=5else max(g[0][(10-v[::-1].index(0,9-j)if 0in v[:j]else 0):(v.index(0,j)if 0in v[j:]else 10)])for j in range(10)]for v in g]
