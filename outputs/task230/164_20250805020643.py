@@ -1,0 +1,1 @@
+f=lambda g,c:[*map(list,zip(*[[(g[i][j],c)[g[i-2][j-2]*(g[i-1][j-1]>4)>4]for j in range(len(g[0]))]for i in range(len(g))][::-1]))];p=lambda g:f(f(f(f(g,4),2),1),3)
