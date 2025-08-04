@@ -1,0 +1,1 @@
+p=lambda g:[[8-2*max(v)%8if g[0][i]else (max(v)==2)*2for i in range(6)]for v in g]

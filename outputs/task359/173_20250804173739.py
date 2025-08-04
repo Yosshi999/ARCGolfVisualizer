@@ -1,0 +1,1 @@
+f=lambda x:[[max(v,key=v.count)]*len(v)for v in x];F=lambda x:[*map(list,zip(*x))];p=lambda g:min(f(g),F(f(F(g))),key=lambda x:sum(v!=w for v,w in zip(sum(g,[]),sum(x,[]))))

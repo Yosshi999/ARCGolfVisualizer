@@ -1,0 +1,1 @@
+p=lambda g:[[v[i]-(i-len(v))%2*(v[i]>0)*2for i in range(len(v))]for v in g]
