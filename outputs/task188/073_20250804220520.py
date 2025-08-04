@@ -1,0 +1,1 @@
+p=lambda g:[[l[:len(l)//2]for l in g],v:=g[:len(g)//2-2//len(g)]][v*2==g]
