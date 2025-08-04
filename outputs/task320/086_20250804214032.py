@@ -1,0 +1,1 @@
+p=lambda g:[*map(list,zip(*[list(v[:len(v)-(s:=sum(v)//4)])+[8]*s for v in zip(*g)]))]
