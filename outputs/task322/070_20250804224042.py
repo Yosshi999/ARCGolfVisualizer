@@ -1,0 +1,1 @@
+r=[0,1,2];p=lambda g:[[max(sum(g,[])[j:3*-~i:3])for j in r]for i in r]

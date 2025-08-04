@@ -1,0 +1,1 @@
+p=lambda g:[[max(g[k][j]for k in range(i+1))for j in[0,1,2]]for i in[0,1,2]]
