@@ -1,0 +1,1 @@
+p=lambda g:[(l:=sorted([max(v)for v in zip(*g)],key=lambda x:x==0))[:3],l[3:6][::-1],l[6:9]]

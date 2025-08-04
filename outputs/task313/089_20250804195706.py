@@ -1,0 +1,1 @@
+r=range;p=lambda g:[[g[i%2][(j+1)%(2+(len(g))//12)]for j in r(len(g))]for i in r(len(g))]

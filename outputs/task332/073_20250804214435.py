@@ -1,0 +1,1 @@
+p=lambda g:[[v[i]*(5-(i-len(v))%2*2)//5for i in range(len(v))]for v in g]
