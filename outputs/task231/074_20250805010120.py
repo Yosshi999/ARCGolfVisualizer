@@ -1,0 +1,1 @@
+p=lambda g:[(v[:3-all(v[:2]*2==v[:4]for v in g)]*20)[:len(v)*2]for v in g]
