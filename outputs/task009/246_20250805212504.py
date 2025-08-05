@@ -1,0 +1,1 @@
+f=lambda g:[*map(list,zip(*[[max([k*10 if k<10 and v[i%3::3].index(k)<i//3<(len(v)//3-v[-(i%3+1)::-3].index(k))else v[i] for k in set(v[i%3::3])])for i in range(len(v))]for v in g]))];p=lambda g:[[i//10 if i>9 else i for i in v] for v in f(f(g))]
