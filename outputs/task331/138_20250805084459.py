@@ -1,0 +1,1 @@
+r=range(10);f=lambda g,c:[*map(list,zip(*[[(g[i][j],c)[(i>0)*g[i-1][j]==1]for j in r]for i in r][::-1]))];p=lambda g:f(f(f(f(g,8),6),2),7)

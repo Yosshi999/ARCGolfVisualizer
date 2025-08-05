@@ -1,0 +1,1 @@
+f=lambda x:[*map(list,zip(*x))];p=lambda g:f([v[(s:=sum(w>0for w in v)):]+[0]*s for v in f(g)])

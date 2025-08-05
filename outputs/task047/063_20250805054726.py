@@ -1,0 +1,1 @@
+p=lambda g:[[(sum(v)|s)%13for s in map(sum,zip(*g))]for v in g]

@@ -1,0 +1,1 @@
+p=lambda g:[[v[j]^(v[0]^(c:=g[0][j]),0)[min(v)*c<1]for j in range(len(v))]for v in g]

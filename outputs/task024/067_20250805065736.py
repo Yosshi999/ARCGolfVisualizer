@@ -1,0 +1,1 @@
+p=lambda g:[[(2*(2in w),c:=sum(v))[c&1]for w in zip(*g)]for v in g]

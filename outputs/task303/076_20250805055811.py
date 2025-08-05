@@ -1,0 +1,1 @@
+p=lambda g:[[(2,a)[b*sum(x)>0]for a,b in zip(x,map(sum,zip(*g)))]for x in g]

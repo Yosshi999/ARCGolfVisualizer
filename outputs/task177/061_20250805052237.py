@@ -1,0 +1,1 @@
+p=lambda g:[v[::-1]for v in[[*filter(None,v)]for v in g]if v]

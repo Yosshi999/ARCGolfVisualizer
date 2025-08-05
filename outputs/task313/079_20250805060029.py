@@ -1,0 +1,1 @@
+def p(g):r=range(n:=len(g));return[[g[i%2][-~j%(2+n//12)]for j in r]for i in r]

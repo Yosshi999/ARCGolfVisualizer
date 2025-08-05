@@ -1,0 +1,1 @@
+p=lambda g:[*map(list,zip(*[sorted(v,key=lambda x:x<1)for v in zip(*g)]))]

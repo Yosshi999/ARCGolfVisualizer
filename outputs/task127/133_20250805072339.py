@@ -1,0 +1,1 @@
+p=lambda g:[[min(set(sum([v[max(j-1,0):j+2]for v in g[max(0,i-1):i+2]],[]))-{0})%5+5for j in range(len(g[0]))]for i in range(len(g))]

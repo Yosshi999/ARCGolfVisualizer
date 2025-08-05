@@ -1,0 +1,1 @@
+r=range(9);p=lambda g:[[(c:=g[i][j],1)[sum(sum(v[max(0,j-1):j+2])for v in g[max(0,i-1):i+2])>c]for j in r]for i in r]
