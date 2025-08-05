@@ -1,0 +1,1 @@
+r=range(9);p=lambda g:[[v[j-1:j+2]for v in g[i+1:i+4]]for i in r for j in r if g[i][j]==5][0]

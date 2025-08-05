@@ -1,0 +1,7 @@
+r=[0,3,6]
+def p(g):
+ for i in r:
+  for j in r:
+   if g[i+1][j+5]:
+    for k in[0,1,2]:g[i+k][j+4:j+7]=g[k][:3]
+ return g

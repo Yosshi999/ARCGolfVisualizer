@@ -1,0 +1,1 @@
+p=lambda g:[[[c for c in range(10)if (c in sum([v[:j+1]for v in g[:i+1]],[])and c in sum([v[j:]for v in g[i:]],[]))or(c in sum([v[:j+1]for v in g[i:]],[])and c in sum([v[j:]for v in g[:i+1]],[]))][-1]for j in range(len(g[0]))]for i in range(len(g))]
