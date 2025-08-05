@@ -1,0 +1,1 @@
+r=range(3);p=lambda g:[[bool({i,j+3}&[{1,4},{0,4},{2,5}][max(sum(g,[]))-1])*5for j in r]for i in r]

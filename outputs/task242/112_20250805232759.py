@@ -1,0 +1,1 @@
+r=range(16);p=lambda g:[[max(g[i][j],g[~i][j],g[i][~j],g[~i][~j])for j in r if g[i][j]<1]for i in r if 0in g[i]]

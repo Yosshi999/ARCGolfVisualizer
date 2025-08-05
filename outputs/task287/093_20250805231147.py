@@ -1,0 +1,1 @@
+r=range(16);p=lambda g:[[max({g[i][j],g[~i][j],g[i][~j],g[~i][~j]}-{4})for j in r]for i in r]
