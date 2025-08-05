@@ -1,0 +1,1 @@
+b=lambda g:[*map(list,zip(*[[max(v[i%10::10])for i in range(len(v))]for v in g]))];p=lambda g:b(b(g))
