@@ -1,0 +1,1 @@
+p=lambda g:[[(g[i][j]^g[i+7][j])*3//2for j in range(5)]for i in range(6)]

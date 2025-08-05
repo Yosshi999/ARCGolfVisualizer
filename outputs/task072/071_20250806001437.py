@@ -1,0 +1,1 @@
+p=lambda g:[[(v[j]^w[j])*3//2for j in range(5)]for v,w in zip(g,g[7:])]
