@@ -1,0 +1,1 @@
+def p(g):h=[v for v in g if sum(v)];i=-g.index(h[0])%3;return (h*9)[i:i+len(g)]

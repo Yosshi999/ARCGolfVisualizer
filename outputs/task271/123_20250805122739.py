@@ -1,0 +1,1 @@
+r=range(7);p=lambda g:max([[v[j:j+3]for v in g[i:i+3]]for i in r for j in r],key=lambda x:(min(h:=sum(x,[]))>0,h.count(1)))

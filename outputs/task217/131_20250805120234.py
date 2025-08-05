@@ -1,0 +1,1 @@
+def p(g):r=[0,3,6];h=max([v[j:j+3]for v in g[i:i+3]]for i in r for j in r);return[[a&b for a in v for b in w]for v in h for w in h]

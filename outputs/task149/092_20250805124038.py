@@ -1,0 +1,1 @@
+r=[0,4,8];p=lambda g:[[sum([v[j:j+3]for v in g[i:i+3]],[]).count(6)//2for j in r]for i in r]
