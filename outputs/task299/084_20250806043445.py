@@ -1,0 +1,1 @@
+p=lambda g:[[{4:2,20:4,16:8}.get(sum(v+[*w]),a)for a,w in zip(v,zip(*g))]for v in g]

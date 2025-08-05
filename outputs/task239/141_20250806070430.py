@@ -1,0 +1,5 @@
+def p(g):
+ h=sum(g,[])
+ z=sorted({*h},key=h.count)[::-1]
+ q=[[c]*(l:=h.count(c))+[0]*(h.count(z[0])-l)for c in z]
+ return[*map(list,zip(*q))]

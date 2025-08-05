@@ -1,0 +1,1 @@
+f=lambda g:[*map(list,zip(*[[(w,8)[w<(1in v[:j]*(1in v[j:]))]for j,w in enumerate(v)]for v in g]))];p=lambda g:f(f(g))

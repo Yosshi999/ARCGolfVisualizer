@@ -1,0 +1,1 @@
+p=lambda g:[[(a,3)[(a<1)*(v.count(0)==(l:=len(v)-2)or w.count(0)==l)]for a,w in zip(v,zip(*g))]for v in g]

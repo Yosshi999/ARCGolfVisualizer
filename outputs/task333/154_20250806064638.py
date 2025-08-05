@@ -1,0 +1,1 @@
+f=lambda g:[*map(list,zip(*[[max(v[:j])if w<1and 3in v[j+1:]and max(v[:j]+[0])else w for j,w in enumerate(v)]for v in g][::-1]))];p=lambda g:f(f(f(f(g))))

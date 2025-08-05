@@ -1,0 +1,1 @@
+r=range(10);p=lambda g:[[[c for c in r if c in v[:j+1]and c in v[j:]][-1]for j in r]for v in g]

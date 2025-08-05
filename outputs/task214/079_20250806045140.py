@@ -1,0 +1,1 @@
+def p(g):k=0;exec('i=k//3;j=k%3;g[j][6-i]=g[2-i][~j]=g[i][j];k+=1;'*9);return g

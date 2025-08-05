@@ -1,0 +1,1 @@
+p=lambda g:[[w^(v[0]^(c:=g[0][j]))*(min(v)*c>0)for j,w in enumerate(v)]for v in g]

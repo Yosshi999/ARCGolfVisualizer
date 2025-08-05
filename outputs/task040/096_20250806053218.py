@@ -1,0 +1,1 @@
+p=lambda g:[[(g[i//5*9][j//5*9],c:=g[i%5+i//5*5][j])[c!=3]for j in range(10)]for i in range(10)]

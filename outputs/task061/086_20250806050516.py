@@ -1,0 +1,1 @@
+p=lambda g:[[w or i*j%max(sum(g,[]))+1for j,w in enumerate(v)]for i,v in enumerate(g)]
