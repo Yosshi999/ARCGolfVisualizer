@@ -1,0 +1,1 @@
+p=lambda g:[[max(v[:i])for v in zip(*g)]for i in[1,2,3]]

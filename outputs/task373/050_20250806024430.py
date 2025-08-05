@@ -1,0 +1,1 @@
+p=lambda g:[[*[*zip(*g)][0]][::i]*3for i in[1,-1]]

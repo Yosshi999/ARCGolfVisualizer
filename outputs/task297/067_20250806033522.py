@@ -1,0 +1,1 @@
+def p(g):n=len(g[0]);return g[:2]+[[g[0][i]]*n for i in range(n)]*2

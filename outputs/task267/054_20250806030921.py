@@ -1,0 +1,1 @@
+p=lambda g:[[g[6][w<1]for w in v]for v in g[:6]]+g[:1]

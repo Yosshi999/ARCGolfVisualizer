@@ -1,0 +1,1 @@
+p=lambda g:[[a|b for a,b in zip(v,v[:4:-1])]for v in g]

@@ -1,0 +1,1 @@
+p=lambda g:[[w*((i%3<1)*.5+1)for i,w in enumerate(v)]for v in g]

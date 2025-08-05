@@ -1,0 +1,1 @@
+p=lambda g:[[v]for v in sorted(range(10),key=sum(g,[]).count)][7:4:-1]

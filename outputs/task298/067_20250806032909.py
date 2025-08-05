@@ -1,0 +1,1 @@
+p=lambda g:[[*map(dict(zip(a:=g[2][:3],a[2:]+a)).get,v)]for v in g]

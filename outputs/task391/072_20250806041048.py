@@ -1,0 +1,1 @@
+def p(g):h=sum(g,[]);return[[v]for v in sorted({*h},key=h.count)][2::-1]

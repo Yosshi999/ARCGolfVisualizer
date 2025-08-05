@@ -1,0 +1,1 @@
+p=lambda g:[[[v[0]]*10,v][v[0]!=v[9]]for v in g]
