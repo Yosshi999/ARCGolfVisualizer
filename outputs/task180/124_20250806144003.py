@@ -1,0 +1,1 @@
+o={0:0,4:1,9:2,6:3,5:4};r=range(4);p=lambda g:[[max(g[i][j],g[i+4][j],g[i][j+4],g[i+4][j+4],key=o.get)for j in r]for i in r]
