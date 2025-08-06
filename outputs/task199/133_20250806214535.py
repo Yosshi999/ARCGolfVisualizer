@@ -1,0 +1,1 @@
+e=enumerate;p=lambda g:[(g[i-1],[(x%2==[i for i,w in e(zip(*g))if sum(w)][0]%2)*4for x,_ in e(v)])[sum(max(g[i:]))>0]for i,v in e(g)]

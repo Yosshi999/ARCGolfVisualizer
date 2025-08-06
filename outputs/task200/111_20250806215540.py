@@ -1,0 +1,1 @@
+r=range(10);p=lambda g:[[(m:=max(g[9]),5*(i==4.5*(j-(k:=g[9].index(m))&2)))[j-k&1]*(j>=k)for j in r]for i in r]

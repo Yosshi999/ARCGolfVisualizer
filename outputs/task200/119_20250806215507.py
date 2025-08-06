@@ -1,0 +1,1 @@
+r=range(10);p=lambda g:[[(g[9][k:=[i for i in r if g[9][i]][0]],5*(i==4.5*(j-k&2)))[j-k&1]*(j>=k)for j in r]for i in r]
