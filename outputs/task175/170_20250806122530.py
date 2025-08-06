@@ -1,0 +1,1 @@
+p=lambda g:[[e[j] if e[j] else g[0][1] if i-j else g[0][0] for j in range(21)]for i,e in enumerate([[max(i,j)for i,j in zip(v,w)]for v,w in zip(g,[*map(list,zip(*g))])])]
