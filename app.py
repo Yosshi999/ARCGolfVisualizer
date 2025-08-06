@@ -4,6 +4,8 @@ from pathlib import Path
 import importlib.util
 import copy
 from datetime import datetime
+import traceback
+import sys
 
 app = Flask(__name__)
 PROBLEM = Path(__file__).parent / 'problems'
@@ -123,10 +125,12 @@ def submit():
                     "output": output,
                 })
     except Exception as e:
+        tb = traceback.extract_tb(sys.exc_info()[2])
+        trace = traceback.format_list(tb)
         return jsonify({
             "success": False,
             "error_type": "execution",
-            "error_message": str(e),
+            "error_message": str(e) + "\n" + "\n".join(trace),
         })
     if len(mismatch) > 0:
         return jsonify({
