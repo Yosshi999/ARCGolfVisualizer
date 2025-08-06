@@ -1,0 +1,1 @@
+e=enumerate;p=lambda g:[[max({w,g[~i][j],v[~j],g[~i][~j]}-{4})for j,w in e(v)]for i,v in e(g)]

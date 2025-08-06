@@ -1,0 +1,1 @@
+e=enumerate;p=lambda g:[[max({w,g[~i][j],v[~j],g[~i][~j]}-{3})for j,w in e(v)if w==3]for i,v in e(g)if 3in v]

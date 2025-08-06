@@ -1,0 +1,1 @@
+p=lambda g:[[(sum(v)|sum(w))%13for w in zip(*g)]for v in g]

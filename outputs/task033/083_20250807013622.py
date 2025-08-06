@@ -1,0 +1,1 @@
+e=enumerate;p=lambda g:[[(w,g[5][0])[w<g[i%6][j%6]]for j,w in e(v)]for i,v in e(g)]

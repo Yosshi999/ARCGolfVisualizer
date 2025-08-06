@@ -1,0 +1,1 @@
+r=range(16);p=lambda g:[[max({g[i][j],g[~i][j],g[i][~j],g[~i][~j]}-{3})for j in r if g[i][j]==3]for i in r if 3in g[i]]

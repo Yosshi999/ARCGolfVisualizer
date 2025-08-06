@@ -1,0 +1,1 @@
+p=lambda g:(h:=[*filter(sum,g)]*9)[(i:=-g.index(h[0])%3):i+len(g)]

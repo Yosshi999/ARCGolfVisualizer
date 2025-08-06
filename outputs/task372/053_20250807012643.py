@@ -1,0 +1,1 @@
+p=lambda g:[[*map(sum,zip(*v))]for v in zip(g,g[6:])]

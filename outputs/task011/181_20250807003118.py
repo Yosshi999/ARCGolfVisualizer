@@ -1,0 +1,1 @@
+r=[0,4,8];p=lambda g:[[([*v[:1]*3,5,*v[1:2]*3,5,*v[2:]*3],[5]*11)[t>2]for v in h for t in[0,1,2,3]][:-1]for i in r for j in r if len({*sum(h:=[v[j:j+3]for v in g[i:i+3]],[])})<6][0]

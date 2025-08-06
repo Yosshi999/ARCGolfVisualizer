@@ -1,0 +1,1 @@
+p=lambda g:[[(a^b//2)*3for a,b in zip(*v)]for v in zip(g,g[5:])]
