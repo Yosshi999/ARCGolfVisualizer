@@ -1,0 +1,1 @@
+p=lambda g:[[{k:e for k,e in zip(g[1][::-1],v[::-1])}[x] for x in g[1]]if sum(v) else v for v in g]

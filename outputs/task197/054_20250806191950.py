@@ -1,0 +1,1 @@
+p=lambda g:[[v[g[1].index(x)]for x in g[1]]for v in g]
