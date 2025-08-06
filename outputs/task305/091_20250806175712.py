@@ -1,0 +1,1 @@
+r=range(16);p=lambda g:[[max(g[0][(i+j)%(c:=len({*sum(g,[])})-1)::c])for j in r]for i in r]

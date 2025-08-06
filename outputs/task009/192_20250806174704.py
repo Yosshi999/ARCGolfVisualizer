@@ -1,0 +1,1 @@
+f=lambda g:[*map(list,zip(*[[max([c*10for c in range(10)if(c in v[j%3:j:3])*(c in v[j+3::3])]+[w])for j,w in enumerate(v)]for v in g]))];p=lambda g:[[w//(1+9*(w>9))for w in v]for v in f(f(g))]

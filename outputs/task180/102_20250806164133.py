@@ -1,0 +1,1 @@
+r=range(4);p=lambda g:[[max(g[i][j:j+5:4]+g[i+4][j:j+5:4],key=[0,4,9,6,5].index)for j in r]for i in r]

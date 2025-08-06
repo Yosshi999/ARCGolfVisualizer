@@ -1,0 +1,1 @@
+e=enumerate;p=lambda g:[[(c:=v[j],8)[(c<1)*(1in v[:j])*(1in v[j+1:])|(c<1)*(1in w[:i])*(1in w[i+1:])]for j,w in e(zip(*g))]for i,v in e(g)]

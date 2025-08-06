@@ -1,0 +1,1 @@
+e=enumerate;p=lambda g:[[w if w else g[0][1] if i-j else g[0][0] for j,w in e(v)]for i,v in e([*map(max,v,w)]for v,w in zip(g,zip(*g)))]

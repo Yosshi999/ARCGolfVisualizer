@@ -1,0 +1,1 @@
+r=range(30);a=lambda g:[v+[9]*2for v in g]+[[9]*32]*2;m=lambda g,i,j:min(g[i][j],g[i][~j],g[~i][j],g[~i][~j]);p=lambda g:[[min(m(a(g),i,j),m(a(g),j,i)) for i in r]for j in r]

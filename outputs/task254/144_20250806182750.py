@@ -1,0 +1,1 @@
+p=lambda g:[[(w>0)*((j==(s:=[v.count(5)for v in zip(*g)]).index(min(filter(None,s))))*2+(j==s.index(max(s))))for j,w in enumerate(v)]for v in g]

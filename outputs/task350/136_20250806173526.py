@@ -1,0 +1,1 @@
+e=enumerate;f=lambda v,i:(1in v[:i])*(1in v[i+1:]);p=lambda g:[[(c:=v[j],8)[(c<1)*(f(v,j)|f(w,i))]for j,w in e(zip(*g))]for i,v in e(g)]
