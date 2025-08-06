@@ -1,0 +1,1 @@
+e=enumerate;s=lambda g:[sum(v)for v in zip(*g)];p=lambda g:[[0 if x%2-next((i for i,w in e(s(g)) if w),None)%2 else 4 for x,_ in e(v)]if sum(s(g[i:]))else g[i-1]for i,v in e(g)]
