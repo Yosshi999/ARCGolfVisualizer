@@ -1,0 +1,1 @@
+h=lambda g:[*map(list,zip(*g))];f=lambda g:h(g)[::-1];a=lambda g:[v+[9]*2for v in g]+[[9]*32]*2;p=lambda g:[[min(x,y,z,w,d,e,j,k)for x,y,z,w,d,e,j,k in zip(m,n,o,p,q,r,s,t)][:30]for m,n,o,p,q,r,s,t in zip(a(g),f(a(g)),f(f(a(g))),f(f(f(a(g)))),h(a(g)),h(f(a(g))),h(f(f(a(g)))),h(f(f(f(a(g))))))][:30]
