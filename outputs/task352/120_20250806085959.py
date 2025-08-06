@@ -1,0 +1,1 @@
+e=enumerate;p=lambda g:[[(w,1)[any(2in v[max(j-1,0):j+2]for v in g[max(i-1,0):i+2])*2>w]for j,w in e(v)]for i,v in e(g)]

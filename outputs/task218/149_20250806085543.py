@@ -1,0 +1,1 @@
+f=lambda g:g[:1]+[g[i+1]for i in range(len(g)-1)if g[i]!=g[i+1]];p=lambda g:[*map(list,zip(*f([*zip(*f([[*filter(None,v)]for v in g if max(v)]))])))]

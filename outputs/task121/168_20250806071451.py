@@ -1,0 +1,1 @@
+r=range(13);p=lambda g:[[g[i-1][j-1:j+2],[g[i][j-1],max({*sum([v[j:j+2]for v in g[i-1:i+2]],[])}-{8}),g[i][j+1]],g[i+1][j-1:j+2]]for i in r for j in r if g[i][j]==8][0]

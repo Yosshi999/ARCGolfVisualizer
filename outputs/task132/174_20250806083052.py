@@ -1,0 +1,1 @@
+e=enumerate;f=lambda g:[[[c for c in range(10)if any(c in v[:j+1]for v in g[:i+1])*any(c in v[j:]for v in g[i:])][-1]for j,w in e(v)]for i,v in e(g)][::-1];p=lambda g:f(f(g))

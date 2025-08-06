@@ -1,0 +1,1 @@
+e=enumerate;p=lambda g:[[(w,8)[sum([(i>0)*g[i-1][j],*v[max(j-1,0):j+2],(i+1<len(g)and g[i+1][j])])>w>2]for j,w in e(v)]for i,v in e(g)]

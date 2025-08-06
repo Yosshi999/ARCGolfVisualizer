@@ -1,0 +1,1 @@
+def p(g):e=enumerate;I,J=zip(*[(i,j)for i,v in e(g)for j,w in e(v)if w>1]);return[[(w,2)[w<(min(I)<=i<=max(I))*(min(J)<=j<=max(J))]for j,w in e(v)]for i,v in e(g)]

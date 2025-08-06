@@ -1,0 +1,1 @@
+p=lambda g:[[w*2for w in v]for v in(g[:3]*3,g+g[2:5],g+g[:3])[(g[:3]*2!=g)*-~(g[:2]*2==g[:4])]]
