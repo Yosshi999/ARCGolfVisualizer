@@ -1,0 +1,1 @@
+r=range(10);p=lambda g:[[((i%9==0)*((j-a)%4==1+2*i//9)*5 if (j-a)%2 else g[9][a])if (a:=(next((k for k in r if g[9][k]),None)))<=j else 0 for j in r]for i in r]
