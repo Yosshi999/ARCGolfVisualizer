@@ -1,0 +1,1 @@
+r=range(10);f=lambda g:[[a if i*(1+(i<g.index([5]*10))==(a:=g[i-1][j]))else g[i][j] for j in r]for i in r];p=lambda g:g if g==(h:=f(f(g)[::-1])[::-1]) else p(h)
