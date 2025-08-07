@@ -1,0 +1,1 @@
+def p(g):h=[*map(sum,zip(*g))];return[[(5-sorted(h)[4:].index(w))%5*(a>0)for a,w in zip(v,h)]for v in g]

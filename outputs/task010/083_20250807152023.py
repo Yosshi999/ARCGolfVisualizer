@@ -1,0 +1,1 @@
+def p(g):d={};return[[v[i]and d.setdefault(i,len(d)+1)for i in range(9)]for v in g]

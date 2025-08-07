@@ -1,0 +1,1 @@
+def p(g):d={};return[[d.setdefault(i,len(d)+1)if e else e for i,e in enumerate(v)]for v in g]
