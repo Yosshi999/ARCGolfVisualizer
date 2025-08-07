@@ -1,0 +1,2 @@
+a=lambda g:next((i for i,e in enumerate(g) if e),None)
+f=lambda g,b:[*map(list,zip(*[[4 if (a(c:=[sum(v)for v in zip(*g)])<i+1<=len(v)-a(c[::-1]))*(b in v)*(e-b)else e for i,e in enumerate(v)]for v in g]))];p=lambda g:f(f(g,2),8)

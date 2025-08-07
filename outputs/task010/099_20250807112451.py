@@ -1,0 +1,1 @@
+p=lambda g:len(d:={6:6})*[[d.setdefault(i,len(d))if e==5 else e for i,e in enumerate(v)]for v in g]
