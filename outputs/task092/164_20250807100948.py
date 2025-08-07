@@ -1,0 +1,1 @@
+f=lambda g:[*map(list,zip(*[[max([k*11if v.index(k)<i<len(v)-1-v[::-1].index(k) else e for k in set(v)])%10for i,e in enumerate(v)]for v in g]))];p=lambda g:f(f(g))
