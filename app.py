@@ -150,11 +150,17 @@ def download():
     import zipfile
     from io import BytesIO
 
+    workspace = Path("submission")
+    workspace.mkdir(exist_ok=True)
+
     zip_buffer = BytesIO()
     with zipfile.ZipFile(zip_buffer, 'w', zipfile.ZIP_DEFLATED) as zip_file:
         for task in task_names:
             if (shortest_sub := get_shortest_submission(task)) is not None:
-                zip_file.write(shortest_sub, arcname=f"{task}.py")
+                workfile = workspace / f"{task}.py"
+                text = shortest_sub.read_text().replace("\r\n", "\n")
+                workfile.write_bytes(text.encode("utf-8"))
+                zip_file.write(str(workfile), arcname=f"{task}.py")
 
     zip_buffer.seek(0)
     return send_file(zip_buffer, as_attachment=True, download_name='submission.zip', mimetype='application/zip')
