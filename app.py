@@ -26,7 +26,7 @@ task_names = list(problems.keys())
 print(f"found tasks: {len(task_names)}")
 assert len(task_names) == len(summaries), "Number of tasks does not match number of summaries."
 
-def get_shortest_submission(task):
+def get_shortest_submission(task: str):
     subs = SUBMISSION / task
     if not subs.exists():
         return None
@@ -34,6 +34,9 @@ def get_shortest_submission(task):
     if not py_files:
         return None
     return min(py_files, key=lambda x: int(x.stem.split('_')[0]))  # shortest submission
+
+def normalize_code(code: str) -> str:
+    return code.strip().replace("\r\n", "\n")
 
 @app.route('/')
 def index():
@@ -43,7 +46,7 @@ def index():
         shortest_sub = get_shortest_submission(task)
         if shortest_sub:
             exists = True
-            code = shortest_sub.stat().st_size
+            code = len(normalize_code(shortest_sub.read_text()))
             score = max(1, 2500 - code)
         else:
             exists = False
@@ -96,8 +99,7 @@ def submit():
     data = request.json
     task: str = data["task"]
     code: str = data["code"]
-    code = code.strip()
-    code = code.replace("\r\n", "\n")  # Normalize line endings
+    code = normalize_code(code)
     if task not in problems:
         return jsonify({
             "success": False,
@@ -158,7 +160,7 @@ def download():
         for task in task_names:
             if (shortest_sub := get_shortest_submission(task)) is not None:
                 workfile = workspace / f"{task}.py"
-                text = shortest_sub.read_text().replace("\r\n", "\n")
+                text = normalize_code(shortest_sub.read_text())
                 workfile.write_bytes(text.encode("utf-8"))
                 zip_file.write(str(workfile), arcname=f"{task}.py")
 
