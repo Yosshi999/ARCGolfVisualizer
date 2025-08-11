@@ -1,0 +1,2 @@
+f=lambda g,q:(s:=0,[[s:=s*2+(x==q)for x in v]for v in g],s)[2]
+p=lambda g:(g:=[(v + [5]) for v in g],s:=f(g,2),s:=s//(s&-s),t:=f(g,0),r:=(1<<95|1<<70)*(t%97 in[31,51]),t:=t^r,m:=t,u:=0,[(t:=t-(s*((s&t)==s)),s:=s*2) for _ in range(200)],u:=t^m,b:=(1<<109),[[(2 if (u&b,b:=b//2)[0] else w) for w in v][:-1]for v in g])[-1]
