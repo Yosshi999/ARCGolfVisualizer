@@ -6,7 +6,7 @@ import copy
 from datetime import datetime
 import traceback
 import sys
-from get_shortest import get_task_min_bytes
+from get_global_shortest import get_global_shortests
 
 app = Flask(__name__)
 PROBLEM = Path(__file__).parent / 'problems'
@@ -14,8 +14,8 @@ SUBMISSION = Path(__file__).parent / 'outputs'
 SUBMISSION.mkdir(exist_ok=True)
 
 # Cache management
-shortest_cache = {}
-cache_file = Path("shortest_cache.json")
+global_shortest_cache = {}
+cache_file = Path("global_shortest_cache.json")
 
 def load_cache():
     """Load cache from file on startup"""
@@ -27,19 +27,19 @@ def save_cache(data):
     """Save cache to file"""
     cache_file.write_text(json.dumps(data, indent=2))
 
-def get_cached_shortest():
-    """Get cached shortest data"""
-    return shortest_cache
+def get_cached_global_shortest():
+    """Get cached global shortest data"""
+    return global_shortest_cache
 
-def sync_shortest_data():
-    """Sync shortest data from Google Sheets"""
-    fresh_data = get_task_min_bytes()
-    shortest_cache.update(fresh_data)
-    save_cache(shortest_cache)
+def sync_global_shortest_data():
+    """Sync global shortest data from Google Sheets"""
+    fresh_data = get_global_shortests()
+    global_shortest_cache.update(fresh_data)
+    save_cache(global_shortest_cache)
     return fresh_data
 
 # Load cache on startup
-shortest_cache = load_cache()
+global_shortest_cache = load_cache()
 summaries = []
 for line in Path("claude_summary.tsv").read_text(encoding="utf-8").strip().split("\n")[1:]:
     func, hardness = line.split("\t")
@@ -55,7 +55,7 @@ task_names = list(problems.keys())
 print(f"found tasks: {len(task_names)}")
 assert len(task_names) == len(summaries), "Number of tasks does not match number of summaries."
 
-def get_shortest_submission(task: str):
+def get_local_shortest_submission(task: str):
     subs = SUBMISSION / task
     if not subs.exists():
         return None
@@ -71,10 +71,9 @@ def normalize_code(code: str) -> str:
 def index():
     tasks_info = []
     overall_score = 0
-    shortests = get_cached_shortest()
-    # print(f"shortests: {shortests}")
+    global_shortest_bytes = get_cached_global_shortest()
     for i, task in enumerate(task_names):
-        shortest_sub = get_shortest_submission(task)
+        shortest_sub = get_local_shortest_submission(task)
         if shortest_sub:
             exists = True
             code = len(normalize_code(shortest_sub.read_text()))
@@ -88,7 +87,7 @@ def index():
             "exists": exists,
             "summary": summaries[i][0],
             "hardness": summaries[i][1],
-            "shortest": shortests.get(task, float('inf')),
+            "global_shortest": global_shortest_bytes.get(task, float('inf')),
             "size": code,
             "score": score,
         })
@@ -121,11 +120,11 @@ def collect_hints(problem):
 def problem(task):
     if task not in problems:
         return jsonify({"error": "Task not found"}), 404
-    shortest_sub = get_shortest_submission(task)
-    shortest_pub = get_cached_shortest().get(task, float('inf'))
+    global_shortest_byte = get_cached_global_shortest().get(task, float('inf'))
+    shortest_sub = get_local_shortest_submission(task)
     code = shortest_sub.read_text() if shortest_sub else ""
     hints = collect_hints(problems[task])
-    return render_template('problem.html', task=task, problem=problems[task], code=code, hints=hints, summary=summaries[task_names.index(task)][0], hardness=summaries[task_names.index(task)][1], shortest=shortest_pub)
+    return render_template('problem.html', task=task, problem=problems[task], code=code, hints=hints, summary=summaries[task_names.index(task)][0], hardness=summaries[task_names.index(task)][1], global_shortest=global_shortest_byte)
 
 @app.post('/submit')
 def submit():
@@ -139,7 +138,7 @@ def submit():
             "error_type": "task_not_found",
             "error_message": "Task not found",
         }), 404
-    old_code = get_shortest_submission(task).read_text() if get_shortest_submission(task) else None
+    old_code = get_local_shortest_submission(task).read_text() if get_local_shortest_submission(task) else None
 
     mismatch = []
     try:
@@ -191,7 +190,7 @@ def download():
     zip_buffer = BytesIO()
     with zipfile.ZipFile(zip_buffer, 'w', zipfile.ZIP_DEFLATED) as zip_file:
         for task in task_names:
-            if (shortest_sub := get_shortest_submission(task)) is not None:
+            if (shortest_sub := get_local_shortest_submission(task)) is not None:
                 workfile = workspace / f"{task}.py"
                 text = normalize_code(shortest_sub.read_text())
                 workfile.write_bytes(text.encode("utf-8"))
@@ -200,10 +199,10 @@ def download():
     zip_buffer.seek(0)
     return send_file(zip_buffer, as_attachment=True, download_name='submission.zip', mimetype='application/zip')
 
-@app.route('/sync_shortest', methods=['POST'])
-def sync_shortest():
+@app.route('/sync_global_shortest', methods=['POST'])
+def sync_global_shortest():
     try:
-        fresh_data = sync_shortest_data()
+        fresh_data = sync_global_shortest_data()
         return jsonify({"success": True, "count": len(fresh_data), "message": "Successfully synced shortest data"})
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 500

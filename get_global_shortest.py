@@ -5,7 +5,7 @@ from io import StringIO
 # https://www.kaggle.com/competitions/google-code-golf-2025/discussion/596679
 CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ7RUqwrtwRD2EJbgMRrccAHkwUQZgFe2fsROCR1WV5LA1naxL0pU2grjQpcWC2HU3chdGwIOUpeuoK/pub?output=csv"
 
-def get_task_min_bytes():
+def get_global_shortests():
     response = requests.get(CSV_URL)
     response.raise_for_status()
     df = pd.read_csv(StringIO(response.text))
