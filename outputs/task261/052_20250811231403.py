@@ -1,0 +1,1 @@
+p=lambda g:eval(f'{g[-1:]+g[:-1]}'.replace('8','2'))

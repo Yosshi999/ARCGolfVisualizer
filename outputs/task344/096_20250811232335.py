@@ -1,0 +1,1 @@
+f=lambda g:[*map(list,zip(*eval(f'{g}'.replace('2, 3','0, 8'))))][::-1];p=lambda g:f(f(f(f(g))))
