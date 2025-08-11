@@ -1,0 +1,1 @@
+p=lambda g:[[any(l-r for l,_,r in g)*6+1]]

@@ -1,0 +1,1 @@
+p=lambda g:[[any(v[0]-v[2]for v in g)*6+1]]
