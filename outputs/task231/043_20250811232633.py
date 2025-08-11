@@ -1,0 +1,1 @@
+p=lambda g:[(9*v[:6])[:2*len(v)]for v in g]

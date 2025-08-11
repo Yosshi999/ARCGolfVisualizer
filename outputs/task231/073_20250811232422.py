@@ -1,0 +1,1 @@
+p=lambda g:[[v[i%(2+(v[:3]==v[3:6]))]for i in range(2*len(v))]for v in g]
