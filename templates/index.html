@@ -30,9 +30,19 @@
         <div class="col-md-10 main-content">
             <div id="page-content">
                 <div id="problems-page" class="p-4">
-                    <h2 class="mb-4"><a href="/download">👉Download submission.zip</a></h2>
-                    <h2 class="mb-4">Problems</h2>
-                    <h3 class="mb-4">Current Estimated Score: {{ overall_score }}</h3>
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div>
+                            <h2><a href="/download">👉Download submission.zip</a></h2>
+                            <h2>Problems</h2>
+                            <h3>Current Estimated Score: {{ overall_score }}</h3>
+                        </div>
+                        <div>
+                            <button id="sync-shortest-btn" class="btn btn-primary">
+                                <span id="sync-btn-text">Sync shortest</span>
+                                <span id="sync-spinner" class="spinner-border spinner-border-sm ms-2 d-none" role="status"></span>
+                            </button>
+                        </div>
+                    </div>
                     <div class="table-responsive">
                         <table class="table table-striped">
                             <thead>
@@ -40,6 +50,7 @@
                                     <th>Task <a href="/?sort=name">▼</a></th>
                                     <th>Summary</th>
                                     <th>Hardness <a href="/?sort=hardness">▼</a></th>
+                                    <th>Shortest <a href="/?sort=global_shortest">▼</a></th>
                                     <th>Size</th>
                                     <th>Score <a href="/?sort=score">▼</a></th>
                                 </tr>
@@ -52,6 +63,7 @@
                                     </td>
                                     <td> {{ task.summary }} </td>
                                     <td> {{ task.hardness }} </td>
+                                    <td> {{ task.global_shortest }} bytes </td>
                                     <td>
                                         {% if task.exists %}
                                             {{ task.size }} bytes
@@ -70,5 +82,42 @@
                 </div>
             </div>
         </div>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+        <script>
+        document.getElementById('sync-shortest-btn').addEventListener('click', function() {
+            const btn = this;
+            const btnText = document.getElementById('sync-btn-text');
+            const spinner = document.getElementById('sync-spinner');
+            
+            btn.disabled = true;
+            btnText.textContent = 'Syncing...';
+            spinner.classList.remove('d-none');
+            
+            fetch('/sync_global_shortest', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert(`Success! Synced ${data.count} task shortest data.`);
+                    location.reload();
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            })
+            .catch(error => {
+                alert('Error: ' + error.message);
+            })
+            .finally(() => {
+                btn.disabled = false;
+                btnText.textContent = 'Sync shortest';
+                spinner.classList.add('d-none');
+            });
+        });
+        </script>
     </body>
 </html>
