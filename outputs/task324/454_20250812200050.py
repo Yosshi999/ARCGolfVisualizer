@@ -1,0 +1,3 @@
+e=enumerate
+l=lambda v,x:(v[1:][::-1]+v)[x+len(v)-2:][:3]
+p=lambda g:(a:=sum(g,[]),c:=sorted(a,key=a.count)[:2],print("st"),m:=[],t:={},[[(s:=l(v,x)[::2]+l([*map(list,zip(*g))][x],y),m:=m+sum([[(t:=t|{a:s+t.get(a,[])}),(y-d,x-d),(y-d,x+d)][1:] for d in range(-50,50) if a in c],[])) for x,a in e(v)]for y,v in e(g)],t:={max(t[k],key=t[k].count):k for k in t}|{k:k for k in t},print(t,"fin"),[[t[a] if(y,x)in m else a for x,a in e(v)]for y,v in e(g)])[-1]
