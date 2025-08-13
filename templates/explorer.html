@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Problem Explorer - AnaRChy Golf</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <style>
+        .stat-card {
+            text-align: center;
+            padding: 15px;
+            border-radius: 8px;
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+        }
+        
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #0d6efd;
+        }
+        
+        .stat-value.text-purple {
+            color: #9b59b6;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: #6c757d;
+            margin-top: 5px;
+        }
+        
+        .control-panel {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        #plot-container {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            min-height: 650px;
+        }
+        
+        .legend-custom {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .legend-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            border: 1px solid #dee2e6;
+        }
+        
+        .navbar-nav .nav-link.active-page {
+            background-color: rgba(255,255,255,0.1);
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="/">AnaRChy Golf</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Problems</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active-page" href="/explorer">🎯 Explorer</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>🎯 Problem Explorer</h2>
+        </div>
+        
+        <div class="control-panel">
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <label class="form-label">スケール:</label>
+                    <select id="scale-select" class="form-select" onchange="updatePlot()">
+                        <option value="linear">リニア</option>
+                        <option value="log">対数</option>
+                    </select>
+                </div>
+                
+                <div class="col-md-3">
+                    <label class="form-label">表示モード:</label>
+                    <select id="view-mode" class="form-select" onchange="updatePlot()">
+                        <option value="scatter">散布図</option>
+                        <option value="delta">差分ビュー</option>
+                        <option value="ratio">改善率ビュー</option>
+                    </select>
+                </div>
+                
+                <div class="col-md-3">
+                    <label class="form-label">フィルター:</label>
+                    <select id="filter-select" class="form-select" onchange="updatePlot()">
+                        <option value="all">すべて</option>
+                        <option value="submitted">提出済みのみ</option>
+                        <option value="unsubmitted">未提出のみ</option>
+                        <option value="winning">優勝中 (Local < Global)</option>
+                        <option value="perfect">完全一致</option>
+                        <option value="close">僅差 (≤5B)</option>
+                        <option value="improvable">改善可能 (>5B)</option>
+                    </select>
+                </div>
+                
+                <div class="col-md-3">
+                    <label class="form-label">色分け:</label>
+                    <select id="color-mode" class="form-select" onchange="updatePlot()">
+                        <option value="delta">差分</option>
+                        <option value="hardness">難易度</option>
+                        <option value="ratio">改善率</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        
+        <div id="plot-container"></div>
+        
+        <div class="row g-3 mt-4">
+            <div class="col">
+                <div class="stat-card">
+                    <div class="stat-value" id="stat-submitted">0</div>
+                    <div class="stat-label">提出済み</div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="stat-card">
+                    <div class="stat-value text-purple" id="stat-winning">0</div>
+                    <div class="stat-label">優勝中</div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="stat-card">
+                    <div class="stat-value" id="stat-perfect">0</div>
+                    <div class="stat-label">完全一致</div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="stat-card">
+                    <div class="stat-value" id="stat-close">0</div>
+                    <div class="stat-label">僅差 (≤5B)</div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="stat-card">
+                    <div class="stat-value" id="stat-avg-delta">0</div>
+                    <div class="stat-label">平均差分</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="legend-custom">
+            <div class="legend-item">
+                <div class="legend-dot" style="background: #9b59b6;"></div>
+                <span>優勝 (Local < Global)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot" style="background: #36a2eb;"></div>
+                <span>完全一致 (0B差)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot" style="background: #00d084;"></div>
+                <span>僅差 (1-5B)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot" style="background: #ffce56;"></div>
+                <span>改善可能 (6-20B)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot" style="background: #ff6384;"></div>
+                <span>要改善 (>20B)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot" style="background: #999;"></div>
+                <span>未提出</span>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // サーバーから渡されたデータ
+        const tasksData = JSON.parse('{{ tasks_data | tojson | safe }}');
+        
+        function getColorByDelta(delta, submitted) {
+            if (!submitted) return '#999999';
+            if (delta < 0) return '#9b59b6';  // 我々が勝っている（紫）
+            if (delta === 0) return '#36a2eb';
+            if (delta <= 5) return '#00d084';
+            if (delta <= 20) return '#ffce56';
+            return '#ff6384';
+        }
+        
+        function getColorByHardness(hardness) {
+            const colors = ['#00d084', '#36a2eb', '#ffce56', '#ff6384', '#cc65fe'];
+            return colors[Math.min(hardness - 1, 4)];
+        }
+        
+        function getColorByRatio(ratio) {
+            if (ratio < 1) return '#9b59b6';  // 優勝
+            if (ratio === 1) return '#36a2eb';
+            if (ratio <= 1.05) return '#00d084';
+            if (ratio <= 1.2) return '#ffce56';
+            return '#999999';
+        }
+        
+        function updateStats() {
+            let submitted = 0;
+            let perfect = 0;
+            let close = 0;
+            let winning = 0;
+            let totalDelta = 0;
+            let deltaCount = 0;
+            
+            tasksData.forEach(task => {
+                if (task.local !== null) {
+                    submitted++;
+                    const delta = task.local - task.global;
+                    
+                    if (delta < 0) winning++;
+                    else if (delta === 0) perfect++;
+                    else if (delta <= 5) close++;
+                }
+
+                let clippedLocal = task.local !== null ? Math.min(task.local, 2499) : 2500;
+                totalDelta += clippedLocal - task.global;
+                deltaCount++;
+            });
+            
+            document.getElementById('stat-submitted').textContent = submitted;
+            document.getElementById('stat-winning').textContent = winning;
+            document.getElementById('stat-perfect').textContent = perfect;
+            document.getElementById('stat-close').textContent = close;
+            document.getElementById('stat-avg-delta').textContent = 
+                deltaCount > 0 ? (totalDelta / deltaCount).toFixed(1) + '点' : 'N/A';
+        }
+        
+        function updatePlot() {
+            const scaleMode = document.getElementById('scale-select').value;
+            const viewMode = document.getElementById('view-mode').value;
+            const filterMode = document.getElementById('filter-select').value;
+            const colorMode = document.getElementById('color-mode').value;
+            
+            // フィルタリング
+            let filteredData = tasksData.filter(task => {
+                switch(filterMode) {
+                    case 'submitted':
+                        return task.local !== null;
+                    case 'unsubmitted':
+                        return task.local === null;
+                    case 'winning':
+                        return task.local !== null && task.local < task.global;
+                    case 'perfect':
+                        return task.local !== null && task.local === task.global;
+                    case 'close':
+                        return task.local !== null && task.local - task.global <= 5 && task.local - task.global > 0;
+                    case 'improvable':
+                        return task.local !== null && task.local - task.global > 5;
+                    default:
+                        return true;
+                }
+            });
+            
+            // データ準備（値のクリッピング追加）
+            let xData, yData, textData, hoverData;
+            
+            xData = filteredData.map(t => t.global);
+            // 2499以上は2499に、NAは2500にクリップ
+            yData = filteredData.map(t => {
+                if (t.local === null) return 2500;
+                return Math.min(t.local, 2499);
+            });
+            
+            if (viewMode === 'delta') {
+                xData = filteredData.map(t => t.global);
+                yData = yData.map((y, i) => y - filteredData[i].global);
+            } else if (viewMode == 'ratio') {
+                xData = filteredData.map(t => t.global);
+                yData = yData.map((y, i) => y / filteredData[i].global);
+            }
+            
+            // 色の設定
+            const colors = filteredData.map(task => {
+                if (colorMode === 'delta') {
+                    const delta = task.local !== null ? task.local - task.global : null;
+                    return getColorByDelta(delta, task.local !== null);
+                } else if (colorMode === 'hardness') {
+                    return getColorByHardness(task.hardness);
+                } else { // ratio
+                    const ratio = task.local !== null ? task.local / task.global : null;
+                    return getColorByRatio(ratio);
+                }
+            });
+            
+            // ホバーテキスト
+            hoverData = filteredData.map(task => {
+                const delta = task.local !== null ? task.local - task.global : 'N/A';
+                const ratio = task.local !== null ? (task.local / task.global * 100 - 100).toFixed(1) : 'N/A';
+                const actualLocal = task.local !== null ? task.local + 'B' : '未提出';
+                
+                return `<b>${task.name}</b><br>` +
+                       `難易度: ${task.hardness}<br>` +
+                       `Global: ${task.global}B<br>` +
+                       `Local: ${actualLocal}<br>` +
+                       `差分: ${delta !== 'N/A' ? (delta < 0 ? '🏆 ' : '') + delta + 'B' : delta} (${ratio !== 'N/A' ? ratio + '%' : ''})<br>` +
+                       `<i>${task.summary}</i>`;
+            });
+            
+            // プロット作成
+            const trace = {
+                x: xData,
+                y: yData,
+                mode: 'markers',
+                type: 'scatter',
+                marker: {
+                    size: 10,
+                    color: colors,
+                    line: {
+                        color: 'white',
+                        width: 1
+                    },
+                    opacity: 0.8
+                },
+                text: filteredData.map(t => t.name),
+                hovertemplate: hoverData.map(h => h + '<extra></extra>'),
+                hoverlabel: {
+                    bgcolor: 'white',
+                    bordercolor: '#333',
+                    font: {size: 12}
+                }
+            };
+
+            const minX = Math.log10(Math.min(...xData.filter(x => x > 0))) - 0.1;
+            const maxX = Math.log10(Math.max(...xData)) + 0.1;
+            
+            const layout = {
+                title: {
+                    text: viewMode === 'scatter' ? 'Global vs Local Shortest' : 
+                          viewMode === 'delta' ? 'Delta from Global Shortest' : 
+                          'Improvement Ratio',
+                    font: {size: 18}
+                },
+                xaxis: {
+                    title: 'Global Shortest (bytes)',
+                    type: scaleMode,
+                    gridcolor: '#e0e0e0',
+                    range: scaleMode === 'log' ? [minX, maxX] : undefined,
+                },
+                yaxis: {
+                    title: viewMode === 'scatter' ? 'Local Shortest (bytes)' :
+                           viewMode === 'delta' ? 'Delta (bytes)' :
+                           'Ratio (Local/Global)',
+                    type: viewMode === 'scatter' ? scaleMode : 'linear',
+                    gridcolor: '#e0e0e0',
+                    range: viewMode === 'scatter' && scaleMode === 'linear' ? [0, 2600] : undefined
+                },
+                hovermode: 'closest',
+                height: 650,
+                paper_bgcolor: 'white',
+                plot_bgcolor: 'white',
+                margin: {t: 50, r: 50, b: 70, l: 70},
+                autosize: true
+            };
+            
+            // y=x線を追加（散布図モードのみ）
+            const shapes = [];
+            const annotations = [];
+            
+            if (viewMode === 'scatter') {
+                shapes.push({
+                    type: 'line',
+                    x0: 18,
+                    y0: 18,
+                    x1: 600,
+                    y1: 600,
+                    line: {
+                        color: 'rgba(128, 128, 128, 0.5)',
+                        width: 2,
+                        dash: 'dash'
+                    }
+                });
+                // NAライン
+                shapes.push({
+                    type: 'line',
+                    x0: 0,
+                    y0: 2500,
+                    x1: 600,
+                    y1: 2500,
+                    line: {
+                        color: 'rgba(153, 153, 153, 0.3)',
+                        width: 1,
+                        dash: 'dot'
+                    }
+                });
+                annotations.push({
+                    x: 650,
+                    y: 2500,
+                    text: '未提出',
+                    showarrow: false,
+                    font: { size: 11, color: '#999' }
+                });
+            } else if (viewMode === 'delta') {
+                // y=0線
+                shapes.push({
+                    type: 'line',
+                    x0: 0,
+                    y0: 0,
+                    x1: 600,
+                    y1: 0,
+                    line: {
+                        color: 'rgba(0, 208, 132, 0.5)',
+                        width: 2,
+                        dash: 'solid'
+                    }
+                });
+            } else if (viewMode === 'ratio') {
+                // y=1線
+                shapes.push({
+                    type: 'line',
+                    x0: 0,
+                    y0: 1,
+                    x1: 600,
+                    y1: 1,
+                    line: {
+                        color: 'rgba(0, 208, 132, 0.5)',
+                        width: 2,
+                        dash: 'solid'
+                    }
+                });
+            }
+            
+            layout.shapes = shapes;
+            layout.annotations = annotations;
+            
+            // プロット描画
+            Plotly.newPlot('plot-container', [trace], layout, {
+                responsive: true,
+                displayModeBar: true,
+                modeBarButtonsToRemove: ['select2d', 'lasso2d'],
+                displaylogo: false
+            });
+            
+            // クリックイベント
+            document.getElementById('plot-container').on('plotly_click', function(data) {
+                const point = data.points[0];
+                const taskName = point.text;
+                window.open(`/problem/${taskName}`, '_blank');
+            });
+        }
+        
+        // 初期化
+        updateStats();
+        updatePlot();
+        
+        // ウィンドウリサイズ時の再描画
+        let resizeTimer;
+        window.addEventListener('resize', function() {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(function() {
+                Plotly.Plots.resize('plot-container');
+            }, 250);
+        });
+    </script>
+</body>
+</html>
