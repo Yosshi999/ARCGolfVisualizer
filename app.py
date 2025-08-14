@@ -206,3 +206,39 @@ def sync_global_shortest():
         return jsonify({"success": True, "count": len(fresh_data), "message": "Successfully synced shortest data"})
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 500
+
+@app.route('/explorer')
+def explorer():
+    """Explorer page to view all tasks and their submissions."""
+    tasks_data = []
+    global_shortest_bytes = get_cached_global_shortest()
+    
+    for i, task in enumerate(task_names):
+        shortest_sub = get_local_shortest_submission(task)
+        
+        if shortest_sub:
+            local_bytes = len(normalize_code(shortest_sub.read_text()))
+        else:
+            local_bytes = None
+        
+        global_bytes = global_shortest_bytes.get(task, 9999)
+        
+        task_info = {
+            "name": task,
+            "global": global_bytes,
+            "local": local_bytes,
+            "hardness": summaries[i][1],
+            "summary": summaries[i][0][:50] + "..." if len(summaries[i][0]) > 50 else summaries[i][0],
+            "submitted": local_bytes is not None
+        }
+        
+        if local_bytes is not None:
+            task_info["delta"] = local_bytes - global_bytes
+            task_info["ratio"] = local_bytes / global_bytes if global_bytes > 0 else float('inf')
+        else:
+            task_info["delta"] = None
+            task_info["ratio"] = None
+        
+        tasks_data.append(task_info)
+    
+    return render_template('explorer.html', tasks_data=tasks_data)
