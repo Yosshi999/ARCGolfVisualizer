@@ -1,0 +1,1 @@
+p=lambda g:[[v[i]|v[~i]for i in range(4)]for v in g]

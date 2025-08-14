@@ -1,0 +1,1 @@
+p=lambda g:[[*map(max,v,v[:4:-1])]for v in g]

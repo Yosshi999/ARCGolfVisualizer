@@ -1,0 +1,1 @@
+p=lambda g:[[max(a)&8^8for a in zip(v,v[4:])]for v in g]

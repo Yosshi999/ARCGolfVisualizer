@@ -1,0 +1,1 @@
+p=lambda g:[[max(a)and 6for a in zip(v,v[3:])]for v in g]

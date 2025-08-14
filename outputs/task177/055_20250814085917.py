@@ -1,0 +1,1 @@
+p=lambda g:[[*filter(int,v)][::-1]for v in g if sum(v)]

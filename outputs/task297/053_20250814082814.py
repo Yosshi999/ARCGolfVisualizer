@@ -1,0 +1,1 @@
+p=lambda g:g[:2]+[[h]*len(g[0])for h,*_ in zip(*g)]*2

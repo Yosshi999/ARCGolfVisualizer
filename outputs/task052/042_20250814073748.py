@@ -1,0 +1,1 @@
+p=lambda g:[[5*(len({*v})<2)]*3for v in g]
