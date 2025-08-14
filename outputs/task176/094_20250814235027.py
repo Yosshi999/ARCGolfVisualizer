@@ -1,0 +1,1 @@
+e=enumerate;p=lambda g:[[(w,4)[(4<j%12<8,j%6<1,-~j%12<3)[i%3]]for j,w in e(v)]for i,v in e(g)]

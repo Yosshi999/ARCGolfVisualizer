@@ -1,0 +1,1 @@
+p=lambda g:[[a for*b,a in zip(*g,x)if sum(b)]for x in g if sum(x)]

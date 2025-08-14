@@ -1,0 +1,1 @@
+p=lambda g:[h for i in[0,3,6]if[*zip(*(h:=g[i:i+3]))]!=[*map(tuple,h)]][0]

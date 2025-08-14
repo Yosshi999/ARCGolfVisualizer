@@ -1,0 +1,1 @@
+p=lambda g:[[1]*(s:=sum(str(v).count('1, 1')for v in g)//2)+[0]*(5-s)]

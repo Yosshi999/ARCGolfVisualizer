@@ -1,0 +1,1 @@
+p=lambda g:[[v[i]or v[i+5]or v[i+10]for i in[0,1,2,3]]for v in g]

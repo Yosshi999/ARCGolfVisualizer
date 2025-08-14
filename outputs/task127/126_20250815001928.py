@@ -1,0 +1,1 @@
+e=enumerate;p=lambda g:[[min({*sum([w[max(j-1,0):j+2]for w in g[max(0,i-1):i+2]],[])}-{0})%5+5for j,_ in e(v)]for i,v in e(g)]

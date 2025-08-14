@@ -1,0 +1,1 @@
+p=lambda g:[[[w,2][sum(v[i-1:i+2])//2]for i,w in enumerate(v)]for v in g]

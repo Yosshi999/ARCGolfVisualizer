@@ -1,0 +1,1 @@
+def p(g):h=[[a for*w,a in zip(*g,v)if sum(w)]for v in g if sum(v)];return[[a&b for a in v for b in w]for v in h for w in h]

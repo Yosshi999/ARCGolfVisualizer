@@ -1,0 +1,1 @@
+p=lambda g:[[(8*(f:=(sum(w)>2)),2^6*f)[2in v]for w in zip(*g)]for v in g]

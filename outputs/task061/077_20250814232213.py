@@ -1,0 +1,1 @@
+r=range(18);p=lambda g:[[g[i][j]or i*j%max(sum(g,[]))+1for j in r]for i in r]

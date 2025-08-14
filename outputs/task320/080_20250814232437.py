@@ -1,0 +1,1 @@
+p=lambda g:[*map(list,zip(*[v[:len(v)-(s:=sum(v)//4)]+s*(8,)for v in zip(*g)]))]

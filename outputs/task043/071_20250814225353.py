@@ -1,0 +1,1 @@
+p=lambda g:[[(a,2)[sum(v)==sum(w)==5^a]for*w,a in zip(*g,v)]for v in g]
