@@ -1,0 +1,1 @@
+def p(g):k=sum(g,[]).index(5);i=k//10;j=k%10;return[v[j-1:j+2]for v in g[i+1:i+4]]

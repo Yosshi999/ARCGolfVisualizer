@@ -1,0 +1,1 @@
+r=[0,3,6];p=lambda g:[[max({*sum([v[j:j+3]for v in g[i:i+3]],[])}-{5})for j in r]for i in r]

@@ -1,0 +1,1 @@
+p=lambda g:g[:-1]+[[4*(2*max(v)!=sum(v))for v in zip(*g)]]

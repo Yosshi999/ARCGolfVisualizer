@@ -1,0 +1,1 @@
+p=lambda g:[[w*(len(v)==2*i+1)for i,w in enumerate(v)]for v in g]

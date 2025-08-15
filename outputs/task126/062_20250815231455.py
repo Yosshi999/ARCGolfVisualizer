@@ -1,0 +1,1 @@
+p=lambda g:g[:-1]+[[4*(v.count(0)==len(v)-1)for v in zip(*g)]]

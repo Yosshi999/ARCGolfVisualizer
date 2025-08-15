@@ -1,0 +1,1 @@
+p=lambda g:[[max({*c}-{4})for c in zip(a,a[::-1],b,b[::-1])]for a,b in zip(g,g[::-1])]

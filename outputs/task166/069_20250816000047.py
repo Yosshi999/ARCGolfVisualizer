@@ -1,0 +1,1 @@
+p=lambda g:[[max(a,2*(8in v)*(8in w))for*w,a in zip(*g,v)]for v in g]

@@ -1,0 +1,1 @@
+p=lambda g:g[:-1]+[[4*(max(v)==sum(v)>0)for v in zip(*g)]]
