@@ -360,8 +360,8 @@
                 }
             };
 
-            const minX = Math.log10(Math.min(...xData.filter(x => x > 0))) - 0.1;
-            const maxX = Math.log10(Math.max(...xData)) + 0.1;
+            const minLogX = Math.log10(Math.min(...xData.filter(x => x > 0))) - 0.1;
+            const maxLogX = Math.log10(Math.max(...xData)) + 0.1;
             
             const layout = {
                 title: {
@@ -374,7 +374,7 @@
                     title: 'Global Shortest (bytes)',
                     type: scaleMode,
                     gridcolor: '#e0e0e0',
-                    range: scaleMode === 'log' ? [minX, maxX] : undefined,
+                    range: scaleMode === 'log' ? [minLogX, maxLogX] : undefined,
                 },
                 yaxis: {
                     title: viewMode === 'scatter' ? 'Local Shortest (bytes)' :
@@ -395,15 +395,15 @@
             // y=x線を追加（散布図モードのみ）
             const shapes = [];
             const annotations = [];
-            const xMax = Math.max(...xData);
+            const maxX = Math.max(...xData);
             
             if (viewMode === 'scatter') {
                 shapes.push({
                     type: 'line',
                     x0: 18,
                     y0: 18,
-                    x1: xMax,
-                    y1: xMax,
+                    x1: maxX,
+                    y1: maxX,
                     line: {
                         color: 'rgba(128, 128, 128, 0.5)',
                         width: 2,
@@ -415,7 +415,7 @@
                     type: 'line',
                     x0: 0,
                     y0: 2500,
-                    x1: xMax,
+                    x1: maxX,
                     y1: 2500,
                     line: {
                         color: 'rgba(153, 153, 153, 0.3)',
@@ -424,7 +424,7 @@
                     }
                 });
                 annotations.push({
-                    x: xMax * 1.05,
+                    x: maxX * 1.05,
                     y: 2500,
                     text: '未提出',
                     showarrow: false,
@@ -436,7 +436,7 @@
                     type: 'line',
                     x0: 0,
                     y0: 0,
-                    x1: xMax,
+                    x1: maxX,
                     y1: 0,
                     line: {
                         color: 'rgba(0, 208, 132, 0.5)',
@@ -450,7 +450,7 @@
                     type: 'line',
                     x0: 0,
                     y0: 1,
-                    x1: xMax,
+                    x1: maxX,
                     y1: 1,
                     line: {
                         color: 'rgba(0, 208, 132, 0.5)',
