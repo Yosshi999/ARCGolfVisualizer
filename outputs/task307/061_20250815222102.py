@@ -1,0 +1,1 @@
+p=lambda g:[sum([[w]*2for w in v],[])for v in g for _ in'00']

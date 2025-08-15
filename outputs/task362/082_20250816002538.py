@@ -1,0 +1,1 @@
+def p(g):o=sum(g,[]).count(5);return[v[o:]+v[:1]+v[:o]for*v,t in g[-o:]*2+g[o:-o]]

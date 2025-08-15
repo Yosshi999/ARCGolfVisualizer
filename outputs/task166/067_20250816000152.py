@@ -1,0 +1,1 @@
+p=lambda g:[[a or 2*(8in v)*(8in w)for*w,a in zip(*g,v)]for v in g]

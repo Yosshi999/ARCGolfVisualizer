@@ -1,0 +1,1 @@
+p=lambda g:[[g[6][w<1]for w in[0]+v]for h,*v in g]

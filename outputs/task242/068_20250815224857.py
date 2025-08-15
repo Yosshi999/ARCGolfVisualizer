@@ -1,0 +1,1 @@
+p=lambda g:[[v[~j]for j,w in enumerate(v)if w<1]for v in g if 0in v]

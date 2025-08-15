@@ -1,0 +1,1 @@
+p=lambda g:[[(a+b<1)*2for a,b in zip(g[i],g[i+4])]for i in[0,1,2,3]]

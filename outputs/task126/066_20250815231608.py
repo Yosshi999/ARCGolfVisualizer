@@ -1,0 +1,1 @@
+p=lambda g:g[:-1]+[[4*(len([*filter(int,v)])==1)for v in zip(*g)]]

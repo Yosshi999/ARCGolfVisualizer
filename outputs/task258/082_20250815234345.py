@@ -1,0 +1,1 @@
+p=lambda g:[[[b,2][(a+b+c)//2]for a,b,c in zip([0]+v[:-1],v,v[1:]+[0])]for v in g]

@@ -1,0 +1,1 @@
+p=lambda g:[[u[i]*u[i+4]*2for i in[0,1,2]]for u in g]
