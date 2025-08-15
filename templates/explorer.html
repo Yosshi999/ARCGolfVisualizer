@@ -395,14 +395,15 @@
             // y=x線を追加（散布図モードのみ）
             const shapes = [];
             const annotations = [];
+            const xMax = Math.max(...xData);
             
             if (viewMode === 'scatter') {
                 shapes.push({
                     type: 'line',
                     x0: 18,
                     y0: 18,
-                    x1: 600,
-                    y1: 600,
+                    x1: xMax,
+                    y1: xMax,
                     line: {
                         color: 'rgba(128, 128, 128, 0.5)',
                         width: 2,
@@ -414,7 +415,7 @@
                     type: 'line',
                     x0: 0,
                     y0: 2500,
-                    x1: 600,
+                    x1: xMax,
                     y1: 2500,
                     line: {
                         color: 'rgba(153, 153, 153, 0.3)',
@@ -423,7 +424,7 @@
                     }
                 });
                 annotations.push({
-                    x: 650,
+                    x: xMax * 1.05,
                     y: 2500,
                     text: '未提出',
                     showarrow: false,
@@ -435,7 +436,7 @@
                     type: 'line',
                     x0: 0,
                     y0: 0,
-                    x1: 600,
+                    x1: xMax,
                     y1: 0,
                     line: {
                         color: 'rgba(0, 208, 132, 0.5)',
@@ -449,7 +450,7 @@
                     type: 'line',
                     x0: 0,
                     y0: 1,
-                    x1: 600,
+                    x1: xMax,
                     y1: 1,
                     line: {
                         color: 'rgba(0, 208, 132, 0.5)',
