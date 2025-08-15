@@ -29,7 +29,7 @@ def collect_used_globals(node: ast.FunctionDef, global_defs: dict):
             out.add(n.id)
     return out
 
-class UnfoldConstants(ast.NodeTransformer):
+class FoldConstants(ast.NodeTransformer):
     def __init__(self, constants: dict):
         super().__init__()
         self.constants = constants
@@ -69,8 +69,8 @@ def minify(source: str) -> str:
                 global_defs[alias.name] = alias
                 import_defs[node.module].add(alias.name)
 
-    # unfold constants
-    tree = UnfoldConstants(constant_defs).visit(tree)
+    # fold constants
+    tree = FoldConstants(constant_defs).visit(tree)
     
     # remove all globals that are not used
     visited_globals = set()
