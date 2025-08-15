@@ -1,4 +1,6 @@
 import ast
+from ast_unparse import Unparser
+
 
 class RemoveTypeAnnotations(ast.NodeTransformer):
     def visit_FunctionDef(self, node):
@@ -89,7 +91,23 @@ def minify(source: str) -> str:
             new_body.append(node)
     tree.body = new_body
 
-    return ast.unparse(tree)
+    # funcdef w/ single statement -> lambda definition
+    new_body = []
+    for node in tree.body:
+        if isinstance(node, ast.FunctionDef) and len(node.body) == 1 and isinstance(node.body[0], ast.Return):
+            node = ast.Assign(
+                [ast.Name(id=node.name, ctx=ast.Store())],
+                ast.Lambda(
+                    args=node.args,
+                    body=node.body[0].value,
+                ),
+                lineno=node.lineno
+            )
+        new_body.append(node)
+    tree.body = new_body
+
+    unparser = Unparser()
+    return unparser.visit(tree)
 
 if __name__ == "__main__":
     import sys
