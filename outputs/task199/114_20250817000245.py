@@ -1,0 +1,1 @@
+p=lambda g:[(g[i-1],([4,0]*9)[(h:=[*zip(*g)]).index(m:=max(h))%2:][:len(v)])[max(m[i:])>0]for i,v in enumerate(g)]

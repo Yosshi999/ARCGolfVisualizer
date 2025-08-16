@@ -1,0 +1,1 @@
+def p(g):t=sum(g,[]);m=max(t,key=t.count);c=m or max(range(1,10),key=t.count);return[[c,c]]*2

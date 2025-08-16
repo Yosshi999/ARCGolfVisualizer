@@ -1,0 +1,1 @@
+e=enumerate;p=lambda g:[(g[i-1],([4,0]*9)[(h:=[*zip(*g)]).index(max(h))%2:][:len(v)])[sum(max(g[i:]))>0]for i,v in e(g)]

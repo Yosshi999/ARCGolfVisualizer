@@ -1,0 +1,1 @@
+def p(g):return[[a&b for*A,a in zip(*g,v)for*B,b in zip(*g,w)if max(A)*max(B)]for v in g for w in g if max(v)*max(w)]

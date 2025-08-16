@@ -1,0 +1,1 @@
+def p(g):n=len(g)//2;h=[[g[0][n]*(w>0)for w in v[:n]+v[:n][::-1]]for v in g[:n]+g[n-1::-1]];return h

@@ -1,0 +1,1 @@
+e=enumerate;p=lambda g:[[g[~i][~j]for j,w in e(v)if w==3]for i,v in e(g)if 3in v]

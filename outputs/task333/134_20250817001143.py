@@ -1,0 +1,1 @@
+def p(g):exec('g[:]=[*map(list,zip(*[[(w,m:=max(v[:j+1]))[m>w<(3in v[j+1:])]for j,w in enumerate(v)]for v in g][::-1]))];'*4);return g

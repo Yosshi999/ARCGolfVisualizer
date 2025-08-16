@@ -1,0 +1,1 @@
+def p(g):h=sum(g,[]);z=sorted({*h},key=h.count)[::-1];return[*map(list,zip(*[([c]*h.count(c)+[0]*99)[:h.count(z[0])]for c in z]))]

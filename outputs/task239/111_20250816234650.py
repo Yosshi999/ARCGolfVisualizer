@@ -1,0 +1,1 @@
+def p(g):h=sum(g,[]);f=h.count;z=sorted({*h},key=f)[::-1];return[[c*(i<f(c))for c in z]for i in range(f(z[0]))]

@@ -1,0 +1,1 @@
+p=lambda g:sum([[sum([[w]*2for w in v],[])]*2for v in g],[])

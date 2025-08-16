@@ -1,0 +1,1 @@
+def p(g):n=len(g);return[(g[i-1],([4,0]*9)[(h:=[*zip(*g)]).index(max(h))%2:][:n])[sum(max(g[i:]))>0]for i in range(n)]

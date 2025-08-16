@@ -1,0 +1,1 @@
+def p(g):r=range(2*len(g));return[[g[i//2][j//2]for j in r]for i in r]

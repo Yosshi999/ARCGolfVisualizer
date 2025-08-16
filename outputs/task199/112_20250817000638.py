@@ -1,0 +1,1 @@
+p=lambda g:[(g[i-1],([4,0]*99)[(h:=[*zip(*g)]).index(m:=max(h)):][:len(g)])[max(m[i:])>0]for i in range(len(g))]
