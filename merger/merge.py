@@ -31,7 +31,7 @@ parser.add_argument("zip", type=str, help="Path to submissions.zip")
 parser.add_argument("comment", type=str, help="Short comment for the merge")
 args = parser.parse_args()
 
-REPO = Path(__file__).absolute().parent.parent
+REPO = Path(__file__).absolute().parent
 PROBLEM = REPO / 'problems'
 SUBMISSION = REPO / 'outputs'
 problems = {}
@@ -41,13 +41,35 @@ for p in sorted(PROBLEM.glob('*.json')):
         problems[p.stem] = data["train"] + data["test"] + data["arc-gen"]
 print(f"found tasks: {len(problems)}")
 
+def get_local_shortest_submission(task: str):
+    subs = SUBMISSION / task
+    print(f"found subs: {len(list(subs.glob('*.py')))} in {subs}")
+    if not subs.exists():
+        return None
+    py_files = list(subs.glob("*.py"))
+    if not py_files:
+        return None
+    return min(py_files, key=lambda x: int(x.stem.split('_')[0]))  # shortest submission
+
+def normalize_code(code: str) -> str:
+    return code.strip().replace("\r\n", "\n")
+
+def get_local_shortest_bytes(task: str):
+    sub = get_local_shortest_submission(task)
+    if sub is None:
+        return float('inf')
+    return int(sub.stem.split('_')[0])  # returns the size part of the filename
+
 with zipfile.ZipFile(args.zip, 'r') as zip_ref:
     for name in zip_ref.namelist():
         if name.endswith('.py'):
             with zip_ref.open(name) as f:
-                task_name = name.split(".")[0]
-                code = f.read().decode('utf-8')
+                task_name = name.split("/")[-1].split(".")[0]
+                code = normalize_code(f.read().decode('utf-8'))
                 print(f"Processing {task_name}...")
+                if get_local_shortest_bytes(task_name) < len(code):
+                    print(f"> Skipped. Local shortest submission is shorter.")
+                    continue
                 assert task_name in problems, f"Task {task_name} not found in problems."
                 if test(problems[task_name], code):
                     print(f"> Passed. size: {len(code)}")
