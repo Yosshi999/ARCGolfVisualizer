@@ -1,0 +1,1 @@
+p=lambda g:[[a*2for a in map(min,u,u[4:])]for u in g]
