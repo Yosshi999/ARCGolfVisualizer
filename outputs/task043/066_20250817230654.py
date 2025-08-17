@@ -1,0 +1,1 @@
+p=lambda g:g[:1]+[[t*w%2*2for w in g[0][:-1]]+[t]for*v,t in g[1:]]
