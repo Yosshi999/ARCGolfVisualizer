@@ -1,0 +1,1 @@
+def p(g):r=range(len(g));P,(Y,X),R=[(i,j)for i in r for j in r if g[i][j]];return[[g[Y][X]*(max(j-X,i-Y,key=abs)%(P[0]-Y)==0)for j in r]for i in r]

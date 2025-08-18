@@ -1,0 +1,1 @@
+p=lambda g:[(v,[t]*9)[t in v]+[t]for*v,t in g]

@@ -1,0 +1,1 @@
+p=lambda g:[([m:=max(g[2+i//5*5])]*10,[m,*[0]*8,m])[0!=i!=2and 7!=i!=9]for i in range(10)]
