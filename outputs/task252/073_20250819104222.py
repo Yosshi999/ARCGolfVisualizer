@@ -1,0 +1,1 @@
+e=enumerate;p=lambda g:[[(w,4)[j%2]*(w>0)for j,w in e(v)]for i,v in e(g)]

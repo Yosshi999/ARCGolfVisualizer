@@ -1,0 +1,1 @@
+p=lambda g:[[(sum(v)|w)%13for w in map(max,*g)]for v in g]

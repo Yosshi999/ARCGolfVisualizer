@@ -1,0 +1,1 @@
+p=lambda g:[[a&8^8for a in map(max,v,v[4:])]for v in g]

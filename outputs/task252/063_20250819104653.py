@@ -1,0 +1,1 @@
+p=lambda g:[[(w,4)[0<j%2<=w]for j,w in enumerate(v)]for v in g]

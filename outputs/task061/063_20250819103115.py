@@ -1,0 +1,1 @@
+r=range(18);p=lambda g:[[i*j%max(g[17])+1for j in r]for i in r]

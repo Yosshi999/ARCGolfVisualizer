@@ -1,0 +1,1 @@
+p=lambda g:[[max(v[i::5],key=bool)for i in[0,1,2,3]]for v in g]
