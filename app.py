@@ -62,7 +62,7 @@ def get_local_shortest_submission(task: str):
     py_files = list(subs.glob("*.py"))
     if not py_files:
         return None
-    return min(py_files, key=lambda x: int(x.stem.split('_')[0]))  # shortest submission
+    return min(py_files, key=lambda fn: len(normalize_code(fn.read_text(encoding="utf-8"))))  # shortest submission
 
 def normalize_code(code: str) -> str:
     return code.strip().replace("\r\n", "\n")
