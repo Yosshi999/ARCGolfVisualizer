@@ -15,5 +15,5 @@ def p(j):
  k.sort(key=len,reverse=1)
  for W,e in enumerate(k):
   d=min(8,max(6,len(e)**.5+.5//1+5))
-  for K in e:j[K[0]][K[1]]=d
+  for K in e:j[K[0]][K[1]]=int(d)
  return j

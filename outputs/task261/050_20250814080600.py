@@ -1,1 +1,0 @@
-p=lambda g:[[w/4for w in v]for v in g[-1:]+g[:-1]]

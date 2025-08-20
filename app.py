@@ -158,6 +158,12 @@ def submit():
                     "index": i,
                     "output": output,
                 })
+            if not all(map(lambda x: type(x) is int, sum(output, []))):
+                return jsonify({
+                    "success": False,
+                    "error_type": "type_error",
+                    "error_message": "Output must be a 2D list of *integers*.",
+                })
     except Exception as e:
         tb = traceback.extract_tb(sys.exc_info()[2])
         trace = traceback.format_list(tb)

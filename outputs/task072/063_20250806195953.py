@@ -1,1 +1,0 @@
-p=lambda g:[[(a^b)*1.5for a,b in zip(*v)]for v in zip(g,g[7:])]
