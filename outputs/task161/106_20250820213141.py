@@ -1,0 +1,1 @@
+p=lambda g:[[(c:=min(h:=sum(g,[]),key=h.count))*(a==c==b or d==c==e)for d,*w,e in zip(*g)]for a,*v,b in g]

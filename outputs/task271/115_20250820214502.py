@@ -1,0 +1,1 @@
+r=range(7);p=lambda g:max((h.count(1),x)for i in r for j in r if min(h:=sum(x:=[v[j:j+3]for v in g[i:i+3]],[])))[1]

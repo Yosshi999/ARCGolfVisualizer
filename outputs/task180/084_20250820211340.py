@@ -1,0 +1,1 @@
+p=lambda g:[[v[j+4]or w[j]or w[j+4]or v[j]for j in range(4)]for v,w in zip(g,g[4:])]
