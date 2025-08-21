@@ -1,0 +1,1 @@
+p=lambda g:[[max(range(10),key=lambda x:len({*[tuple(w*(w==x)for w in v)for v in g]}))]]

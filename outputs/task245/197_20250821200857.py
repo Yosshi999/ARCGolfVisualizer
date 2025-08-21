@@ -1,0 +1,6 @@
+def p(g):
+ h=eval(str(g).replace(*'20'))
+ r=[[a*(a==2)for*w,a in zip(*g,v)if 2in w]for v in g if 2in v]
+ i,j=divmod(sum(g,[]).index(3),len(g[0]))
+ for x in range(5):h[i+x+1][j+1:j+6]=r[x]
+ return h

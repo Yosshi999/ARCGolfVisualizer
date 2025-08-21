@@ -1,0 +1,1 @@
+f=lambda g:[*map(list,zip(*filter(sum,g)))];p=lambda g:f(f(g))

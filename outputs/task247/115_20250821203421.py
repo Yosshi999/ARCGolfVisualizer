@@ -1,0 +1,1 @@
+def p(g):f=sum(zip(*g),());m=max(map(F:=f.count,{*f}-{0}));return[sorted([c for c in{*f}if F(c)==m],key=f.index)]*m

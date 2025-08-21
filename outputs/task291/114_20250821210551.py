@@ -1,0 +1,1 @@
+p=lambda g:[[max(sum(max([[[w*(w==c)for w in v]for v in g]for c in range(10)],key=lambda x:len({*zip(*x)})),[]))]]

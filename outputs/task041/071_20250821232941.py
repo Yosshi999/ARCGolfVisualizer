@@ -1,0 +1,1 @@
+r=range(10);p=lambda g:[[max({*v[:j+1]}&{*v[j:]})for j in r]for v in g]

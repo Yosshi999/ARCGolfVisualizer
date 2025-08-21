@@ -1,0 +1,1 @@
+r=range(10);p=lambda g:[[g[i][j]and g[i//5*9][j//5*9]for j in r]for i in r]

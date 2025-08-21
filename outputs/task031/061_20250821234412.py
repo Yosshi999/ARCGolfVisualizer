@@ -1,0 +1,1 @@
+p=lambda g:[*map(list,filter(max,zip(*filter(max,zip(*g)))))]
