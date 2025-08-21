@@ -1,0 +1,1 @@
+p=lambda g:[[v[i]*(2+(i%3<1))//2for i in range(len(v))]for v in g]

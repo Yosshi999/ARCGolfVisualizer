@@ -1,0 +1,1 @@
+p=lambda g:[[v[0],v[1]|v[5],v[6]]for v in[g[0],[*map(max,g[1],g[3])],g[4]]]
