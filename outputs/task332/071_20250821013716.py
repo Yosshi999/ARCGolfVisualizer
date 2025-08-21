@@ -1,0 +1,1 @@
+p=lambda g:[[v[-1-i]and i%2*2+3for i in range(len(v))][::-1]for v in g]
