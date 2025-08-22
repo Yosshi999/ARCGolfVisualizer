@@ -1,1 +1,0 @@
-def p(g):t=sum(g,[]);m=max(t,key=t.count);c=m or max(range(1,10),key=lambda x:t.count(x)if x else-1);return[[c,c]]*2
