@@ -1,0 +1,1 @@
+f=lambda g:[[max([c*11for c in range(10)if c in{*v[j%3:j:3]}&{*v[j+3::3]}]+[w])for j,w in enumerate(v)]for v in zip(*g)];p=lambda g:[[w%10for w in v]for v in f(f(g))]
