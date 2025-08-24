@@ -1,1 +1,0 @@
-p=lambda g:[[sorted(set(a:=sum(g,[])),key=a.count)[-2]]*2]*2
