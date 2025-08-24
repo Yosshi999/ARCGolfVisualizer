@@ -1,0 +1,1 @@
+p=lambda g,d=4:[*map(lambda v,M=0:[c or((M:=v[x+1])*0if len(set(v[x:x+3]))>2else M)for x,c in enumerate(v)],zip(*p(g,d-1)[::-1]))]if d else g
