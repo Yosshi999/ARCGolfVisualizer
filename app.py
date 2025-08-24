@@ -6,6 +6,8 @@ import copy
 from datetime import datetime
 import traceback
 import sys
+import re
+import numpy
 from get_global_shortest import get_global_shortests
 
 app = Flask(__name__)
@@ -153,16 +155,40 @@ def submit():
             input_data = copy.deepcopy(example["input"])
             expected_output = copy.deepcopy(example["output"])
             output = program(input_data)
-            if output != expected_output:
-                mismatch.append({
-                    "index": i,
-                    "output": output,
-                })
-            if not all(map(lambda x: type(x) is int, sum(output, []))):
+            
+            # Convert output to proper format using JSON normalization
+            try:
+                result = json.dumps(output)
+                result = result.replace("true", "1").replace("false", "0")
+                unsafe_chars = re.compile(r"[^0-9,\[\]\s\.]")
+                if unsafe_chars.search(result):
+                    return jsonify({
+                        "success": False,
+                        "error_type": "type_error",
+                        "error_message": f"Invalid output format: {result[:500]}",
+                    })
+                output = json.loads(result)
+            except Exception as e:
                 return jsonify({
                     "success": False,
                     "error_type": "type_error",
-                    "error_message": "Output must be a 2D list of *integers*.",
+                    "error_message": f"Output format error: {str(e)}",
+                })
+            
+            # Use numpy array comparison
+            try:
+                user_output = numpy.array(output)
+                label_output = numpy.array(expected_output)
+                if not numpy.array_equal(user_output, label_output):
+                    mismatch.append({
+                        "index": i,
+                        "output": output,
+                    })
+            except Exception as e:
+                return jsonify({
+                    "success": False,
+                    "error_type": "array_error",
+                    "error_message": f"Array comparison error: {str(e)}",
                 })
     except Exception as e:
         tb = traceback.extract_tb(sys.exc_info()[2])
