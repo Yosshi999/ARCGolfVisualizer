@@ -76,7 +76,7 @@
 #submission {
     font-family: monospace;
 }
-#stdout-log {
+#stdout-log-text {
     font-family: monospace;
 }
         </style>
@@ -224,7 +224,7 @@
                 if(document.getElementById('showStdout').checked){
                     stdoutLog.innerHTML = `
                         <span>stdout</span>
-                        <textarea class="form-control" id="stdout-log" rows="3">${grid.stdoutLog || ""}</textarea>
+                        <textarea class="form-control" id="stdout-log-text" rows="3">${grid.stdoutLog || ""}</textarea>
                     `;
                 }
 
