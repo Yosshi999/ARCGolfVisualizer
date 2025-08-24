@@ -133,6 +133,7 @@ def submit():
     data = request.json
     task: str = data["task"]
     code: str = data["code"]
+    saveFile: bool = data["saveFile"]
     code = normalize_code(code)
     if task not in problems:
         return jsonify({
@@ -206,9 +207,10 @@ def submit():
         })
     
     # everything is fine, save the submission
-    (SUBMISSION / task).mkdir(exist_ok=True)
-    new_sub = SUBMISSION / task / f"{len(code):03d}_{datetime.now().strftime('%Y%m%d%H%M%S')}.py"
-    new_sub.write_bytes(code.encode("utf-8"))
+    if saveFile:
+        (SUBMISSION / task).mkdir(exist_ok=True)
+        new_sub = SUBMISSION / task / f"{len(code):03d}_{datetime.now().strftime('%Y%m%d%H%M%S')}.py"
+        new_sub.write_bytes(code.encode("utf-8"))
     return jsonify({"success": True, "size": len(code), "score": max(1, 2500 - len(code)), "shortest": old_code is None or len(code) < len(old_code)})
 
 @app.route('/download')

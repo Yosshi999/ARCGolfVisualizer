@@ -156,7 +156,10 @@
                             <div id="submission-length" class="text-muted">{{ code | length }}</div>
                         </div>
                         <textarea class="form-control" id="submission" rows="10">{{ code }}</textarea>
-                        <button class="btn btn-primary mt-2" onclick="submitBtn()">Submit</button>
+                        <div class="d-flex">
+                            <button class="btn btn-primary mt-2" onclick="submitBtn()">Submit</button>
+                            <button class="btn btn-primary mt-2 ms-auto" onclick="testBtn()">Just test</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -253,6 +256,13 @@
             });
 
             function submitBtn() {
+                submit(true);
+            }
+            function testBtn() {
+                submit(false);
+            }
+
+            function submit(saveFile) {
                 const code = submission.value;
                 if (code.trim() === '') {
                     alert('Please enter your code before submitting.');
@@ -263,15 +273,15 @@
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ task: '{{ task }}', code: code })
+                    body: JSON.stringify({ task: '{{ task }}', code: code, saveFile: saveFile })
                 })
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
                         if (data.shortest) {
-                            alert('Submission successful! size: ' + data.size + ', score: ' + data.score);
+                            alert(`Submission successful!${saveFile ? "" : " (Submission isn't saved.)"} size: ` + data.size + ', score: ' + data.score);
                         } else {
-                            alert('Not the shortest but the submission has been saved. size: ' + data.size);
+                            alert(`Not the shortest${saveFile ? " but the submission has been saved" : ""}. size: ` + data.size);
                         }
                     } else {
                         if (data.error_type === "test") {
