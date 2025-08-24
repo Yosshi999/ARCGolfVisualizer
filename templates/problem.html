@@ -76,6 +76,9 @@
 #submission {
     font-family: monospace;
 }
+#stdout-log {
+    font-family: monospace;
+}
         </style>
     </head>
     <body>
@@ -119,6 +122,12 @@
                                 Show Only Failed Tests
                             </label>
                         </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="showStdout">
+                            <label class="form-check-label" for="showStdout">
+                                Show Stdout
+                            </label>
+                        </div>
                         <div>
                             {% for hint in hints %}
                                 <div class="text-muted">{{ hint }}</div>
@@ -148,6 +157,7 @@
                                 <div class="color-grid m-4" id="actual-grid"></div>
                             </div>
                         </div>
+                        <div id="stdout-log"></div>
                     </div>
 
                     <div class="mb-4">
@@ -170,11 +180,18 @@
                     legend.classList.remove('legend');
                 }
             });
+            document.getElementById('showStdout').addEventListener('change', function() {
+                if (!this.checked) {
+                    stdoutLog.innerHTML="";
+                }
+                updateDisplay();
+            });
 
             const gridData = {{ problem | tojson }};
             const failedData = [];
             const inputGrid = document.getElementById('input-grid');
             const outputGrid = document.getElementById('output-grid');
+            const stdoutLog = document.getElementById('stdout-log');
             const problemIdx = document.getElementById('problemIdx');
             const prevBtn = document.getElementById('prevBtn');
             const nextBtn = document.getElementById('nextBtn');
@@ -204,6 +221,12 @@
                 outputGrid.style.gridTemplateColumns = `repeat(${grid.output[0].length}, 1fr)`;
                 outputGrid.style.gridTemplateRows = `repeat(${grid.output.length}, 1fr)`;
                 outputGrid.innerHTML = outputHtml;
+                if(document.getElementById('showStdout').checked){
+                    stdoutLog.innerHTML = `
+                        <span>stdout</span>
+                        <textarea class="form-control" id="stdout-log" rows="3">${grid.stdoutLog || ""}</textarea>
+                    `;
+                }
 
                 if (grid.actual) {
                     let actualHtml = '';
@@ -281,7 +304,8 @@
                                 failedData.push({
                                     input: gridData[m.index].input,
                                     output: gridData[m.index].output,
-                                    actual: m.output
+                                    actual: m.output,
+                                    stdoutLog: m.stdoutLog,
                                 });
                             })
                             currentIndex = 0;
