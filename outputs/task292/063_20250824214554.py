@@ -1,0 +1,1 @@
+p=lambda g:[[w*(2+(i%3<1))/2for i,w in enumerate(v)]for v in g]

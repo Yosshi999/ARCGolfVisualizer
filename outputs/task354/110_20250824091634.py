@@ -1,0 +1,1 @@
+p=lambda g:[[v[j]and max(g[0][10-(v[::-1]+[0]).index(0,9-j):(v+[0]).index(0,j)])for j in range(10)]for v in g]

@@ -1,0 +1,1 @@
+def p(g):w=len(g[0]);W=2*~-w;return[[(9-i-j)%W*((9-i+j)%W)<1for j in range(w)]for i in range(10)]
