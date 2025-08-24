@@ -1,0 +1,1 @@
+p=lambda g:[[-v.index(5)%3+2]*3for v in g]
