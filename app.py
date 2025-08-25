@@ -9,6 +9,8 @@ import sys
 import re
 import numpy
 from get_global_shortest import get_global_shortests
+import contextlib
+import io
 
 app = Flask(__name__)
 PROBLEM = Path(__file__).parent / 'problems'
@@ -154,7 +156,9 @@ def submit():
         for i, example in enumerate(problems[task]):
             input_data = copy.deepcopy(example["input"])
             expected_output = copy.deepcopy(example["output"])
-            output = program(input_data)
+            with contextlib.redirect_stdout(io.StringIO()) as fp:
+                output = program(input_data)
+                stdoutLog = fp.getvalue()
             
             # Convert output to proper format using JSON normalization
             try:
@@ -183,6 +187,7 @@ def submit():
                     mismatch.append({
                         "index": i,
                         "output": output,
+                        "stdoutLog": stdoutLog,
                     })
             except Exception as e:
                 return jsonify({
