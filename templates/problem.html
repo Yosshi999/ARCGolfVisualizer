@@ -281,7 +281,7 @@
                         if (data.shortest) {
                             alert(`Submission successful!${saveFile ? "" : " (Submission isn't saved.)"} size: ` + data.size + ', score: ' + data.score);
                         } else {
-                            alert(`Not the shortest${saveFile ? " but the submission has been saved" : ""}. size: ` + data.size);
+                            alert(`${saveFile ? "Not the shortest but the submission has been saved." : "Correct, though not the shortest."} size: ` + data.size);
                         }
                     } else {
                         if (data.error_type === "test") {
