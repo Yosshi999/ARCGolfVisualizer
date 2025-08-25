@@ -1,0 +1,1 @@
+p=lambda g,d=4:p([[w[i]or(5in w)*8*(w[4:i].count(5)<i//5)for i in range(10)]for*w,in zip(*g)][::-1],d-1)if d else g

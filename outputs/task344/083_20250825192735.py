@@ -1,0 +1,1 @@
+p=lambda g,d=4:p(eval(f'{[*zip(*g[::-1])]}'.replace('3, 2','8, 0')),d-1)if d else g

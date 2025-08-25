@@ -1,0 +1,1 @@
+p=lambda g,d=4:p([*zip(*[[w[i]or 8*((5in g[i])*(5in w)or(i>4and 5in w and 5 not in w[4:]))for*w,in zip(*g)]for i in range(10)])][::-1],d-1)if d else g

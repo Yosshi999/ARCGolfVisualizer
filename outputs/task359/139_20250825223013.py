@@ -1,0 +1,1 @@
+f=lambda x:[[max(v,key=v.count)]*len(v)for v in x];F=lambda x:[*map(list,zip(*x))];p=lambda g:(f(g),F(f(F(g))))[all(len({*v})>2for v in g)]
