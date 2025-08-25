@@ -1,0 +1,1 @@
+p=lambda g:eval('[*filter(max,zip(*'*2+'g))]*2))]')
