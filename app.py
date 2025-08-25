@@ -157,9 +157,23 @@ def submit():
         for i, example in enumerate(problems[task]):
             input_data = copy.deepcopy(example["input"])
             expected_output = copy.deepcopy(example["output"])
-            with contextlib.redirect_stdout(io.StringIO()) as fp:
-                output = program(input_data)
-                stdoutLog = fp.getvalue()
+            stdoutLog = io.StringIO()
+            try:
+                with contextlib.redirect_stdout(stdoutLog):
+                    output = program(input_data)
+            except Exception as e:
+                tb = traceback.extract_tb(sys.exc_info()[2])
+                trace = traceback.format_list(tb)
+                mismatch.append({
+                    "index": i,
+                    "output": [[]],
+                    "stdoutLog": (
+                        str(e) + "\n" + "\n".join(trace) + "\n" +
+                        "====== STDOUT =====\n" +
+                        stdoutLog.getvalue()
+                    ),
+                })
+                continue
             
             # Convert output to proper format using JSON normalization
             try:
@@ -188,7 +202,7 @@ def submit():
                     mismatch.append({
                         "index": i,
                         "output": output,
-                        "stdoutLog": stdoutLog,
+                        "stdoutLog": stdoutLog.getvalue(),
                     })
             except Exception as e:
                 return jsonify({
