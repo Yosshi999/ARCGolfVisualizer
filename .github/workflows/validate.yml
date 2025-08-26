@@ -8,18 +8,15 @@ on:
 jobs:
   validate:
     runs-on: ubuntu-latest
+    container: python:3.11.13-slim
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.10'
-
       - name: Install dependencies
         run: |
+          apt-get update && apt-get install -y unzip
           pip install kaggle numpy
 
       - name: Download competition data
