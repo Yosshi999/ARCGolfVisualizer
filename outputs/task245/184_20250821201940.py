@@ -1,1 +1,0 @@
-def p(g):h=eval(str(g).replace(*'20'));i,j=divmod(sum(g,[]).index(3),len(g[0]));x=0;exec('h[i+x+1][j+1:j+6]=[[a%3for*w,a in zip(*g,v)if 2in w]for v in g if 2in v][x];x+=1;'*5);return h
