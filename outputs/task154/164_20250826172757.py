@@ -1,0 +1,1 @@
+def p(g):g=(g,[*zip(*g)])[f:=5in max(g)];i=g.index(max(g),4);z=g[2:3];g=z*2+g[2:5]+g[1::-1]+z*(i==11)+g[i+3:i+1:-1]+g[i-1:i+2]+z*2+z*(i==10);return(g,[*zip(*g)])[f]

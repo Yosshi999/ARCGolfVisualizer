@@ -1,0 +1,1 @@
+p=lambda g,b=0:[(w:=[max(v[:j+1])for j in range(len(v))])+[b:=max(w)or b]for*v,t in g]
