@@ -32,4 +32,4 @@ jobs:
           unzip -o ./data/google-code-golf-2025.zip -d ./problems
 
       - name: Validate submissions
-        run: python validate.py
+        run: python -W ignore::SyntaxWarning validate.py
