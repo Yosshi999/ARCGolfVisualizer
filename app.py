@@ -1,10 +1,7 @@
 from flask import Flask, render_template, request, jsonify, send_file
 import json
 from pathlib import Path
-import copy
 from datetime import datetime
-import traceback
-import sys
 from get_global_shortest import get_global_shortests
 
 # import common judge utilities
@@ -33,8 +30,6 @@ def save_cache(data):
 def get_cached_global_shortest():
     """Get cached global shortest data"""
     return global_shortest_cache
-
-from get_global_shortest import get_global_shortests
 
 def sync_global_shortest_data():
     """Sync global shortest data from Google Sheets"""
