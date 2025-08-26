@@ -5,10 +5,7 @@ import copy
 from datetime import datetime
 import traceback
 import sys
-import numpy
 from get_global_shortest import get_global_shortests
-import contextlib
-import io
 
 # import common judge utilities
 from judge.core import normalize_code, judge_code
