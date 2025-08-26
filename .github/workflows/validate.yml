@@ -23,11 +23,11 @@ jobs:
           pip install kaggle numpy
 
       - name: Download competition data
-         env:
-           KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
-           KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
-         run: |
-           kaggle competitions download -c google-code-golf-2025 -p ./data
+        env:
+          KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
+          KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
+        run: |
+          kaggle competitions download -c google-code-golf-2025 -p ./data
 
       - name: Unzip competition files into problems/
         run: |
