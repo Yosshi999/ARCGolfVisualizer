@@ -1,0 +1,1 @@
+p=lambda g,d=4:p([*zip(*(g,g[(a:=max(i for i,v in enumerate(g)if 2in v)+1):(b:=g.index(max(g,key=max)))]+g[:a]+g[b:])[a<b])][::-1],d-1)if d else g
