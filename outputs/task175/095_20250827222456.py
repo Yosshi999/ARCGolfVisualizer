@@ -1,0 +1,1 @@
+e=enumerate;p=lambda g:[[max(w)or g[0][i!=j]for j,w in e(zip(v,z))]for i,(*v,z)in e(zip(*g,g))]

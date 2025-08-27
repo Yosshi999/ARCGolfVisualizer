@@ -1,0 +1,1 @@
+e=enumerate;p=lambda g:[[w|g[j][i]or g[0][i!=j]for j,w in e(v)]for i,v in e(g)]

@@ -1,0 +1,1 @@
+p=lambda g:g[:1]+[[a or 7*(4in w[:4])for*w,a in zip(*g,v)]for v in g[1:4]]+[[a or 7*(4in v)*(4in w[4:])for*w,a in zip(*g,v)]for v in g[4:]]

@@ -1,0 +1,1 @@
+p=lambda g,d=96:p(eval(str([*zip(*g[::-1])]).replace('0, 1','1, 1')),d-1)if d else g

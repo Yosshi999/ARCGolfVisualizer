@@ -1,0 +1,1 @@
+p=lambda g:[[a or 7*(4in v)*(4in(w[:4],w[4:])[i>3])for*w,a in zip(*g,v)]for i,v in enumerate(g)]
