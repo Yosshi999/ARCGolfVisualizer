@@ -1,16 +1,12 @@
 from flask import Flask, render_template, request, jsonify, send_file
 import json
 from pathlib import Path
-import importlib.util
-import copy
 from datetime import datetime
-import traceback
-import sys
-import re
-import numpy
 from get_global_shortest import get_global_shortests
-import contextlib
-import io
+
+# import common judge utilities
+from judge.core import normalize_code, judge_code
+from judge.utils import get_local_shortest_submission, load_problems_from_dir
 
 app = Flask(__name__)
 PROBLEM = Path(__file__).parent / 'problems'
@@ -49,27 +45,11 @@ for line in Path("claude_summary.tsv").read_text(encoding="utf-8").strip().split
     func, hardness = line.split("\t")
     summaries.append((func, int(hardness)))
 
-problems = {}
-for p in sorted(PROBLEM.glob('*.json')):
-    with open(p, 'r') as f:
-        data = json.load(f)
-        problems[p.stem] = data["train"] + data["test"] + data["arc-gen"]
+problems = load_problems_from_dir(PROBLEM)
 
 task_names = list(problems.keys())
 print(f"found tasks: {len(task_names)}")
 assert len(task_names) == len(summaries), "Number of tasks does not match number of summaries."
-
-def get_local_shortest_submission(task: str):
-    subs = SUBMISSION / task
-    if not subs.exists():
-        return None
-    py_files = list(subs.glob("*.py"))
-    if not py_files:
-        return None
-    return min(py_files, key=lambda fn: len(normalize_code(fn.read_text(encoding="utf-8"))))  # shortest submission
-
-def normalize_code(code: str) -> str:
-    return code.strip().replace("\r\n", "\n")
 
 @app.route('/')
 def index():
@@ -77,7 +57,7 @@ def index():
     overall_score = 0
     global_shortest_bytes = get_cached_global_shortest()
     for i, task in enumerate(task_names):
-        shortest_sub = get_local_shortest_submission(task)
+        shortest_sub = get_local_shortest_submission(SUBMISSION, task)
         if shortest_sub:
             exists = True
             code = len(normalize_code(shortest_sub.read_text()))
@@ -125,7 +105,7 @@ def problem(task):
     if task not in problems:
         return jsonify({"error": "Task not found"}), 404
     global_shortest_byte = get_cached_global_shortest().get(task, float('inf'))
-    shortest_sub = get_local_shortest_submission(task)
+    shortest_sub = get_local_shortest_submission(SUBMISSION, task)
     code = shortest_sub.read_text() if shortest_sub else ""
     hints = collect_hints(problems[task])
     return render_template('problem.html', task=task, problem=problems[task], code=code, hints=hints, summary=summaries[task_names.index(task)][0], hardness=summaries[task_names.index(task)][1], global_shortest=global_shortest_byte)
@@ -143,74 +123,15 @@ def submit():
             "error_type": "task_not_found",
             "error_message": "Task not found",
         }), 404
-    old_code = get_local_shortest_submission(task).read_text() if get_local_shortest_submission(task) else None
 
-    mismatch = []
-    try:
-        task_modname = "task_with_imports"
-        spec = importlib.util.spec_from_loader(task_modname, loader=None)
-        module = importlib.util.module_from_spec(spec)
-        exec(code, module.__dict__)
-        assert hasattr(module, "p"), "Unable to locate function p()."
-        program = getattr(module, "p")
-        assert callable(program), "p() is not callable."
-        for i, example in enumerate(problems[task]):
-            input_data = copy.deepcopy(example["input"])
-            expected_output = copy.deepcopy(example["output"])
-            with contextlib.redirect_stdout(io.StringIO()) as fp:
-                output = program(input_data)
-                stdoutLog = fp.getvalue()
-            
-            # Convert output to proper format using JSON normalization
-            try:
-                result = json.dumps(output)
-                result = result.replace("true", "1").replace("false", "0")
-                unsafe_chars = re.compile(r"[^0-9,\[\]\s\.]")
-                if unsafe_chars.search(result):
-                    return jsonify({
-                        "success": False,
-                        "error_type": "type_error",
-                        "error_message": f"Invalid output format: {result[:500]}",
-                    })
-                output = json.loads(result)
-            except Exception as e:
-                return jsonify({
-                    "success": False,
-                    "error_type": "type_error",
-                    "error_message": f"Output format error: {str(e)}",
-                })
-            
-            # Use numpy array comparison
-            try:
-                user_output = numpy.array(output)
-                label_output = numpy.array(expected_output)
-                if not numpy.array_equal(user_output, label_output):
-                    mismatch.append({
-                        "index": i,
-                        "output": output,
-                        "stdoutLog": stdoutLog,
-                    })
-            except Exception as e:
-                return jsonify({
-                    "success": False,
-                    "error_type": "array_error",
-                    "error_message": f"Array comparison error: {str(e)}",
-                })
-    except Exception as e:
-        tb = traceback.extract_tb(sys.exc_info()[2])
-        trace = traceback.format_list(tb)
-        return jsonify({
-            "success": False,
-            "error_type": "execution",
-            "error_message": str(e) + "\n" + "\n".join(trace),
-        })
-    if len(mismatch) > 0:
-        return jsonify({
-            "success": False,
-            "error_type": "test",
-            "mismatch": mismatch,
-        })
-    
+    old_path = get_local_shortest_submission(SUBMISSION, task)
+    old_code = old_path.read_text() if old_path else None
+
+    result = judge_code(task, code, problems[task])
+    if not result.get("success"):
+        # Return the structured result in the same shape your original endpoint used
+        return jsonify(result), 400
+
     # everything is fine, save the submission
     if saveFile:
         (SUBMISSION / task).mkdir(exist_ok=True)
@@ -229,7 +150,7 @@ def download():
     zip_buffer = BytesIO()
     with zipfile.ZipFile(zip_buffer, 'w', zipfile.ZIP_DEFLATED) as zip_file:
         for task in task_names:
-            if (shortest_sub := get_local_shortest_submission(task)) is not None:
+            if (shortest_sub := get_local_shortest_submission(SUBMISSION, task)) is not None:
                 workfile = workspace / f"{task}.py"
                 text = normalize_code(shortest_sub.read_text())
                 workfile.write_bytes(text.encode("utf-8"))
@@ -253,7 +174,7 @@ def explorer():
     global_shortest_bytes = get_cached_global_shortest()
     
     for i, task in enumerate(task_names):
-        shortest_sub = get_local_shortest_submission(task)
+        shortest_sub = get_local_shortest_submission(SUBMISSION, task)
         
         if shortest_sub:
             local_bytes = len(normalize_code(shortest_sub.read_text()))

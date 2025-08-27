@@ -1,0 +1,35 @@
+name: Validate Submissions
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    container: python:3.11.13-slim
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          apt-get update && apt-get install -y unzip
+          pip install kaggle numpy
+
+      - name: Download competition data
+        env:
+          KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
+          KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
+        run: |
+          kaggle competitions download -c google-code-golf-2025 -p ./data
+
+      - name: Unzip competition files into problems/
+        run: |
+          mkdir -p problems
+          unzip -o ./data/google-code-golf-2025.zip -d ./problems
+
+      - name: Validate submissions
+        run: python -W ignore::SyntaxWarning validate.py
