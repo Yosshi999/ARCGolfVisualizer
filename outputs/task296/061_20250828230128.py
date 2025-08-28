@@ -1,0 +1,1 @@
+p=lambda g:eval('[[a,max(v),d]for a,*v,d in zip(*'*2+'g)])]')

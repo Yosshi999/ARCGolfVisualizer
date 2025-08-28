@@ -1,0 +1,1 @@
+p=lambda g:[[a^(v[0]^t)*(v[0]*t>0)for*w,t,a in zip(*g,v)]for v in g]
