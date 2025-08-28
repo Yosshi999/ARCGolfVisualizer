@@ -1,0 +1,1 @@
+def p(g):i,j=divmod(sum(k for k,w in enumerate(sum(g,[]))if w)//2,len(g[0]));g[i][j-1:j+2]=[3]*3;g[i-1][j]=g[i+1][j]=3;return g

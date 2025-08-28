@@ -1,0 +1,1 @@
+def p(g):h=[*zip(*g)];I=g.index;m=I(a:=max(g));J=h.index;n=J(b:=max(h));return[[max(a)*(v>0)for v in u[n+1:J(b,n+1)]]for u in g[m+1:I(a,m+1)]]

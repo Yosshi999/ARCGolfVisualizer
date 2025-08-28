@@ -1,0 +1,1 @@
+p=lambda g:[w[19-v.index(1):][4::-1]for v,w in zip(g,g[::-1])if 1in v]

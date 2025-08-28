@@ -1,0 +1,1 @@
+p=lambda g,d=4:p([v if len({*v})<3 else[0]*(a:=v[:(l:=v.index(5))].count(0))+[5]*(l-a)+v[l:]for*v,in zip(*g)][::-1],d-1)if d else g

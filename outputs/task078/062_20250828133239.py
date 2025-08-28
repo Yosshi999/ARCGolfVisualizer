@@ -1,0 +1,1 @@
+p=lambda g:[*zip(*[sorted(v,key=(1).__gt__)for v in zip(*g)])]

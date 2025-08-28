@@ -1,0 +1,1 @@
+e=enumerate;p=lambda g:[[max(g[i%(m:=len(g)//7+2)::m])[j]for j,w in e(v)if w<1]for i,v in e(g)if 0in v]

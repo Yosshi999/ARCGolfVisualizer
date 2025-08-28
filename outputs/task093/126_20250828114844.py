@@ -1,0 +1,1 @@
+p=lambda g,d=4:p([[0]*(a:=v[:(l:=v.index(5))].count(0))+[5]*(l-a)+v[l:]if 5in v else v for*v,in zip(*g)][::-1],d-1)if d else g

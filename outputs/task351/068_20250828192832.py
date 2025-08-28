@@ -1,0 +1,1 @@
+p=lambda g:[w[~v.index(3)::-1][:5]for v,w in zip(g,g[::-1])if 3in v]

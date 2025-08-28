@@ -1,0 +1,1 @@
+def p(g):r=range(n:=len(g));return[[L[0][2]if(L:=sorted((d:=max(abs(x-i),abs(y-j)),abs(x-i)+abs(y-j),c)for x,y in[(0,0),(0,n-1),(n-1,0),(n-1,n-1)]if(c:=g[x][y])))and L[0][:2]!=L[1][:2]and L[0][0]%2<1else 0for j in r]for i in r]
