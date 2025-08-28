@@ -1,0 +1,1 @@
+p=lambda g:[[max(range(1,10),key=lambda x:len({v.count(x)for v in g}))]]

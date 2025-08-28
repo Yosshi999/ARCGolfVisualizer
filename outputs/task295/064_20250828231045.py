@@ -1,0 +1,1 @@
+p=lambda g:p(g+[g[0][:1]+g[-1][:-1]])if len(g)*2<len(g[0])else g

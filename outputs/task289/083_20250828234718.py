@@ -1,0 +1,1 @@
+def p(g):c=len({*sum(g,[])})-1;f=lambda x:sum(zip(*[x]*c),());return f([*map(f,g)])
