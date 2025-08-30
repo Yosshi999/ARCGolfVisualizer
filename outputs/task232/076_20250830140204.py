@@ -1,0 +1,1 @@
+p=lambda g:[(v[:v.index(m)]+[m,5]*9)[:len(v)]if(m:=max(v))else v for v in g]

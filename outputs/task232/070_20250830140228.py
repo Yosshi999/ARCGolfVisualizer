@@ -1,0 +1,1 @@
+p=lambda g:[(v[:v.index(m:=max(v))]+[m,5*(m>0)]*9)[:len(v)]for v in g]

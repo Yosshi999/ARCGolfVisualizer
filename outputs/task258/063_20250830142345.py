@@ -1,0 +1,1 @@
+p=lambda g:eval(eval("str(g)"+".replace('1, 0, 1','1,2,1')"*2))
