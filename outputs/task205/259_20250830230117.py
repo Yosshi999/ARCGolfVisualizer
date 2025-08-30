@@ -1,0 +1,1 @@
+def p(g):_,H,h=max((len(H),H,h)for i in range(len(g))for j in range(len(g[0]))for k in range(len(g))for l in range(len(g[0]))if len(set(H:=sum(h:=[v[j:l]for v in g[i:k]],[])))<3);c,d=sorted({*H},key=H.count);return[[(d,c)[c in v+w]for*w,in zip(*h)]for v in h]

@@ -1,0 +1,1 @@
+def p(g):*w,a,b=g;i=a.index(b[j:=0]);exec('v=w[-i+j];v[j]=v[~j]=b[i];j+=1;'*i);return g
