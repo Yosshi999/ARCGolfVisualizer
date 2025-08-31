@@ -1,0 +1,1 @@
+p=lambda g:sum([[sum([[w%5+5]*(1+2*(w<5))for w in v if w],[])]*(1+2*(0in v))for v in g[1::2]],[])
