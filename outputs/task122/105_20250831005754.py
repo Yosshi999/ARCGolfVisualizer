@@ -1,0 +1,1 @@
+p=lambda g:g[-2:][::(-1)**((3in g[-1])==(3in g[0]))]+g[:-2]if max(g).count(3)<2else[*zip(*p([*zip(*g)]))]

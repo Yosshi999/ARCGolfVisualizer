@@ -1,0 +1,1 @@
+def p(g):r=range(len(g));return[[(abs(g.index(u:=max(g))-i)==abs(u.index(m:=max(u))-j))*m for j in r]for i in r]

@@ -1,0 +1,1 @@
+p=lambda g:[[(w,4)[w>j]for j,w in zip([9,0]*9,v)]for v in g]

@@ -1,0 +1,1 @@
+f=lambda g:[[(w,-8)[w<(8in{*v[:j]}&{*v[j:]})]for j,w in enumerate(v)]for v in zip(*g)];p=lambda g:[[*map(abs,v)]for v in f(f(g))]
