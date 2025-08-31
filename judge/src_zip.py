@@ -9,8 +9,11 @@ def zip_src(src):
  def sanitize_for_quote_type(b_in, quote_type):
   """Clean up problematic bytes in compressed b-string for specific quote type"""
   b_out = bytearray()
-  for b in b_in:
-   if   b==0:         b_out += b"\\x00"
+  for i, b in enumerate(b_in):
+   if b==0:
+    # If the next character is [0-9], use \\x00 instead of \\0
+    if i+1<len(b_in) and chr(b_in[i+1]).isdigit(): b_out += b"\\x00"
+    else: b_out += b"\\0"
    elif b==ord("\r"): b_out += b"\\r"
    elif b==ord("\\"): b_out += b"\\\\"
    elif b==ord("\n") and (quote_type == "'" or quote_type == '"'): b_out += b"\\n"
@@ -54,8 +57,10 @@ def zip_src(src):
  
  # Option 3: Triple single quotes
  base_sanitized = bytearray()
- for b in compressed:
-  if   b==0:         base_sanitized += b"\\x00"
+ for i,b in enumerate(compressed):
+  if   b==0:
+   if i+1<len(compressed) and chr(compressed[i+1]).isdigit(): base_sanitized += b"\\x00"
+   else: base_sanitized += b"\\0"
   elif b==ord("\r"): base_sanitized += b"\\r"
   elif b==ord("\\"): base_sanitized += b"\\\\"
   else: base_sanitized.append(b)
