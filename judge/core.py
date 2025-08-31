@@ -73,5 +73,5 @@ def judge_code(task: str, code: str, examples: list) -> Dict[str, Any]:
 from pathlib import Path
 
 def judge_file(task: str, file_path: Path, examples: list) -> Dict[str, Any]:
-    code = file_path.read_text(encoding="utf-8")
+    code = file_path.read_text(encoding="L1")
     return judge_code(task, code, examples)

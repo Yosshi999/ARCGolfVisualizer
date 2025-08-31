@@ -20,7 +20,7 @@ cache_file = Path("global_shortest_cache.json")
 def load_cache():
     """Load cache from file on startup"""
     if cache_file.exists():
-        return json.loads(cache_file.read_text())
+        return json.loads(cache_file.read_text(encoding="L1"))
     return {}
 
 def save_cache(data):
@@ -41,7 +41,7 @@ def sync_global_shortest_data():
 # Load cache on startup
 global_shortest_cache = load_cache()
 summaries = []
-for line in Path("claude_summary.tsv").read_text(encoding="utf-8").strip().split("\n")[1:]:
+for line in Path("claude_summary.tsv").read_text().strip().split("\n")[1:]:
     func, hardness = line.split("\t")
     summaries.append((func, int(hardness)))
 
@@ -60,7 +60,7 @@ def index():
         shortest_sub = get_local_shortest_submission(SUBMISSION, task)
         if shortest_sub:
             exists = True
-            code = len(normalize_code(shortest_sub.read_text()))
+            code = len(normalize_code(shortest_sub.read_text(encoding="L1")))
             score = max(1, 2500 - code)
         else:
             exists = False
@@ -106,7 +106,7 @@ def problem(task):
         return jsonify({"error": "Task not found"}), 404
     global_shortest_byte = get_cached_global_shortest().get(task, float('inf'))
     shortest_sub = get_local_shortest_submission(SUBMISSION, task)
-    code = shortest_sub.read_text() if shortest_sub else ""
+    code = shortest_sub.read_text(encoding="L1") if shortest_sub else ""
     hints = collect_hints(problems[task])
     return render_template('problem.html', task=task, problem=problems[task], code=code, hints=hints, summary=summaries[task_names.index(task)][0], hardness=summaries[task_names.index(task)][1], global_shortest=global_shortest_byte)
 
@@ -125,7 +125,7 @@ def submit():
         }), 404
 
     old_path = get_local_shortest_submission(SUBMISSION, task)
-    old_code = old_path.read_text() if old_path else None
+    old_code = old_path.read_text(encoding="L1") if old_path else None
 
     result = judge_code(task, code, problems[task])
     if not result.get("success"):
@@ -136,7 +136,7 @@ def submit():
     if saveFile:
         (SUBMISSION / task).mkdir(exist_ok=True)
         new_sub = SUBMISSION / task / f"{len(code):03d}_{datetime.now().strftime('%Y%m%d%H%M%S')}.py"
-        new_sub.write_bytes(code.encode("utf-8"))
+        new_sub.write_bytes(code.encode("L1"))
     return jsonify({"success": True, "size": len(code), "score": max(1, 2500 - len(code)), "shortest": old_code is None or len(code) < len(old_code)})
 
 @app.route('/download')
@@ -152,8 +152,8 @@ def download():
         for task in task_names:
             if (shortest_sub := get_local_shortest_submission(SUBMISSION, task)) is not None:
                 workfile = workspace / f"{task}.py"
-                text = normalize_code(shortest_sub.read_text())
-                workfile.write_bytes(text.encode("utf-8"))
+                text = normalize_code(shortest_sub.read_text(encoding="L1"))
+                workfile.write_bytes(text.encode("L1"))
                 zip_file.write(str(workfile), arcname=f"{task}.py")
 
     zip_buffer.seek(0)
@@ -177,7 +177,7 @@ def explorer():
         shortest_sub = get_local_shortest_submission(SUBMISSION, task)
         
         if shortest_sub:
-            local_bytes = len(normalize_code(shortest_sub.read_text()))
+            local_bytes = len(normalize_code(shortest_sub.read_text(encoding="L1")))
         else:
             local_bytes = None
         
