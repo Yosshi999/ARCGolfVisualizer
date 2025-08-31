@@ -1,0 +1,1 @@
+p=lambda g:min(h:=[[v[k%4:][:2]for v in g[k%5:][:2]]for k in b''],key=h.count)

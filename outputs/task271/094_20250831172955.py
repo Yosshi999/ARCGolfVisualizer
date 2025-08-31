@@ -1,0 +1,1 @@
+p=lambda g:max((sum(x:=[v[k%7:][:3]for v in g[k%8:][:3]],[]).count(1),x)for k in range(56))[1]

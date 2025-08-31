@@ -1,0 +1,1 @@
+p=lambda g:min((sum(h),x)for k in range(49)if min(h:=sum(x:=[v[k%7:][:3]for v in g[k//7:][:3]],[])))[1]

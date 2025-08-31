@@ -1,0 +1,2 @@
+r=range(11)
+p=lambda g:max((Q.count(2),len(Q),q)for i in r for j in r for k in r for l in r if min(Q:=sum(q:=[v[j:l]for v in g[i:k]],[1])))[2]

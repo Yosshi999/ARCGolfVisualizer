@@ -1,0 +1,1 @@
+p=lambda g:[[(a>0)*((w==min(filter(sum,s:=[*zip(*g)]),key=sum))*2+(w==max(s,key=sum)))for w,a in zip(zip(*g),v)]for v in g]
