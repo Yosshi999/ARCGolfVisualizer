@@ -1,0 +1,1 @@
+p=lambda g:[-~(c:=0)*[(c:=c+w,5)[(c:=-c)>0]for w in v]for v in g]

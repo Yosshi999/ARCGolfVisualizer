@@ -1,0 +1,1 @@
+p=lambda g:[(j:=1)*[w*(1-g[:i].count(v)*(j:=j+(w>0))%2)for w in v]for i,v in enumerate(g)]
