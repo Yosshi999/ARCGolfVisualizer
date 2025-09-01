@@ -1,0 +1,1 @@
+p=lambda g:[(s:=0,m:=0,[3*(s:=s^((m:=m*2+c)&15==4))*(c<1)for c in v])[2]for v in g]

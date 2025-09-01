@@ -1,0 +1,1 @@
+p=lambda g:[(s:=0,m:=0,n:=0,[((s:=s^(c<m>n))*(c<1)*3,n:=m,m:=c)[0]for c in v])[3]for v in g]
