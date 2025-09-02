@@ -1,0 +1,1 @@
+p=lambda g:[*zip(*((v+v)[15-v.count(0):][:15]for*v,in zip(*g)))]

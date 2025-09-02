@@ -1,0 +1,1 @@
+p=lambda g:[[a or(4in({*w[4:]}&{*v},w[:4])[4in v[:5]])*7for*w,a in zip(*g,v)]for v in g]
