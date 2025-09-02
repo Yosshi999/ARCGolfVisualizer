@@ -1,0 +1,1 @@
+p=lambda g:[[max(G[k+x+y]for k in range(121)if(G:=sum(g,[]))[k]==5)for y in[-1,0,1]]for x in[-11,0,11]]

@@ -1,0 +1,1 @@
+p=lambda g:[*map(f:=lambda x:sum(zip(x,x,x),()),f(g))]

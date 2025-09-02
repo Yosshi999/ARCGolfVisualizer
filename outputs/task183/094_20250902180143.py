@@ -1,0 +1,1 @@
+def p(g):n=len(g);r=range(2,n-2);return[[g[i][j]/8*g[0-2*i//n][0-2*j//n]for j in r]for i in r]

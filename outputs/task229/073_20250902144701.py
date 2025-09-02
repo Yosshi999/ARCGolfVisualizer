@@ -1,0 +1,1 @@
+p=lambda g:[[(5,w)[w==max(u:=sum(g,g),key=u.count)]for w in v]for v in g]

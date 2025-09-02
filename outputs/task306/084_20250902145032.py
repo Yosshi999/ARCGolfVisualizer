@@ -1,0 +1,1 @@
+p=lambda g:eval('[[max(w[i%10::10])for i in range(len(w))]for w in zip(*'*2+'g)])]')

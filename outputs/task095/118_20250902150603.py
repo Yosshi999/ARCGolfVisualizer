@@ -1,0 +1,1 @@
+r=range(9);p=lambda g:[[min(max(abs(x-i),abs(y-j))for x in r for y in r if g[x][y])==1or g[i][j]for j in r]for i in r]

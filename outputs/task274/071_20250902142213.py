@@ -1,0 +1,1 @@
+p=lambda g:[(v:=g.count(max(g,key=any))*[8]+[0]*9)[:3],v[5:2:-1],[0]*3]

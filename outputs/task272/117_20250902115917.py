@@ -1,0 +1,1 @@
+e=enumerate;p=lambda g:[[(a:=v[j],1)[sum(v[j-(j>0):j+2]+[*w[i-(i>0):i+2]])<3*a]for j,w in e(zip(*g))]for i,v in e(g)]

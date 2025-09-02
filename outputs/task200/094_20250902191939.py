@@ -1,0 +1,1 @@
+p=lambda g:[((u:=g[9])[:u.index(m:=max(u))]+[m,5*(i==0),m,5*(i==9)]*3)[:10]for i in range(10)]

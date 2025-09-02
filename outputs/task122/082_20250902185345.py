@@ -1,0 +1,1 @@
+p=lambda g:g[-2:][::1|0-len(g)%2]+g[:-2]if sum(max(g))<8else[*zip(*p([*zip(*g)]))]

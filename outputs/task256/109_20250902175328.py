@@ -1,0 +1,1 @@
+def p(g):i=g.index(v:=max(g));s=sum(v)//2;j=0;exec('k=s+i-j;g[j][:k]=[(j<i)-(j>i)+2]*k;j+=1;'*(i+s));return g

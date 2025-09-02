@@ -1,0 +1,1 @@
+p=lambda g:eval("eval(str([*zip(*"*4+"g"+"[::-1])]).replace('1, 0','1,%c'))"*4%(*"2786",))

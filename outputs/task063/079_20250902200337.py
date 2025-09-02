@@ -1,0 +1,1 @@
+p=lambda g:[[a or(sum(v[1:-1])*sum(w)<1)*3for _,*w,_,a in zip(*g,v)]for v in g]

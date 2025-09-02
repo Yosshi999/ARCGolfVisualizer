@@ -1,0 +1,1 @@
+p=lambda g:[[a&b for*A,a in zip(*g,v)for*B,b in zip(*g,w)if{*A}&{*B}-{0}]for v in g for w in g if{*v}&{*w}-{0}]

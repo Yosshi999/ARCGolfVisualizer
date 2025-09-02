@@ -1,0 +1,1 @@
+p=lambda g:[[a or(3,a)[v.count(0)!=len(v)-2!=w.count(0)]for*w,a in zip(*g,v)]for v in g]
