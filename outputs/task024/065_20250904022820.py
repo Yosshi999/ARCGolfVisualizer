@@ -1,0 +1,1 @@
+p=lambda g:[[max({*v}-{2})or(2in w)*2for w in zip(*g)]for v in g]

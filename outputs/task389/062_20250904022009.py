@@ -1,0 +1,1 @@
+p=lambda g:[[sum({*sum(g,[])})-5&-(w==5)for w in v]for v in g]
