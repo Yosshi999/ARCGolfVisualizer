@@ -1,0 +1,1 @@
+p=lambda g:[[3-any(v)*3for v in zip(v,v[4:])]for v in g]
