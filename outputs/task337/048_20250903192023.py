@@ -1,0 +1,1 @@
+p=lambda g:eval(str(g).translate({56:53,53:56}))
