@@ -1,0 +1,5 @@
+def f(g):
+ M=[max(v)for v in zip(*g)]
+ return[[x*(x not in[y for x,y in zip(v,M)if x==0])for x in v]for v in g]
+R=lambda g:[*zip(*g)]
+p=lambda g:any(len({*v})<2 for v in g)and R(f(R(g)))or f(g)
