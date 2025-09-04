@@ -1,0 +1,1 @@
+p=lambda g,d=4:p([*zip(*sorted(g[:(a:=g.index(max(g,key=max)))],key=max)+g[a:])][::-1],d-1)if d else g
