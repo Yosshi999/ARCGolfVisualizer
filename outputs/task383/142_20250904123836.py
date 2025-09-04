@@ -1,0 +1,1 @@
+def p(g):B,_,C,*_=filter(int,[*filter(max,g)][2]);return[[(B,C)[a<1]if 0<v.count(B)<4 or 0<w.count(B)<4else a for*w,a in zip(*g,v)]for v in g]

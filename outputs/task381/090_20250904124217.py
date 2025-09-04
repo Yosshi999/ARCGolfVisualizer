@@ -1,0 +1,1 @@
+p=lambda g:g[:1]+[[v[j]or(2in{*v[:j]}&{*v[j:]})*9for j in range(10)]for v in g[1:9]]+g[9:]

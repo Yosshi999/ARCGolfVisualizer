@@ -1,0 +1,1 @@
+p=lambda g:(v:=g[:len(g)//2-2//len(g)])*(v*2==g)or[*zip(*p([*zip(*g)]))]
