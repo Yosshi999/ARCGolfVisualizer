@@ -1,0 +1,1 @@
+def p(g,d=4):v,w,u,*_=filter(any,g);f=g.index;a=f(v)+2;b=f(u);return p([*zip(*(g,g[:a]+g[b:]+g[a:b])[8in v])][::-1],d-1)if d else g

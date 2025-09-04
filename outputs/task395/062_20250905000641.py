@@ -1,0 +1,1 @@
+p=lambda g:[[2-2*any(w[i::3])for w in zip(*g)]for i in[0,1,2]]
