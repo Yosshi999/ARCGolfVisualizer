@@ -107,7 +107,15 @@
                     <h2 class="mb-4">{{ task }}</h2>
                     <div>{{ summary }}</div>
                     <div class="text-muted">Hardness: {{ hardness }}</div>
-                    <div class="text-muted">Shortest (Global): {{ global_shortest }} bytes</div>
+                    <div class="text-muted">
+                        Shortest (Global): 
+                        {% if global_shortest[0] != global_shortest[1] %}
+                            💎{{ global_shortest[0] }}
+                        {% else %}
+                            🥇{{ global_shortest[0] }}
+                        {% endif %}
+                        - 🥈{{ global_shortest[1] }} - 🥉{{ global_shortest[2] }} bytes
+                    </div>
 
                     <div class="mb-4">
                         <div class="form-check">

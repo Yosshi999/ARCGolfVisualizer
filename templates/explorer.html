@@ -330,7 +330,7 @@
                 
                 return `<b>${task.name}</b><br>` +
                        `難易度: ${task.hardness}<br>` +
-                       `Global: ${task.global}B<br>` +
+                       `Global: ${task.global_top3.map(val => val + 'B').join(" - ")}<br>` +
                        `Local: ${actualLocal}<br>` +
                        `差分: ${delta !== 'N/A' ? (delta < 0 ? '🏆 ' : '') + delta + 'B' : delta} (${ratio !== 'N/A' ? ratio + '%' : ''})<br>` +
                        `<i>${task.summary}</i>`;

@@ -66,12 +66,18 @@ def index():
             exists = False
             code = 0
             score = 0
+
+        # 上位3つのバイト数を取得し、最小値を使用
+        global_shortest_list = global_shortest_bytes.get(task, [])
+        global_shortest_min = min(global_shortest_list) if global_shortest_list and type(global_shortest_list) is list else float('inf')
+
         tasks_info.append({
             "name": task,
             "exists": exists,
             "summary": summaries[i][0],
             "hardness": summaries[i][1],
-            "global_shortest": global_shortest_bytes.get(task, float('inf')),
+            "global_shortest_top3": global_shortest_list,
+            "global_shortest": global_shortest_min,
             "size": code,
             "score": score,
         })
@@ -104,11 +110,20 @@ def collect_hints(problem):
 def problem(task):
     if task not in problems:
         return jsonify({"error": "Task not found"}), 404
-    global_shortest_byte = get_cached_global_shortest().get(task, float('inf'))
+    global_shortest_byte_top3 = get_cached_global_shortest().get(task, float('inf'))
     shortest_sub = get_local_shortest_submission(SUBMISSION, task)
     code = shortest_sub.read_text() if shortest_sub else ""
     hints = collect_hints(problems[task])
-    return render_template('problem.html', task=task, problem=problems[task], code=code, hints=hints, summary=summaries[task_names.index(task)][0], hardness=summaries[task_names.index(task)][1], global_shortest=global_shortest_byte)
+    return render_template(
+        'problem.html',
+        task=task,
+        problem=problems[task],
+        code=code,
+        hints=hints,
+        summary=summaries[task_names.index(task)][0],
+        hardness=summaries[task_names.index(task)][1],
+        global_shortest=global_shortest_byte_top3
+    )
 
 @app.post('/submit')
 def submit():
@@ -181,11 +196,13 @@ def explorer():
         else:
             local_bytes = None
         
-        global_bytes = global_shortest_bytes.get(task, 9999)
+        global_bytes_list = global_shortest_bytes.get(task, [])
+        global_bytes_min = min(global_bytes_list) if global_bytes_list and type(global_bytes_list) is list else float('inf')
         
         task_info = {
             "name": task,
-            "global": global_bytes,
+            "global_top3": global_bytes_list,
+            "global": global_bytes_min,
             "local": local_bytes,
             "hardness": summaries[i][1],
             "summary": summaries[i][0][:50] + "..." if len(summaries[i][0]) > 50 else summaries[i][0],
@@ -193,8 +210,8 @@ def explorer():
         }
         
         if local_bytes is not None:
-            task_info["delta"] = local_bytes - global_bytes
-            task_info["ratio"] = local_bytes / global_bytes if global_bytes > 0 else float('inf')
+            task_info["delta"] = local_bytes - global_bytes_min
+            task_info["ratio"] = local_bytes / global_bytes_min if global_bytes_min > 0 else float('inf')
         else:
             task_info["delta"] = None
             task_info["ratio"] = None

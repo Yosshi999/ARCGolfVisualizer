@@ -17,6 +17,8 @@ def get_global_shortests():
     for col in task_df.columns[1:]:
         task_df[col] = pd.to_numeric(task_df[col], errors="coerce")
 
-    min_bytes = task_df.set_index("TASK").min(axis=1, skipna=True)
-    res = {'task' + task: int(size) for task, size in min_bytes.items() if size is not None}
+    top3_bytes = task_df.set_index("TASK").apply(
+        lambda row: [int(size) for size in row.nsmallest(3).dropna()], axis=1
+    )
+    res = {'task' + task: sizes for task, sizes in top3_bytes.items() if sizes}
     return res
