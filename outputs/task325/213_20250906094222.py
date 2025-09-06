@@ -1,0 +1,2 @@
+R=range
+def p(g):W=len(g[0]);G=sum(g,[]);L=len(G);D=lambda z:L>z>=0<(c:=G[z])and(G.__setitem__(z,0)or D(z-W)|D(z+W)|D(z+(z%W<W-1))|D(z-(z%W>0))|1);n=R(sum(D(i)for i in R(L)));return[[8*(y==x)for x in n]for y in n]
