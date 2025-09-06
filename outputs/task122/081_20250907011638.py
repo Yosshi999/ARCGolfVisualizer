@@ -1,0 +1,1 @@
+p=lambda g:8>sum(max(g))and g[-2:][::1|0-len(g)%2]+g[:-2]or[*zip(*p([*zip(*g)]))]

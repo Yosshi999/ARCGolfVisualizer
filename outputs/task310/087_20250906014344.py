@@ -1,0 +1,1 @@
+p=lambda g:(f:=lambda x:[v for v in zip(*x)if min(h:=sum(g,[]),key=h.count)in v])(f(g))

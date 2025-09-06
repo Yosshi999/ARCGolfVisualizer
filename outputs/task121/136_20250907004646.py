@@ -1,0 +1,1 @@
+p=lambda g:min([[[c*(a>0)for*w,a in zip(*g,v)if{*w}&{c,8}]for v in g if{*v}&{c,8}]for c in{*sum(g,[])}-{8}],key=lambda x:len(sum(x,[])))

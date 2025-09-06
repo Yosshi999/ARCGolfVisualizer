@@ -1,0 +1,1 @@
+p=lambda g,d=8:d and p(eval(str([*zip(*g[::-1])]).replace('3, 3','3,-3')),d-1)or eval(str(g).replace('-3','8'))
