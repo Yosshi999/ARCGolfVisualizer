@@ -1,0 +1,1 @@
+p=lambda g,i=0:exec('g[i][i]=g[i][~i]=0;i+=1;'*len(g))or g
