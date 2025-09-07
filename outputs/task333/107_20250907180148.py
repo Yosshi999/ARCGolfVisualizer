@@ -1,0 +1,1 @@
+p=lambda g,d=4:d and p([[w or(3in v[j:])*sum(v[:j])for j,w in enumerate(v)]for v in zip(*g)][::-1],d-1)or g

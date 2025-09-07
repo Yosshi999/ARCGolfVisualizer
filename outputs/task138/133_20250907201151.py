@@ -1,0 +1,1 @@
+p=lambda g,d=8,c=0:d and p([*zip(*[v if d>4else v[:(x:=v.index(C:=v[-1]))]+[C]*(len(v)-x)for*v,in g if(c:=c|all(v))])][::-1],d-1)or g
