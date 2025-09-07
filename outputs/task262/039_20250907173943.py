@@ -1,0 +1,1 @@
+p=lambda g:[[~a%(4|b)]*3for a,b,c in g]
