@@ -1,0 +1,1 @@
+def p(g):h=sum(g,[]);f=h.count;z=sorted({*h},key=f)[::-1];return[*zip(*[[c]*f(c)+[0]*99for c in z])][:f(z[0])]
