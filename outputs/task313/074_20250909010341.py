@@ -1,0 +1,1 @@
+p=lambda g:[(v[1:v.index(v[0],1)+1]*9)[:len(v)]for v in g[:2]*15][:len(g)]

@@ -1,0 +1,1 @@
+p=lambda g:[[*map((b"\0"*3).count,*v)]for v in zip(g[5:],g)]

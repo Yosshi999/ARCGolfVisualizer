@@ -1,0 +1,1 @@
+p=lambda g:[[*map((b"\0"*8).count,v,v[4:])]for v in g]

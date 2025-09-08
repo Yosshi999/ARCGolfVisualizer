@@ -1,0 +1,1 @@
+p=lambda g:all(map(any,g))and[v:=max(([*filter(int,v)]for v in[g[0],g[-1]]),key=len)]*len(v)or[*zip(*p([*zip(*g)]))]
