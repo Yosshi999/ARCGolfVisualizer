@@ -1,0 +1,1 @@
+p=lambda g:(v:=g[0])[0]==v[-1]and[*zip(*p([*zip(*g)]))]or[[*{w:0for w in v}]]
