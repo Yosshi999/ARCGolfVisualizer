@@ -1,0 +1,1 @@
+p=lambda g:[[(w[0],w[0]/4+2)[2in v]for w in zip(*g)]for v in g]

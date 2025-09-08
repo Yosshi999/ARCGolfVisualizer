@@ -1,0 +1,1 @@
+p=lambda g,n=2:g[-n]==g[1-n]and p(g,n+1)or[v[::-n]for v in g[::n]]
