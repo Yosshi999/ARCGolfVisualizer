@@ -1,0 +1,1 @@
+p=lambda g,f=0:[(([0,4]*9)[any(max(g)[::2]):][:len(u)],u)[f:=f|any(u)]for u in g[-1:]+g[:-1]]

@@ -1,0 +1,1 @@
+def p(g):h=eval('[*filter(max,zip(*'*2+'g'+'))][::3]'*2);return[[a&b for a in v for b in w]for v in h for w in h]

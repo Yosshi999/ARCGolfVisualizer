@@ -1,0 +1,1 @@
+def p(g):exec('g[:]=zip(*g[::-1]);v,*_,u,w=filter(max,g);f=g.index\nif{*v}=={0,8}:g[f(v):f(u)]=[w]+[u]*(f(w)-f(v))\n'*4);return g
