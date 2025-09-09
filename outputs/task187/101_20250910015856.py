@@ -1,0 +1,1 @@
+p=lambda g:eval("[[(c,2|(d==3))[c&13<1]for c,d in zip(v,(3,)+v)]for v in zip(*"*60+"g"+"[::-1])]"*60)

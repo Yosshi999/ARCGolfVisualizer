@@ -1,0 +1,1 @@
+def p(g):exec("g[:]=[[(c,(2,3)[d==3])[c*(c-2)==0]for c,d in zip(v,(3,)+v)]for v in zip(*g[::-1])]\n"*60);return g
