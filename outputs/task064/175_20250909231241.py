@@ -1,1 +1,1 @@
-def p(g):G=sum(g,[]);C,B,A=sorted(sorted({*G}),key=G.count);exec("g[:]=[*zip(*[[[c,C][(C in v[:x])*(B in v[x:])*c==A]for x,c in enumerate(v)]for v in g])][::-1]\n"*4);return g
+def p(g):G=sum(g,[]);C,B,A=sorted(sorted({*G}),key=G.count);exec("g[:]=[*zip(*[[[c,C][(C in v[:x])*(B in v[x:])*c==A]for x,c in enumerate(v)]for v in g])][::-1]\n"*4,locals());return g
