@@ -1,0 +1,1 @@
+p=lambda g:2>len({*g[0]}-{0})and[*zip(*p([*zip(*g)]))]or[[w*(max(g).count(w)==v.count(w))for w in v]for v in g]
