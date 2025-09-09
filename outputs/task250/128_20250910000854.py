@@ -1,0 +1,1 @@
+p=lambda g,d=4:d and p([*zip(*([[0]*10]*~-(I:=min(i for i in range(10)if 2in g[i]))+[[*map(max,*g[:I])]]+g[I:])[::-1])],d-1)or g

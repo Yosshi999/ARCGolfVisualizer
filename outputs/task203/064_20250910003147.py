@@ -1,0 +1,1 @@
+p=lambda g:[[g[l:=len(g)//2][l+v.index(x)]for x in v]for v in g]

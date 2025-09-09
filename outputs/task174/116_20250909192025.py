@@ -1,0 +1,1 @@
+p=lambda g:[h for c in sum(g,[])if(h:=[*eval(f'zip(*filter(lambda v:{c} in v,'*2+'g))))')])==[v[::-1]for v in h]][0]

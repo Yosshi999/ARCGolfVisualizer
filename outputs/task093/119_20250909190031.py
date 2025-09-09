@@ -1,0 +1,1 @@
+p=lambda g:any(min(g))*[[0]*(a:=v[:7].count(0))+[5]*(14-a-(b:=v[7:].count(0)))+b*[0]for v in g]or[*zip(*p([*zip(*g)]))]
