@@ -1,0 +1,1 @@
+p=lambda g,d={}:[[v[i]and(d:={i:len(d)+1}|d)[i]for i in range(9)]for v in g]
