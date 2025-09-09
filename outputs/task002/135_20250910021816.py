@@ -1,0 +1,1 @@
+p=lambda g:[[c&7 for c in v]for v in eval("[[(c,(4,8)[d==8])[c*(c-4)==0]for c,d in zip(v,(8,)+v)]for v in zip(*"*64+"g"+"[::-1])]"*64)]

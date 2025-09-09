@@ -1,0 +1,1 @@
+p=lambda g,n=64:n and[[(4*((n<2)|(d*c>0)),c)[c&1]for c,d in zip(v,(0,)+v)]for v in zip(*p(g,n-1)[::-1])]or g
