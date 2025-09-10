@@ -1,10 +1,10 @@
-import zlib
+import zopfli.zlib as zlib
 
 def zip_src(src):
  compression_level = 9 # Max Compression
 
  # We prefer that compressed source not end in a quotation mark
- compressed = zlib.compress(src, compression_level, wbits=-zlib.MAX_WBITS)
+ compressed = zlib.compress(src)[2:-4]
 
  def sanitize_for_quote_type(b_in, quote_type):
   """Clean up problematic bytes in compressed b-string for specific quote type"""
