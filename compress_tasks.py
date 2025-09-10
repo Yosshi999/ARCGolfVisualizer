@@ -1,12 +1,18 @@
 import os
 import glob
+from pathlib import Path
 
-from judge.src_zip import zip_src
+from judge.src_zip import run_optimizer
+from judge.utils import load_problems_from_dir
+
+BASE_DIR = Path(__file__).resolve().parent
+PROBLEM_DIR = BASE_DIR / 'problems'
 
 def process_tasks():
     """各タスクフォルダのPythonファイルを処理し、圧縮版が有効なら保存"""
     
     results = []
+    problems = load_problems_from_dir(PROBLEM_DIR)
     
     for task_num in range(1, 401):  # task001 to task400
         task_folder = f"outputs/task{task_num:03d}"
@@ -48,7 +54,8 @@ def process_tasks():
         
         for py_file, content in file_contents.items():
             try:
-                compressed = zip_src(content)
+                sample_case = problems[f'task{task_num:03d}'][0]
+                compressed = run_optimizer(content.decode('L1'), sample_case, pruning_threshold=min_original_size)
                 compressed_size = len(compressed)
                 compressed_results.append((py_file, compressed, compressed_size))
                 print(f"  {os.path.basename(py_file)}: {len(content)} → {compressed_size} bytes")
