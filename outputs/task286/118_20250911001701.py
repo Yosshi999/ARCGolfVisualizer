@@ -1,0 +1,1 @@
+p=lambda g,d=272:d and p([[x or(y%8>0)*(sum({*sum(g,[])})-8-y)for x,y in zip(v,[0]+v)]for*v,in zip(*g)][::-1],d-1)or g

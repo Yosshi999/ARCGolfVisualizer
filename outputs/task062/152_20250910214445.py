@@ -1,0 +1,1 @@
+p=lambda g,d=4:d and p([*zip(*{*(v:=max(g[::-1],key=any))}=={0,2}and[[c or 3for c in g[min(i,g.index(v)*2-i-1)]]for i in range(10)]or g)][::-1],d-1)or g
