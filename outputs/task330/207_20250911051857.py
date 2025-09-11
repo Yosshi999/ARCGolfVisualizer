@@ -1,0 +1,2 @@
+r=range
+def p(g):D=lambda y,x,S:S if((y,x)in S)or~-(10>x>-1<y<10>0<g[y][x])or S.add((y,x))else[D(y+a%3-1,x+a//3-1,S)for a in r(9)]and S;return[[(0<(q:=len(D(y,x,set()))))+(q==6)for x in r(10)]for y in r(10)]

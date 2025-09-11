@@ -1,0 +1,1 @@
+def p(g):B=min(G:=sum(g,[]),key=G.count);return[[max(max(d:=[{*v}&{*w}-{B}for w in zip(*g)for c,v in zip(w,g)if c==B],key=d.count))]]
