@@ -1,0 +1,1 @@
+p=lambda g:[[min(v:=sum(filter(lambda v:v.count(0)+1<len(v),g[1:]),[]),key=v.count)]]
