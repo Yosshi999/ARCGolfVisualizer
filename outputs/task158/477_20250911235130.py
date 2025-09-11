@@ -1,0 +1,3 @@
+R=range
+L=len
+def p(n):y=n[0];o=max(y,key=y.count);f,=[r for a in(n,n[::-1])for g in R(L(n)-2)for h in R(L(y)-2)if L(set(r:=[a[g+p//3][h+p%3]for p in R(9)]))>3>0<o!=r[0]!=r[8]!=o];[(t:=lambda d=o,b=o,c=o,*z:[d]*u+[b]*u+[c]*u)(t(f[0]),t(),t(c=f[8]))!=[a[g+p][h:[h+3*u*s,None][h+3*u*s<0]:s]for p in R(3*u)]or exec('for p in R(3*u):a[g+p][h:[h+3*u*s,None][h+3*u*s<0]:s]=t(*f[p//u*3:])')for u in R(4)for s in(1,-1)for g in R(L(n)-3*u+1)for h in R(L(y))for a in(n,n[::-1])];return n
