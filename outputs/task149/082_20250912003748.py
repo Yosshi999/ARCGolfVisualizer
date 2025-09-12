@@ -1,0 +1,1 @@
+r=[0,4,8];p=lambda g:[[sum(sum(v[j:j+3])for v in g[i:i+3])>9for j in r]for i in r]

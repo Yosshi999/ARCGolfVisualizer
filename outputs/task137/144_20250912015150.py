@@ -1,0 +1,1 @@
+def p(g):r=range(len(g));I,J,K=map(g.index,filter(any,g));c=max(g[J]);return[[c*(max(j-g[J].index(c),i-J,key=abs)%(J-I)<1)for j in r]for i in r]

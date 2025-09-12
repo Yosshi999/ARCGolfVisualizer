@@ -1,0 +1,1 @@
+def p(g):r=range(n:=len(g));return[[3*(1&min(i+1,n-i,j+1,n-j)^(i-1==j<n//2-(n%4==2)))for j in r]for i in r]

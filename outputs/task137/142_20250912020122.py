@@ -1,0 +1,1 @@
+def p(g):r=range(len(g));*_,v,w=sorted(g);f=g.index;c=max(v);return[[c*(max(j-v.index(c),i-f(v),key=abs)%(f(v)-f(w))==0)for j in r]for i in r]
