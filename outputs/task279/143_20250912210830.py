@@ -1,0 +1,1 @@
+p=lambda g,n=72:n and[[(c*(d|(c<2)>0),(c,8)[(d>=8)*(c==1)],(c,9)[c<1])[(n>60)+(n>44)]for c,d in zip(v,[0]+v)]for*v,in zip(*p(g,n-1)[::-1])]or g
