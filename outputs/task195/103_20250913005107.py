@@ -1,0 +1,1 @@
+p=lambda g:exec('g[:]=filter(max,zip(*g[::3]));'*2)or[[a&b for a in v for b in w]for v in g for w in g]

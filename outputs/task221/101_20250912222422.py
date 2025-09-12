@@ -1,0 +1,1 @@
+def p(g):k=sum(g,g).count(0);r=range(3*k);return[[g[i%3][j%3]*(i//3*k+j//3<9-k)for j in r]for i in r]

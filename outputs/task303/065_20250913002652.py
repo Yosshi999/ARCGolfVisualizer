@@ -1,0 +1,1 @@
+p=lambda g:[[(2,a)[{*b}&{*x}>{0}]for*b,a in zip(*g,x)]for x in g]

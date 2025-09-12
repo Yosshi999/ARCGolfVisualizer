@@ -1,0 +1,1 @@
+def p(g):k=sum(g,g).count(c:=0);return[[w*(c//k//9*k+~-(c:=c+1)%(3*k)//3<9-k)for w in v*k]for v in g*k]
