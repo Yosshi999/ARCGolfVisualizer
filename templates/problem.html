@@ -125,12 +125,6 @@
                             </label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="onlyFailed">
-                            <label class="form-check-label" for="onlyFailed">
-                                Show Only Failed Tests
-                            </label>
-                        </div>
-                        <div class="form-check">
                             <input class="form-check-input" type="checkbox" value="" id="showStdout">
                             <label class="form-check-label" for="showStdout">
                                 Show Stdout
@@ -209,7 +203,7 @@
             let currentIndex = 0;
 
             function updateDisplay() {
-                const useData = document.getElementById('onlyFailed').checked ? failedData : gridData;
+                const useData = failedData.length > 0 ? failedData : gridData;
                 const grid = useData[currentIndex];
                 prevBtn.disabled = currentIndex === 0;
                 nextBtn.disabled = currentIndex === useData.length - 1;
@@ -257,7 +251,7 @@
             }
 
             function changeGrid(direction) {
-                const useData = document.getElementById('onlyFailed').checked ? failedData : gridData;
+                const useData = failedData.length > 0 ? failedData : gridData;
                 const newIndex = currentIndex + direction;
                 if (newIndex < 0 || newIndex >= useData.length) {
                     return; // Out of bounds
@@ -267,7 +261,7 @@
             }
 
             problemIdx.addEventListener('change', (e) => {
-                const useData = document.getElementById('onlyFailed').checked ? failedData : gridData;
+                const useData = failedData.length > 0 ? failedData : gridData;
                 const idx = parseInt(e.target.value, 10);
                 if (isNaN(idx) || idx < 0 || idx >= useData.length) {
                     e.target.value = currentIndex; // Reset to current index if invalid
@@ -327,7 +321,6 @@
                                 });
                             })
                             currentIndex = 0;
-                            document.getElementById('onlyFailed').checked = true;
                             updateDisplay();
                         } else {
                             alert('An error occurred: ' + data.error_message);
