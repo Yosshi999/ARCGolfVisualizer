@@ -1,0 +1,1 @@
+p=lambda g,n=12:n and[[(((d!=5)+c,3-c,(c,1)[d==1])[(n>5)+(n>4)],c)[c==5]for c,d in zip(v,[5]+v)]for*v,in zip(*p(g,n-1)[::-1])]or g
