@@ -1,0 +1,1 @@
+p=lambda g:eval('[[8*(x*y>0)or x for x,y in zip(v,[0]+v)]for*v,in zip(*'*4+'g'+')][::-1]'*4)

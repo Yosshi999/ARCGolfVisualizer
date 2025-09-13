@@ -1,0 +1,1 @@
+def p(g):f=sum(zip(*g[::-1]),());m=max(map(F:=f.count,{*f}-{0}));return[[*{c:0for c in f if F(c)==m}]]*m

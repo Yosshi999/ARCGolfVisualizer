@@ -1,0 +1,2 @@
+e=enumerate
+def p(g):c=min(f:=sum(g,[]),key=f.count);return max([[c*(w>0)for w in v[j:l+1]]for v in g[i:k+1]]for i,v in e(g)for j,w in e(zip(*g))for k,_ in e(g)for l,_ in e(v)if len({*v[j:l+1],*w[i:k+1]})<2)
