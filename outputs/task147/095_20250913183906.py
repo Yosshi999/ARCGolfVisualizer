@@ -1,0 +1,1 @@
+p=lambda g,d=8:d and p([[8*(x*y>0)or x for x,y in zip(v,[0]+v)]for*v,in zip(*g)][::-1],d-1)or g

@@ -1,0 +1,1 @@
+p=lambda g:[[w or(sum(v[:j])%3==(v==g[0]))*4for j,w in enumerate(v)]for v in g]

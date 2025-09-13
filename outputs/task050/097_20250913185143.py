@@ -1,0 +1,1 @@
+p=lambda g:eval('[[w or(8in{*v[:j]}&{*v[j:]})*3for j,w in enumerate(v)]for v in zip(*'*2+'g)])]')

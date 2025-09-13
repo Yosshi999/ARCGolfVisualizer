@@ -1,0 +1,1 @@
+p=lambda g:[[min(v:=sum([v for v in g[1:]if sum(v)>max(v)],[]),key=v.count)]]

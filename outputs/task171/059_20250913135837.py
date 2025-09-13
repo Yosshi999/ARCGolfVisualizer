@@ -1,0 +1,1 @@
+p=lambda g:eval('[[8]+v[1:-1]+[8]for*v,in zip(*'*2+'g)])]')
