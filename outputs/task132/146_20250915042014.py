@@ -1,0 +1,1 @@
+p=lambda g,d=4:d and p([[[c for c in range(10)if(c in v)*any(c in{*u[:j+1]}&{*u[j:]}for u in g)][-1]for v in g]for j in range(len(g[0]))],d-1)or g

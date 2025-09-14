@@ -1,0 +1,1 @@
+p=lambda g:[[max(v[j]for v in g if all(x*y*(x-y)==0for x,y in zip(v,u)))or j-1for j in range(29)]for u in g]
