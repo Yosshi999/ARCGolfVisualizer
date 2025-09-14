@@ -54,7 +54,7 @@ class Unparser(NodeVisitor):
         self._type_ignores = {}
         self._indent = 0
         self._prev_indent = 0
-        self._single_stmt = False
+        self._simple_stmts = False
         self._in_try_star = False
         self._in_interactive = False
 
@@ -93,9 +93,11 @@ class Unparser(NodeVisitor):
     def fill(self, text="", *, allow_semicolon=True):
         """Indent a piece of text and append it, according to the current
         indentation level, or only delineate with semicolon if applicable"""
-        if self._single_stmt:
+        if self._simple_stmts:
+            assert allow_semicolon
+            if self._source and self._source[-1] != ":":
+                self.maybe_semicolon()
             self.write(text)
-            self._single_stmt = False
         elif self._prev_indent == self._indent and allow_semicolon:
             self.maybe_semicolon()
             self.write(text)
@@ -181,9 +183,10 @@ class Unparser(NodeVisitor):
 
     def traverse(self, node):
         if isinstance(node, list):
-            self._single_stmt = len(node) == 1 and isinstance(node[0], (Assign, Return))
+            self._simple_stmts = all([not isinstance(n, (FunctionDef, If, ClassDef, With, For, Try, While, Match)) for n in node])
             for item in node:
                 self.traverse(item)
+            self._simple_stmts = False
         else:
             super().visit(node)
 
