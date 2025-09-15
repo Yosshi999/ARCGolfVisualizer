@@ -1,0 +1,1 @@
+def p(g):H=len(g);W=len(g[0]);D=lambda y,x:H>y>-1<x<W>0<(c:=g[y][x])and(g[y].__setitem__(x,0)!=3>c)+D(y,x-1)+D(y-1,x)+D(y+1,x)+D(y,x+1);return[[max(D(i//W,i%W)for i in range(H*W))&8]]
