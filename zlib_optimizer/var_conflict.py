@@ -3,6 +3,8 @@ from dataclasses import dataclass
 from typing import List, Optional, Tuple, Union, Set, Dict
 from contextlib import contextmanager
 
+from ast_unparse import unparse
+
 @dataclass
 class CFN:
     """Node in a control flow graph (CFG)."""
@@ -38,7 +40,7 @@ class CFGConstructor(ast.NodeVisitor):
     @contextmanager
     def scope(self, name: Optional[str] = None):
         if name is None:
-            name = f"<anon-{self.anon_counter}>"
+            name = f"anon-{self.anon_counter}"
             self.anon_counter += 1
         self._scope_stack.append(self._prev)
         subgraph = CFN(parents=[], children=[], uevar=set(), varkill=set(), liveout=set())
@@ -202,6 +204,45 @@ class CFGConstructor(ast.NodeVisitor):
     def visit_AsyncWith(self, node):
         self.traverse(node.items)
         self.traverse(node.body)
+
+    def visit_IfExp(self, node):
+        self.traverse(node.test)
+        branch_head = self._prev
+        self.traverse(node.body)
+        if node.orelse:
+            branch_ends = [self._prev]
+            self._prev = branch_head
+            self.traverse(node.orelse)
+            branch_ends.append(self._prev)
+            merge_node = CFN(parents=[], children=[], uevar=set(), varkill=set(), liveout=set())
+            for end in branch_ends:
+                end.append_child(merge_node)
+            self._prev = merge_node
+    
+    def visit_ListComp(self, node):
+        with self.scope():
+            self._generator_helper(node.generators)
+            self.traverse(node.elt)
+    def visit_SetComp(self, node):
+        with self.scope():
+            self._generator_helper(node.generators)
+            self.traverse(node.elt)
+    def visit_GeneratorExp(self, node):
+        with self.scope():
+            self._generator_helper(node.generators)
+            self.traverse(node.elt)
+    def visit_DictComp(self, node):
+        with self.scope():
+            self._generator_helper(node.generators)
+            self.traverse(node.key)
+            self.traverse(node.value)
+    
+    def _generator_helper(self, generators: List[ast.comprehension]):
+        for gen in generators:
+            self.traverse(gen.iter)
+            self.traverse(gen.target)
+            for if_clause in gen.ifs:
+                self.traverse(if_clause)
     
     def visit_TypeVar(self, node):
         raise NotImplementedError()
@@ -220,12 +261,12 @@ def visualize_cfg(node: ast.AST) -> CFN:
 
 if __name__ == "__main__":
     src = """
-def f(x):
-    if x > 0:
-        y = x
-    else:
-        y = -x
-    return y
+R=range
+def p(g):
+ h=[v==0 for u in g for v in u]
+ c=sum(h)
+ g=[[v * c for v in u] for u in g]
+ return g
 """
     tree = ast.parse(src)
     cfg, sub_cfgs = visualize_cfg(tree)
