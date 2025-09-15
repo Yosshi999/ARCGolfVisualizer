@@ -1,0 +1,1 @@
+p=lambda g:[[sum(g[0][bytes(v).rfind(0,0,j+1)+1:(v+[0]).index(0,j)])for j in range(10)]for v in g]
