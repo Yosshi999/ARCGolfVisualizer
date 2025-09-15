@@ -1,0 +1,1 @@
+p=lambda g:eval('[[v[~j]or(3in v[:~j])*sum(v[~j:])for v in '*4+'g'+']for j in range(10)]'*4)

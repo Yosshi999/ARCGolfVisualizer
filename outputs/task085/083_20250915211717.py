@@ -1,0 +1,1 @@
+p=lambda g,b=0:[(c:=1,[w-b%3*(c:=c+(w>0))%2*w for w in v],b:=b+(c>1))[1]for v in g]

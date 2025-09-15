@@ -1,0 +1,1 @@
+p=lambda g:[[*max(d:=[{*v}&{*w}-{c}for v in g for*w,c in zip(*g,v)if sum(g,g).count(c)<15],key=d.count)]]
