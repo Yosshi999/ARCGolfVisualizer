@@ -23,7 +23,8 @@ class CFGConstructor(ast.NodeVisitor):
         self._graph = CFN(parents=[], children=[], uevar=set(), varkill=set(), liveout=set())
         self._subgraph: Dict[str, CFN] = {}
         self._scope_stack: List[CFN] = []
-        self.anon_counter = 0
+        self._function_callers: List[Tuple[str, CFN]] = []  # (function name, caller node) to resolve uevar later
+        self._anon_counter = 0  # for anonymous scopes
         self._prev = self._graph
     
     def visit(self, node: ast.AST) -> CFN:
@@ -40,8 +41,8 @@ class CFGConstructor(ast.NodeVisitor):
     @contextmanager
     def scope(self, name: Optional[str] = None):
         if name is None:
-            name = f"anon-{self.anon_counter}"
-            self.anon_counter += 1
+            name = f"anon-{self._anon_counter}"
+            self._anon_counter += 1
         self._scope_stack.append(self._prev)
         subgraph = CFN(parents=[], children=[], uevar=set(), varkill=set(), liveout=set())
         self._prev = subgraph
@@ -243,6 +244,16 @@ class CFGConstructor(ast.NodeVisitor):
             self.traverse(gen.target)
             for if_clause in gen.ifs:
                 self.traverse(if_clause)
+    
+    def visit_Call(self, node):
+        for arg in node.args:
+            self.traverse(arg)
+        for kw in node.keywords:
+            self.traverse(kw)
+        self.traverse(node.func)
+        # record function call for reference from the callee
+        if isinstance(node.func, ast.Name):
+            self._function_callers.append((node.func.id, self._prev))
     
     def visit_TypeVar(self, node):
         raise NotImplementedError()
