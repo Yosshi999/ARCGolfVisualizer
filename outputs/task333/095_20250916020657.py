@@ -1,0 +1,1 @@
+p=lambda g,d=4:d and p([[v[~j]or(3in v[:~j])*sum(v[~j:])for v in g]for j in range(10)],d-1)or g
