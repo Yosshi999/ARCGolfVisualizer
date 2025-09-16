@@ -1,5 +1,6 @@
 import ast
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+import heapq
 from typing import List, Optional, Tuple, Union, Set, Dict
 from contextlib import contextmanager
 
@@ -13,6 +14,7 @@ class CFN:
     uevar: Set[str]  # Upward Exposure Variables
     varkill: Set[str]  # Variables killed (redefined) in this node
     liveout: Set[str]  # Variables live on exit
+    minimum_env: Set[str] = field(default_factory=set)  # FOR DEBUG: minimum variables defined in the node
 
     def append_child(self, child: "CFN"):
         self.children.append(child)
@@ -40,14 +42,55 @@ class CFGConstructor(ast.NodeVisitor):
     
     @contextmanager
     def scope(self, name: Optional[str] = None):
+        """Isolate a new scope for functions, classes, comprehensions, etc."""
         if name is None:
             name = f"anon-{self._anon_counter}"
             self._anon_counter += 1
         self._scope_stack.append(self._prev)
         subgraph = CFN(parents=[], children=[], uevar=set(), varkill=set(), liveout=set())
         self._prev = subgraph
-        yield
+        yield name
         self._subgraph[name] = subgraph
+
+        # Resolve function call uevar
+        minimum_vars: Dict[int, Set[str]] = {}  # minumum defined vairables at beginning in each node
+        externals: Set[str] = set()  # variables used but not defined in this scope
+        @dataclass(order=True)
+        class Item:
+            size: int
+            node: CFN = field(compare=False)
+            prev_vars: Set[str] = field(compare=False, default_factory=set)
+        queue = [Item(0, subgraph, set())]
+        heapq.heapify(queue)
+        while queue:
+            item = heapq.heappop(queue)
+            node = item.node
+            if id(node) in minimum_vars and (minimum_vars[id(node)] & item.prev_vars) == minimum_vars[id(node)]:
+                # no update
+                continue
+            if id(node) not in minimum_vars:
+                minimum_vars[id(node)] = set(item.prev_vars)
+            else:
+                minimum_vars[id(node)] &= item.prev_vars
+            # add newly defined variables
+            current_vars = node.varkill | minimum_vars[id(node)]
+            node.minimum_env = set(current_vars)
+            # add used but not defined variables to externals
+            externals |= node.uevar - current_vars
+
+            for child in node.children:
+                heapq.heappush(queue, Item(len(current_vars), child, current_vars))
+        subgraph.uevar |= externals
+
+        # Update callers
+        resolved = []
+        for i, (func_name, caller) in enumerate(self._function_callers):
+            if func_name == name:
+                caller.uevar |= externals
+                resolved.append(i)
+        for i in reversed(resolved):
+            self._function_callers.pop(i)
+
         self._prev = self._scope_stack.pop()
     
     def visit_Name(self, node):
@@ -65,7 +108,12 @@ class CFGConstructor(ast.NodeVisitor):
             raise NotImplementedError(f"Unknown context {node.ctx} for Name")
     
     def visit_Assign(self, node):
-        self.traverse(node.value)
+        if len(node.targets) == 1 and isinstance(node.targets[0], ast.Name) and isinstance(node.value, ast.Lambda):
+            # Lambda assignment (e.g. f = lambda x: x+1)
+            # Record it as a function f
+            self._trackable_lambda(node.value, node.targets[0].id)
+        else:
+            self.traverse(node.value)
         for target in node.targets:
             self.traverse(target)
     
@@ -123,7 +171,10 @@ class CFGConstructor(ast.NodeVisitor):
             self.traverse(node.body)
     
     def visit_Lambda(self, node):
-        with self.scope():
+        raise NotImplementedError(f"Untrackable lambda function at L{node.lineno}")
+    
+    def _trackable_lambda(self, node, assigned_name: str):
+        with self.scope(assigned_name):
             for arg in node.args.args:
                 self._prev.varkill.add(arg.arg)
             if node.args.vararg:
@@ -221,22 +272,33 @@ class CFGConstructor(ast.NodeVisitor):
             self._prev = merge_node
     
     def visit_ListComp(self, node):
-        with self.scope():
+        with self.scope() as funcname:
             self._generator_helper(node.generators)
             self.traverse(node.elt)
+        self._prev.append_child(
+            CFN(parents=[], children=[], uevar=set(self._subgraph[funcname].uevar), varkill=set(), liveout=set())
+        )
+        self._prev = self._prev.children[-1]
     def visit_SetComp(self, node):
-        with self.scope():
+        with self.scope() as funcname:
             self._generator_helper(node.generators)
             self.traverse(node.elt)
+        self._prev.append_child(
+            CFN(parents=[], children=[], uevar=set(self._subgraph[funcname].uevar), varkill=set(), liveout=set())
+        )
+        self._prev = self._prev.children[-1]
     def visit_GeneratorExp(self, node):
-        with self.scope():
-            self._generator_helper(node.generators)
-            self.traverse(node.elt)
+        # Not supported due to complexity of tracking evaluation
+        raise NotImplementedError("Generator expressions are not supported")
     def visit_DictComp(self, node):
-        with self.scope():
+        with self.scope() as funcname:
             self._generator_helper(node.generators)
             self.traverse(node.key)
             self.traverse(node.value)
+        self._prev.append_child(
+            CFN(parents=[], children=[], uevar=set(self._subgraph[funcname].uevar), varkill=set(), liveout=set())
+        )
+        self._prev = self._prev.children[-1]
     
     def _generator_helper(self, generators: List[ast.comprehension]):
         for gen in generators:
@@ -251,9 +313,17 @@ class CFGConstructor(ast.NodeVisitor):
         for kw in node.keywords:
             self.traverse(kw)
         self.traverse(node.func)
-        # record function call for reference from the callee
         if isinstance(node.func, ast.Name):
-            self._function_callers.append((node.func.id, self._prev))
+            if node.func.id in self._subgraph:
+                self._prev.append_child(
+                    CFN(parents=[], children=[], uevar=set(self._subgraph[node.func.id].uevar), varkill=set(), liveout=set())
+                )
+                self._prev = self._prev.children[-1]
+            else:
+                # resolve later
+                self._function_callers.append((node.func.id, self._prev))
+        else:
+            print("Warning: Unresolvable function call", unparse(node), "at Line", node.lineno)
     
     def visit_TypeVar(self, node):
         raise NotImplementedError()
@@ -274,7 +344,8 @@ if __name__ == "__main__":
     src = """
 R=range
 def p(g):
- h=[v==0 for u in g for v in u]
+ i=0
+ h=[v==i for u in g for v in u]
  c=sum(h)
  g=[[v * c for v in u] for u in g]
  return g
@@ -297,7 +368,7 @@ def p(g):
             if id(node) in checked:
                 return
             checked.add(id(node))
-            label = f"\"ld({','.join(sorted(node.uevar))}) st({','.join(sorted(node.varkill))}) LO({','.join(sorted(node.liveout))})\""
+            label = f"\"ld({','.join(sorted(node.uevar))}) st({','.join(sorted(node.varkill))}) LO({','.join(sorted(node.liveout))}) ENV({','.join(sorted(node.minimum_env))})\""
             visualized += f'  N{id(node)}[{label}]\n'
             for child in node.children:
                 visualized += f'  N{id(node)} --> N{id(child)}\n'
