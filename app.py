@@ -11,6 +11,7 @@ from judge.utils import get_local_shortest_submission, load_problems_from_dir
 app = Flask(__name__)
 PROBLEM = Path(__file__).parent / 'problems'
 SUBMISSION = Path(__file__).parent / 'outputs'
+ZLIB_SUBMISSION = Path(__file__).parent / 'compressed'
 SUBMISSION.mkdir(exist_ok=True)
 
 # Cache management
@@ -165,11 +166,18 @@ def download():
     zip_buffer = BytesIO()
     with zipfile.ZipFile(zip_buffer, 'w', zipfile.ZIP_DEFLATED) as zip_file:
         for task in task_names:
-            if (shortest_sub := get_local_shortest_submission(SUBMISSION, task)) is not None:
-                workfile = workspace / f"{task}.py"
-                text = normalize_code(shortest_sub.read_text())
-                workfile.write_bytes(text.encode("utf-8"))
-                zip_file.write(str(workfile), arcname=f"{task}.py")
+            shortest_sub = get_local_shortest_submission(SUBMISSION, task)
+            shortest_sub_zlib = get_local_shortest_submission(ZLIB_SUBMISSION, task, encoding='L1')
+            if shortest_sub_zlib:
+                len_bytes = len(normalize_code(shortest_sub.read_text()))
+                len_bytes_zlib = len(normalize_code(shortest_sub_zlib.read_text(encoding='L1'))) if shortest_sub else float('inf')
+                if len_bytes_zlib < len_bytes:
+                    shortest_sub = shortest_sub_zlib
+
+            workfile = workspace / f"{task}.py"
+            text = normalize_code(shortest_sub.read_text("L1"))
+            workfile.write_bytes(text.encode("L1"))
+            zip_file.write(str(workfile), arcname=f"{task}.py")
 
     zip_buffer.seek(0)
     return send_file(zip_buffer, as_attachment=True, download_name='submission.zip', mimetype='application/zip')
@@ -190,12 +198,18 @@ def explorer():
     
     for i, task in enumerate(task_names):
         shortest_sub = get_local_shortest_submission(SUBMISSION, task)
+        shortest_sub_zlib = get_local_shortest_submission(ZLIB_SUBMISSION, task, encoding='L1')
         
         if shortest_sub:
             local_bytes = len(normalize_code(shortest_sub.read_text()))
         else:
             local_bytes = None
-        
+
+        if shortest_sub_zlib:
+            local_bytes_with_zlib = min(local_bytes, len(normalize_code(shortest_sub_zlib.read_text(encoding='L1'))))
+        else:
+            local_bytes_with_zlib = local_bytes
+
         global_bytes_list = global_shortest_bytes.get(task, [])
         global_bytes_min = min(global_bytes_list) if global_bytes_list and type(global_bytes_list) is list else float('inf')
         
@@ -203,19 +217,27 @@ def explorer():
             "name": task,
             "global_top3": global_bytes_list,
             "global": global_bytes_min,
-            "local": local_bytes,
+            "local_no_zlib": local_bytes,
+            "local_with_zlib": local_bytes_with_zlib,
             "hardness": summaries[i][1],
             "summary": summaries[i][0][:50] + "..." if len(summaries[i][0]) > 50 else summaries[i][0],
             "submitted": local_bytes is not None
         }
         
         if local_bytes is not None:
-            task_info["delta"] = local_bytes - global_bytes_min
-            task_info["ratio"] = local_bytes / global_bytes_min if global_bytes_min > 0 else float('inf')
+            task_info["delta_no_zlib"] = local_bytes - global_bytes_min
+            task_info["ratio_no_zlib"] = local_bytes / global_bytes_min if global_bytes_min > 0 else float('inf')
         else:
-            task_info["delta"] = None
-            task_info["ratio"] = None
-        
+            task_info["delta_no_zlib"] = None
+            task_info["ratio_no_zlib"] = None
+
+        if local_bytes_with_zlib is not None:
+            task_info["delta_with_zlib"] = local_bytes_with_zlib - global_bytes_min
+            task_info["ratio_with_zlib"] = local_bytes_with_zlib / global_bytes_min if global_bytes_min > 0 else float('inf')
+        else:
+            task_info["delta_with_zlib"] = None
+            task_info["ratio_with_zlib"] = None
+
         tasks_data.append(task_info)
     
     return render_template('explorer.html', tasks_data=tasks_data)

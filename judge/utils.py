@@ -3,14 +3,14 @@ from typing import Optional
 from .core import normalize_code
 
 # Return Path to shortest .py file under submission_dir / task
-def get_local_shortest_submission(submission_dir: Path, task: str) -> Optional[Path]:
+def get_local_shortest_submission(submission_dir: Path, task: str, encoding='utf-8') -> Optional[Path]:
     subs = submission_dir / task
     if not subs.exists():
         return None
     py_files = list(subs.glob("*.py"))
     if not py_files:
         return None
-    return min(py_files, key=lambda fn: len(normalize_code(fn.read_text(encoding="utf-8"))))
+    return min(py_files, key=lambda fn: len(normalize_code(fn.read_text(encoding=encoding))))
 
 # Helper to load problems from a directory (matches original behavior)
 import json

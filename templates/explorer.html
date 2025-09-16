@@ -123,13 +123,8 @@
                 <div class="col-md-3">
                     <label class="form-label">フィルター:</label>
                     <select id="filter-select" class="form-select" onchange="updatePlot()">
-                        <option value="all">すべて</option>
-                        <option value="submitted">提出済みのみ</option>
-                        <option value="unsubmitted">未提出のみ</option>
-                        <option value="winning">優勝中 (Local < Global)</option>
-                        <option value="perfect">完全一致</option>
-                        <option value="close">僅差 (≤5B)</option>
-                        <option value="improvable">改善可能 (>5B)</option>
+                        <option value="no-zlib">圧縮済みを含めない</option>
+                        <option value="with-zlib">圧縮済みも含める</option>
                     </select>
                 </div>
                 
@@ -235,6 +230,8 @@
         }
         
         function updateStats() {
+            const filterMode = document.getElementById('filter-select').value;
+
             let submitted = 0;
             let perfect = 0;
             let close = 0;
@@ -243,6 +240,10 @@
             let deltaCount = 0;
             
             tasksData.forEach(task => {
+                task.local = filterMode === 'with-zlib' ? task.local_with_zlib : task.local_no_zlib;
+                task.delta = filterMode === 'with-zlib' ? task.delta_with_zlib : task.delta_no_zlib;
+                task.ratio = filterMode === 'with-zlib' ? task.ratio_with_zlib : task.ratio_no_zlib;
+
                 if (task.local !== null) {
                     submitted++;
                     const delta = task.local - task.global;
@@ -266,51 +267,32 @@
         }
         
         function updatePlot() {
+            updateStats();
+
             const scaleMode = document.getElementById('scale-select').value;
             const viewMode = document.getElementById('view-mode').value;
-            const filterMode = document.getElementById('filter-select').value;
             const colorMode = document.getElementById('color-mode').value;
-            
-            // フィルタリング
-            let filteredData = tasksData.filter(task => {
-                switch(filterMode) {
-                    case 'submitted':
-                        return task.local !== null;
-                    case 'unsubmitted':
-                        return task.local === null;
-                    case 'winning':
-                        return task.local !== null && task.local < task.global;
-                    case 'perfect':
-                        return task.local !== null && task.local === task.global;
-                    case 'close':
-                        return task.local !== null && task.local - task.global <= 5 && task.local - task.global > 0;
-                    case 'improvable':
-                        return task.local !== null && task.local - task.global > 5;
-                    default:
-                        return true;
-                }
-            });
             
             // データ準備（値のクリッピング追加）
             let xData, yData, textData, hoverData;
             
-            xData = filteredData.map(t => t.global);
+            xData = tasksData.map(t => t.global);
             // 2499以上は2499に、NAは2500にクリップ
-            yData = filteredData.map(t => {
+            yData = tasksData.map(t => {
                 if (t.local === null) return 2500;
                 return Math.min(t.local, 2499);
             });
             
             if (viewMode === 'delta') {
-                xData = filteredData.map(t => t.global);
-                yData = yData.map((y, i) => y - filteredData[i].global);
+                xData = tasksData.map(t => t.global);
+                yData = yData.map((y, i) => y - tasksData[i].global);
             } else if (viewMode == 'ratio') {
-                xData = filteredData.map(t => t.global);
-                yData = yData.map((y, i) => y / filteredData[i].global);
+                xData = tasksData.map(t => t.global);
+                yData = yData.map((y, i) => y / tasksData[i].global);
             }
             
             // 色の設定
-            const colors = filteredData.map(task => {
+            const colors = tasksData.map(task => {
                 if (colorMode === 'delta') {
                     const delta = task.local !== null ? task.local - task.global : null;
                     return getColorByDelta(delta, task.local !== null);
@@ -323,7 +305,7 @@
             });
             
             // ホバーテキスト
-            hoverData = filteredData.map(task => {
+            hoverData = tasksData.map(task => {
                 const delta = task.local !== null ? task.local - task.global : 'N/A';
                 const ratio = task.local !== null ? (task.local / task.global * 100 - 100).toFixed(1) : 'N/A';
                 const actualLocal = task.local !== null ? task.local + 'B' : '未提出';
@@ -351,7 +333,7 @@
                     },
                     opacity: 0.8
                 },
-                text: filteredData.map(t => t.name),
+                text: tasksData.map(t => t.name),
                 hovertemplate: hoverData.map(h => h + '<extra></extra>'),
                 hoverlabel: {
                     bgcolor: 'white',
