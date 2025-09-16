@@ -334,28 +334,50 @@ class CFGConstructor(ast.NodeVisitor):
     def visit_TypeAlias(self, node):
         raise NotImplementedError()
 
-def visualize_cfg(node: ast.AST) -> CFN:
-    """Construct a control flow graph (CFG) from an AST node. Returns the root CFN."""
-    constructor = CFGConstructor()
-    graph, _ = constructor.visit(node)
-    return graph, _
+def calculate_liveout(root: CFN):
+    """Calculate liveout sets for each node in the CFG."""
+    changed = True
+    while changed:
+        changed = False
+        stack = [root]
+        visited = set()
+        while stack:
+            node = stack.pop()
+            if id(node) in visited:
+                continue
+            visited.add(id(node))
+            old_liveout = set(node.liveout)
+            # liveout = union of uevar and (liveout - varkill) of children
+            new_liveout = set()
+            for child in node.children:
+                new_liveout |= child.uevar | (child.liveout - child.varkill)
+                stack.append(child)
+            node.liveout = new_liveout
+            if old_liveout != node.liveout:
+                changed = True
 
-if __name__ == "__main__":
-    src = """
-R=range
-def p(g):
- i=0
- h=[v==i for u in g for v in u]
- c=sum(h)
- g=[[v * c for v in u] for u in g]
- return g
-"""
-    tree = ast.parse(src)
-    cfg, sub_cfgs = visualize_cfg(tree)
-    cfg = {
-        "__main__": cfg,
-        **sub_cfgs
-    }
+def construct_collision_graph(cfg: Dict[str, CFN]) -> Dict[str, Set[str]]:
+    """Names of LiveOut and VarKill variables cannot be the same."""
+    ret: Dict[str, Set[str]] = {}
+    for g in cfg.values():
+        stack = [g]
+        visited = set()
+        while stack:
+            node = stack.pop()
+            if id(node) in visited:
+                continue
+            visited.add(id(node))
+            cluster = node.liveout | node.varkill
+            for name in cluster:
+                if name not in ret:
+                    ret[name] = set()
+                ret[name].update(cluster - {name})
+            for child in node.children:
+                stack.append(child)
+    return ret
+
+def visualize_cfg(cfg: Dict[str, CFN]) -> str:
+    """Construct a control flow graph (CFG) from an AST node. Returns the root CFN."""
     visualized = ""
     visualized += f"```python\n{src}\n```\n"
     for name, g in cfg.items():
@@ -364,7 +386,7 @@ def p(g):
         visualized += "graph TB\n"
         checked = set()
         def dfs(node: CFN):
-            global visualized
+            nonlocal visualized
             if id(node) in checked:
                 return
             checked.add(id(node))
@@ -375,6 +397,36 @@ def p(g):
                 dfs(child)
         dfs(g)
         visualized += "```\n"
-    
+    return visualized
+
+if __name__ == "__main__":
+    src = """
+def p(g):
+ i=0
+ h=[v==i for u in g for v in u]
+ c=sum(h)
+ g=[[v * c + i for v in u] for u in g]
+ return g
+"""
+    tree = ast.parse(src)
+    constructor = CFGConstructor()
+    graph, subgraphs = constructor.visit(tree)
+    cfg = {
+        "__main__": graph,
+        **subgraphs
+    }
+    for g in cfg.values():
+        calculate_liveout(g)
+
+    visualized = visualize_cfg(cfg)
+
+    collision = construct_collision_graph(cfg)
+    visualized += "## Variable Collision Graph\n"
+    visualized += "```mermaid\ngraph TB\n"
+    for var, conflicts in collision.items():
+        for c in conflicts:
+            if var < c:  # avoid duplicate edges
+                visualized += f'  {var} --- {c}\n'
+    visualized += "```\n"
     with open("graph.md", "w") as f:
         f.write(visualized)
