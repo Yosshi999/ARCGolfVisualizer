@@ -1,0 +1,1 @@
+p=lambda g:[*zip(*[(v*3)[(f:=lambda c:max(bytes(v).find(c)for v in zip(*g)))(max(v))-f(1)+len(g):][:len(g)]for v in zip(*g)])]

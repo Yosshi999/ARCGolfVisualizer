@@ -1,0 +1,1 @@
+p=lambda g,b=0:[(c:=0,[(c:=c+w//8,w or(0,2,0,4,6,3,0,1,0)[c+b*3])[1]for w in v],b:=b+all(v))[1]for v in g]
