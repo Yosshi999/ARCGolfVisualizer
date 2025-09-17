@@ -138,16 +138,42 @@ class CFGConstructor(ast.NodeVisitor):
         """x += v
         Load(x); Load(v); Store(x)
         """
-        # target is always single.
-        self._prev.append_child(
-            CFN(parents=[], children=[], uevar={node.target.id}, varkill=set(), liveout=set())
-        )
-        self._prev = self._prev.children[-1]
-        self.traverse(node.value)
-        self._prev.append_child(
-            CFN(parents=[], children=[], uevar=set(), varkill={node.target.id}, liveout=set())
-        )
-        self._prev = self._prev.children[-1]
+        if isinstance(node.target, ast.Name):
+            # target is single.
+            self._prev.append_child(
+                CFN(parents=[], children=[], uevar={node.target.id}, varkill=set(), liveout=set())
+            )
+            self._prev = self._prev.children[-1]
+            self.traverse(node.value)
+            self._prev.append_child(
+                CFN(parents=[], children=[], uevar=set(), varkill={node.target.id}, liveout=set())
+            )
+            self._prev = self._prev.children[-1]
+        elif isinstance(node.target, ast.Subscript):
+            # only support subscript chain like a[i][j]...
+            v = node.target.value
+            stack = [node.target.slice]
+            while True:
+                if isinstance(v, ast.Subscript):
+                    stack.append(v.slice)
+                    v = v.value
+                elif isinstance(v, ast.Name):
+                    break
+                else:
+                    raise NotImplementedError(f"Unsupported AugAssign target {unparse(node)} at L{node.lineno}")
+            assert isinstance(v, ast.Name)
+            self._prev.append_child(
+                CFN(parents=[], children=[], uevar={v.id}, varkill=set(), liveout=set())
+            )
+            self._prev = self._prev.children[-1]
+            for s in reversed(stack):
+                self.traverse(s)
+            self._prev.append_child(
+                CFN(parents=[], children=[], uevar=set(), varkill={v.id}, liveout=set())
+            )
+            self._prev = self._prev.children[-1]
+        else:
+            raise NotImplementedError(f"Unsupported AugAssign {unparse(node)} at L{node.lineno}")
         
     def visit_Try(self, node):
         raise NotImplementedError()
