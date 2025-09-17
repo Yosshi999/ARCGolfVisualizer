@@ -20,6 +20,39 @@ class CFN:
         self.children.append(child)
         child.parents.append(self)
 
+
+def collect_free_vars(root: CFN) -> Set[str]:
+    # Resolve function call uevar
+    minimum_vars: Dict[int, Set[str]] = {}  # minumum defined vairables at beginning in each node
+    externals: Set[str] = set()  # variables used but not defined in this scope
+    @dataclass(order=True)
+    class Item:
+        size: int
+        node: CFN = field(compare=False)
+        prev_vars: Set[str] = field(compare=False, default_factory=set)
+    queue = [Item(0, root, set())]
+    heapq.heapify(queue)
+    while queue:
+        item = heapq.heappop(queue)
+        node = item.node
+        if id(node) in minimum_vars and (minimum_vars[id(node)] & item.prev_vars) == minimum_vars[id(node)]:
+            # no update
+            continue
+        if id(node) not in minimum_vars:
+            minimum_vars[id(node)] = set(item.prev_vars)
+        else:
+            minimum_vars[id(node)] &= item.prev_vars
+        # add newly defined variables
+        current_vars = node.varkill | minimum_vars[id(node)]
+        node.minimum_env = set(current_vars)
+        # add used but not defined variables to externals
+        externals |= node.uevar - current_vars
+
+        for child in node.children:
+            heapq.heappush(queue, Item(len(current_vars), child, current_vars))
+    return externals
+
+
 class CFGConstructor(ast.NodeVisitor):
     def __init__(self):
         self._graph = CFN(parents=[], children=[], uevar=set(), varkill=set(), liveout=set())
@@ -52,34 +85,7 @@ class CFGConstructor(ast.NodeVisitor):
         yield name
         self._subgraph[name] = subgraph
 
-        # Resolve function call uevar
-        minimum_vars: Dict[int, Set[str]] = {}  # minumum defined vairables at beginning in each node
-        externals: Set[str] = set()  # variables used but not defined in this scope
-        @dataclass(order=True)
-        class Item:
-            size: int
-            node: CFN = field(compare=False)
-            prev_vars: Set[str] = field(compare=False, default_factory=set)
-        queue = [Item(0, subgraph, set())]
-        heapq.heapify(queue)
-        while queue:
-            item = heapq.heappop(queue)
-            node = item.node
-            if id(node) in minimum_vars and (minimum_vars[id(node)] & item.prev_vars) == minimum_vars[id(node)]:
-                # no update
-                continue
-            if id(node) not in minimum_vars:
-                minimum_vars[id(node)] = set(item.prev_vars)
-            else:
-                minimum_vars[id(node)] &= item.prev_vars
-            # add newly defined variables
-            current_vars = node.varkill | minimum_vars[id(node)]
-            node.minimum_env = set(current_vars)
-            # add used but not defined variables to externals
-            externals |= node.uevar - current_vars
-
-            for child in node.children:
-                heapq.heappush(queue, Item(len(current_vars), child, current_vars))
+        externals = collect_free_vars(subgraph)
         subgraph.uevar |= externals
 
         # Update callers
