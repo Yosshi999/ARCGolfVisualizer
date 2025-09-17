@@ -424,16 +424,18 @@ def construct_collision_graph(tree: ast.AST) -> Tuple[Dict[str, CFN], Dict[str, 
     collision = collect_dependents(cfg)
     if set(collision.keys()) & {"eval", "exec"}:
         raise NotImplementedError("The code uses eval/exec, which may introduce dynamic variable usage. Optimization aborted.")
+    
+    global_collision = collect_dependents({"__main__": graph})
 
-    # remove reserved names and the entry point `p`
-    reserved_names = set(keyword.kwlist) | set(dir(builtins)) | {"p"}
+    # remove reserved names and the entry point `p` and global variables
+    reserved_names = set(keyword.kwlist) | set(dir(builtins)) | {"p"} | set(global_collision.keys())
     collision = {
         key: value - reserved_names
         for key, value in collision.items()
         if key not in reserved_names
     }
 
-    return cfg, collision
+    return cfg, collision, reserved_names
 
 def visualize_cfg(cfg: Dict[str, CFN]) -> str:
     """Construct a control flow graph (CFG) from an AST node. Returns the root CFN."""
@@ -468,7 +470,7 @@ def p(g):
  return g
 """
     tree = ast.parse(src)
-    cfg, collision = construct_collision_graph(tree)
+    cfg, collision, _ = construct_collision_graph(tree)
     visualized = visualize_cfg(cfg)
 
     visualized += "## Variable Collision Graph\n"
