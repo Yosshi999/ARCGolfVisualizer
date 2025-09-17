@@ -3,6 +3,8 @@ from dataclasses import dataclass, field
 import heapq
 from typing import List, Optional, Tuple, Union, Set, Dict
 from contextlib import contextmanager
+import keyword
+import builtins
 
 from ast_unparse import unparse
 
@@ -394,9 +396,11 @@ def construct_collision_graph(tree: ast.AST) -> Tuple[Dict[str, CFN], Dict[str, 
         calculate_liveout(g)
 
     collision = collect_dependents(cfg)
+    if set(collision.keys()) & {"eval", "exec"}:
+        raise NotImplementedError("The code uses eval/exec, which may introduce dynamic variable usage. Optimization aborted.")
 
     # remove reserved names and the entry point `p`
-    reserved_names = set(dir(__builtins__)) | {"p"}
+    reserved_names = set(keyword.kwlist) | set(dir(builtins)) | {"p"}
     collision = {
         key: value - reserved_names
         for key, value in collision.items()
