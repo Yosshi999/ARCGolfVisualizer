@@ -357,7 +357,7 @@ class CFGConstructor(ast.NodeVisitor):
                 # resolve later
                 self._function_callers.append((node.func.id, self._prev))
         else:
-            print("Warning: Unresolvable function call", unparse(node), "at Line", node.lineno)
+            raise NotImplementedError(f"Warning: Unresolvable function call {unparse(node)} at Line {node.lineno}")
     
     def visit_TypeVar(self, node):
         raise NotImplementedError()
