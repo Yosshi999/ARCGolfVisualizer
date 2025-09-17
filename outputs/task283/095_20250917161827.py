@@ -1,0 +1,1 @@
+p=lambda g:exec('g[::-1]=[[(x,(x+3)%5)[x*y>0]for x,y in zip(v,[0]+v)]for*v,in zip(*g)];'*4)or g
