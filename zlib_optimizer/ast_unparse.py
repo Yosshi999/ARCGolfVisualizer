@@ -14,6 +14,7 @@ _INFSTR = "1e" + repr(sys.float_info.max_10_exp + 1)
 class _Precedence(IntEnum):
     """Precedence table that originated from python grammar."""
 
+    OMIT = auto()            # do not add parenthesis
     NAMED_EXPR = auto()      # <target> := <expr1>
     TUPLE = auto()           # <expr1>, <expr2>
     YIELD = auto()           # 'yield', 'yield from'
@@ -222,7 +223,7 @@ class Unparser(NodeVisitor):
 
     def visit_NamedExpr(self, node):
         with self.require_parens(_Precedence.NAMED_EXPR, node):
-            self.set_precedence(_Precedence.ATOM, node.target, node.value)
+            self.set_precedence(_Precedence.TEST, node.target, node.value)
             self.traverse(node.target)
             self.write(":=")
             self.traverse(node.value)
@@ -245,6 +246,7 @@ class Unparser(NodeVisitor):
             self.set_precedence(_Precedence.TUPLE, target)
             self.traverse(target)
             self.write("=")
+        self.set_precedence(_Precedence.TUPLE, node.value)
         self.traverse(node.value)
 
     def visit_AugAssign(self, node):
@@ -940,6 +942,8 @@ class Unparser(NodeVisitor):
                 # parentheses can be omitted if the tuple isn't empty
                 self.items_view(self.traverse, node.slice.elts)
             else:
+                # you dont need parenthesis in the []
+                self.set_precedence(_Precedence.OMIT, node.slice)
                 self.traverse(node.slice)
 
     def visit_Starred(self, node):
