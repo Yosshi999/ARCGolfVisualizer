@@ -49,7 +49,7 @@ def alive(self: interegular.FSM, lives, test: str):
     return state in lives
 
 def confusion_check(term1: Terminal, term2: Terminal) -> bool:
-    test = term1.value + term2.value[0]
+    test = term1.value.split(" ")[-1] + term2.value[0]
     for name in regex_fsms.keys():
         if alive(regex_fsms[name], live_states[name], test):
             # Potensial confusion
