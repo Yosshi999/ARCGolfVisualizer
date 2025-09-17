@@ -362,7 +362,7 @@ def calculate_liveout(root: CFN):
             if old_liveout != node.liveout:
                 changed = True
 
-def construct_collision_graph(cfg: Dict[str, CFN]) -> Dict[str, Set[str]]:
+def collect_dependents(cfg: Dict[str, CFN]) -> Dict[str, Set[str]]:
     """Names of LiveOut and VarKill variables cannot be the same."""
     ret: Dict[str, Set[str]] = {}
     for g in cfg.values():
@@ -381,6 +381,29 @@ def construct_collision_graph(cfg: Dict[str, CFN]) -> Dict[str, Set[str]]:
             for child in node.children:
                 stack.append(child)
     return ret
+
+def construct_collision_graph(tree: ast.AST) -> Tuple[Dict[str, CFN], Dict[str, Set[str]]]:
+    """Construct a control flow graph (CFG) and variable collision graph from an AST node."""
+    constructor = CFGConstructor()
+    graph, subgraphs = constructor.visit(tree)
+    cfg = {
+        "__main__": graph,
+        **subgraphs
+    }
+    for g in cfg.values():
+        calculate_liveout(g)
+
+    collision = collect_dependents(cfg)
+
+    # remove reserved names and the entry point `p`
+    reserved_names = set(dir(__builtins__)) | {"p"}
+    collision = {
+        key: value - reserved_names
+        for key, value in collision.items()
+        if key not in reserved_names
+    }
+
+    return cfg, collision
 
 def visualize_cfg(cfg: Dict[str, CFN]) -> str:
     """Construct a control flow graph (CFG) from an AST node. Returns the root CFN."""
@@ -415,18 +438,9 @@ def p(g):
  return g
 """
     tree = ast.parse(src)
-    constructor = CFGConstructor()
-    graph, subgraphs = constructor.visit(tree)
-    cfg = {
-        "__main__": graph,
-        **subgraphs
-    }
-    for g in cfg.values():
-        calculate_liveout(g)
-
+    cfg, collision = construct_collision_graph(tree)
     visualized = visualize_cfg(cfg)
 
-    collision = construct_collision_graph(cfg)
     visualized += "## Variable Collision Graph\n"
     visualized += "```mermaid\ngraph TB\n"
     for var, conflicts in collision.items():
