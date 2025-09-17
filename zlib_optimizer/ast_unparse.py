@@ -1043,7 +1043,8 @@ class Unparser(NodeVisitor):
                 self.traverse(node.args)
             if buffer:
                 for b in buffer:
-                    self.write(b)
+                    assert isinstance(b, Terminal)
+                    self.write_terminal(b)
             self.write(":")
             self.set_precedence(_Precedence.TEST, node.body)
             self.traverse(node.body)
