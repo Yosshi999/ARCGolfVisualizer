@@ -1,0 +1,1 @@
+p=lambda g,n=4:n and[[(d>0,c)[c>0]for c,d in zip(v,[0]+v)]for*v,in zip(*p(g,n-1)[::-1])]or g
