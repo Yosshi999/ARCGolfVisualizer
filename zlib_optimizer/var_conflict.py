@@ -322,8 +322,16 @@ class CFGConstructor(ast.NodeVisitor):
         )
         self._prev = self._prev.children[-1]
     def visit_GeneratorExp(self, node):
+        with self.scope() as funcname:
+            self._generator_helper(node.generators)
+            self.traverse(node.elt)
+        self._prev.append_child(
+            CFN(parents=[], children=[], uevar=set(self._subgraph[funcname].uevar), varkill=set(), liveout=set())
+        )
+        self._prev = self._prev.children[-1]
+
         # Not supported due to complexity of tracking evaluation
-        raise NotImplementedError("Generator expressions are not supported")
+        # raise NotImplementedError("Generator expressions are not supported")
     def visit_DictComp(self, node):
         with self.scope() as funcname:
             self._generator_helper(node.generators)
@@ -357,7 +365,9 @@ class CFGConstructor(ast.NodeVisitor):
                 # resolve later
                 self._function_callers.append((node.func.id, self._prev))
         else:
-            raise NotImplementedError(f"Warning: Unresolvable function call {unparse(node)} at Line {node.lineno}")
+            msg = f"Warning: Unresolvable function call {unparse(node)} at Line {node.lineno}"
+            print(msg)
+            # raise NotImplementedError(msg)
     
     def visit_TypeVar(self, node):
         raise NotImplementedError()

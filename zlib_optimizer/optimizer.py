@@ -118,15 +118,9 @@ def optimize_code(src: str) -> str:
 
 
 if __name__ == "__main__":
-    src = """r=range
-f=lambda g:[y for y,v in enumerate(g)if any(v)]
-def p(g):
- h,w=f(g),f(zip(*g))
- for t in r(36):
-  for k in r((h[1]-h[0])//2)[1::2]:g[h[a:=t//2%2]+(k+1)*(1-2*a)][w[b:=t%2]]=5
-  for k in r((w[1]-w[0])//2)[1::2]:g[h[b]][w[a]+(k+1)*(1-2*a)]=5
-  if(Y:=t//4%3-1)|(X:=t//12%3-1):g[h[b]+Y][w[a]+X]=g[h[~b]][w[a]]
- return g""".strip().replace("\r","")
+    src = """
+def p(n):o=max(n[0],key=n[0].count);f,=[r for a in(n,n[::-1])for g in range(len(n)-2)for h in range(len(n[0])-2)if len(set(r:=[a[g+p//3][h+p%3]for p in range(9)]))>3>0<o!=r[0]!=r[8]!=o];[(t:=lambda d=o,b=o,c=o,*z:[d]*u+[b]*u+[c]*u)(t(f[0]),t(),t(c=f[8]))!=[a[g+p][h:[h+3*u*s,None][h+3*u*s<0]:s]for p in range(3*u)]or exec('for p in range(3*u):a[g+p][h:[h+3*u*s,None][h+3*u*s<0]:s]=t(*f[p//u*3:])')for u in range(4)for s in(1,-1)for g in range(len(n)-3*u+1)for h in range(len(n[0]))for a in(n,n[::-1])];return n
+""".strip().replace("\r","")
 
     optimized_src, mapper = optimize_code(src)
 

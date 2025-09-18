@@ -1,4 +1,4 @@
-import zlib
+import zopfli.zlib as zlib
 
 def zip_src(src):
  # We prefer that compressed source not end in a quotation mark
