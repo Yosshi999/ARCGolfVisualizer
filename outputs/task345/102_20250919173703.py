@@ -1,0 +1,1 @@
+p=lambda g,i=9:exec(("j=0;i-=1\n"+"if g[i+1][j]&2:g[i+1][k:=j+g[i][j]%2]=g[i][k]=2\nj+=1\n"*10)*9)or g

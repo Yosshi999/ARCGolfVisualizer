@@ -1,0 +1,1 @@
+p=lambda g:[[(1-len(v)%2*.4)*v.pop(0)for _ in[]+v]for*v,in g]

@@ -1,0 +1,1 @@
+p=lambda g:[(s:=0)or[((s%3==v[0]/2)*4,s:=s+w,2)[w]for w in v]for v in g]
