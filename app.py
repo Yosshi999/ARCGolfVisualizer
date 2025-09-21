@@ -3,6 +3,7 @@ import json
 from pathlib import Path
 from datetime import datetime
 from get_global_shortest import get_global_shortests
+from comments_manager import Comment, Comments_manager
 
 # import common judge utilities
 from judge.core import normalize_code, judge_code
@@ -51,6 +52,8 @@ problems = load_problems_from_dir(PROBLEM)
 task_names = list(problems.keys())
 print(f"found tasks: {len(task_names)}")
 assert len(task_names) == len(summaries), "Number of tasks does not match number of summaries."
+
+comments_manager = Comments_manager()
 
 @app.route('/')
 def index():
@@ -115,6 +118,9 @@ def problem(task):
     shortest_sub = get_local_shortest_submission(SUBMISSION, task)
     code = shortest_sub.read_text() if shortest_sub else ""
     hints = collect_hints(problems[task])
+    comments = comments_manager.get_comments(task)
+    comments = sorted(comments,key=lambda c:c.time)
+    print("task",task,comments)
     return render_template(
         'problem.html',
         task=task,
@@ -123,7 +129,8 @@ def problem(task):
         hints=hints,
         summary=summaries[task_names.index(task)][0],
         hardness=summaries[task_names.index(task)][1],
-        global_shortest=global_shortest_byte_top3
+        global_shortest=global_shortest_byte_top3,
+        comments=comments,
     )
 
 @app.post('/submit')
@@ -241,3 +248,12 @@ def explorer():
         tasks_data.append(task_info)
     
     return render_template('explorer.html', tasks_data=tasks_data)
+
+@app.post('/comment/<task>')
+def comment(task):
+    data = request.form
+    comment = Comment.from_form(data=data)
+    if comment.is_empty():
+        return "Empty comment", 400
+    comments_manager.save_comment(task,comment)
+    return render_template('_comment.html',comment=comment)
