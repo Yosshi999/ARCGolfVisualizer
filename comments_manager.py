@@ -1,6 +1,8 @@
 from pathlib import Path
 import re
 from datetime import datetime
+from flask import render_template_string
+from urllib.parse import quote,unquote
 
 class Comment:
     def __init__(self,time,text):
@@ -14,6 +16,30 @@ class Comment:
 
     def is_empty(self):
         return self.text.strip() == ""
+
+    def pp_text(self):
+        texts = re.split(r"(@\d{3}|#[^\W]+)",self.text)
+        template = ""
+        vars_dict = {}
+        var_cnt = 0
+        def gen_var():
+            nonlocal var_cnt
+            var_cnt += 1
+            return f"var{var_cnt}"
+
+        for text in texts:
+            if (m := re.match(r"^(@(\d{3}))$",text)):
+                s = m.group(2)
+                template += f'<a href="/problem/task{s}" target="_blank">@{s}</a>'
+            elif (m := re.match(r"^(#[^\W]+)$",text)):
+                s = m.group(1)
+                template += f'<a href="/search/{quote(s)}" target="_blank">{s}</a>'
+            else:
+                v = gen_var()
+                template += "{{" + v + "}}"
+                vars_dict[v] = text
+
+        return render_template_string(template,**vars_dict)
 
 COMMENTS = Path("comments")
 

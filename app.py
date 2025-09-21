@@ -2,6 +2,8 @@ from flask import Flask, render_template, request, jsonify, send_file
 import json
 from pathlib import Path
 from datetime import datetime
+import urllib.parse
+import re
 from get_global_shortest import get_global_shortests
 from comments_manager import Comment, Comments_manager
 
@@ -257,3 +259,23 @@ def comment(task):
         return "Empty comment", 400
     comments_manager.save_comment(task,comment)
     return render_template('_comment.html',comment=comment)
+
+@app.route('/search/')
+def searchBase():
+    return render_template('search.html',query="",results=[])
+
+@app.route('/search/<query>/')
+def search(query):
+    results = []
+    for task in task_names:
+        comments = comments_manager.get_comments(task)
+        for comment in comments:
+            print(repr(query),repr(comment.text),re.search(query,comment.text))
+            if re.search(query,comment.text):
+                results.append({
+                    "taskname": task,
+                    "comment": comment,
+                })
+    sort_by = request.args.get('sort', 'taskname')
+    results.sort(key=lambda v: v[sort_by])
+    return render_template('search.html',query=urllib.parse.quote(query),results=results)
