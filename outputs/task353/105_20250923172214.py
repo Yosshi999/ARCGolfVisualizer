@@ -1,0 +1,1 @@
+p=lambda g:exec('g[:]=zip(*g[::-1]);i=g.index(max(g,key=any));g[i:i+2]=g[i:i+2][::2*max(g[i])-7];'*4)or g

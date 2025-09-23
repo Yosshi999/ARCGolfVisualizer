@@ -1,0 +1,1 @@
+p=lambda g:[g:=(s:=[])+[[w*(w>1)for w in v]for*v,in zip(*g)if any(s:=s+v)][::-1]for _ in g*2][7]

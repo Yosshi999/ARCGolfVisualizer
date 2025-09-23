@@ -1,0 +1,1 @@
+def p(g):f=g.index;i=f(u:=max(g))+1;h=u.index;j=h(c:=max(u))+1;return[[c*(w>0)for w in v][j:h(c,j)]for v in g][i:f(u,i)]
