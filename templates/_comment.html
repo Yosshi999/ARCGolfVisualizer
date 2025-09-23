@@ -2,7 +2,7 @@
     <td> {% autoescape false %} {{ comment.pp_text() }} {% endautoescape %} </td>
     <td>
         <button class="btn btn-outline-danger btn-comment-delete"
-            hx-delete="/comment/{{ task }}/{{comment.time}}"
+            hx-delete="/comment/{{ task }}/{{comment.id}}"
         >
             🗑️
         </button>

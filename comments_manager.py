@@ -5,14 +5,16 @@ from flask import render_template_string
 from urllib.parse import quote,unquote
 
 class Comment:
-    def __init__(self,time,text):
-        self.time = time
+    def __init__(self,commentid,text):
+        self.id = commentid
         self.text = text
     
     @classmethod
     def from_form(self,data):
         time=f"{datetime.now().strftime('%Y%m%d%H%M%S')}"
-        return Comment(time=time,text=data["comment"])
+        # Without hash, comments at the same timing might conflict.
+        h = ("%x" % hash(data))[:4]
+        return Comment(commentid=f"{time}_{h}",text=data["comment"])
 
     def is_empty(self):
         return self.text.strip() == ""
@@ -53,9 +55,9 @@ class Comments_manager:
             data = set()
             for fn in (base / task).glob("*.comment"):
                 try:
-                    m = re.match("(\d+).comment",fn.name)
-                    time = m.group(1)
-                    data.add(Comment(time=time,text=open(fn,"r").read()))
+                    m = re.match("(.*).comment",fn.name)
+                    commentid = m.group(1)
+                    data.add(Comment(commentid=commentid,text=open(fn,"r").read()))
                 except Exception as e:
                     print(f"Failed for loading comment {fn}")
             self.cache[task] = data
@@ -65,7 +67,7 @@ class Comments_manager:
     def save_comment(self,task,comment):
         print("save",task,comment)
         (COMMENTS / task).mkdir(exist_ok=True)
-        fp = COMMENTS / task / f"{comment.time}.comment"
+        fp = COMMENTS / task / f"{comment.id}.comment"
         fp.write_bytes(comment.text.encode("utf-8"))
         self.cache[task].add(comment)
 
@@ -73,4 +75,4 @@ class Comments_manager:
         print("delete",task,commentid)
         path = COMMENTS / task / f"{commentid}.comment"
         path.unlink()
-        self.cache[task] = {*filter(lambda c: c.time!=commentid,self.cache[task])}
+        self.cache[task] = {*filter(lambda c: c.id!=commentid,self.cache[task])}

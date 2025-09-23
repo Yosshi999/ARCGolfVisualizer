@@ -121,7 +121,7 @@ def problem(task):
     code = shortest_sub.read_text() if shortest_sub else ""
     hints = collect_hints(problems[task])
     comments = comments_manager.get_comments(task)
-    comments = sorted(comments,key=lambda c:c.time)
+    comments = sorted(comments,key=lambda c:c.id)
     print("task",task,comments)
     return render_template(
         'problem.html',
