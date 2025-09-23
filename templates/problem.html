@@ -7,6 +7,7 @@
         <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" rel="stylesheet">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.7/dist/htmx.min.js"></script>
         <style>
 .grid-container {
     display: grid;
@@ -96,6 +97,9 @@
                         <li class="nav-item">
                             <a class="nav-link" href="/explorer">🎯 Explorer</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/search">🔍 Search</a>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -173,6 +177,34 @@
                             <button class="btn btn-primary mt-2 ms-auto" onclick="testBtn()">Just test</button>
                         </div>
                     </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Comments</th>
+                                    <th>削除</th>
+                                </tr>
+                            </thead>
+                            <tbody id="comment-list"
+                                   hx-confirm="Delete comment?"
+                                   hx-target="closest tr"
+                                   hx-swap="outerHTML"
+                            >
+                                {% for comment in comments %}
+                                    {% include "_comment.html" %}
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <form class="mb-4" hx-post="/comment/{{ task }}" hx-target="#comment-list" hx-swap="beforeend"
+                        hx-on::after-request="if(event.detail.successful)this.reset()">
+                        <textarea class="form-control" id="comment" name="comment" rows="3"></textarea>
+                        <div class="d-flex">
+                            <button class="btn btn-primary mt-2" type="submit">Add Comment</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -190,6 +222,10 @@
                     stdoutLog.innerHTML="";
                 }
                 updateDisplay();
+            });
+
+            document.body.addEventListener('htmx:responseError', function(event) {
+                alert("エラー:　" + event.detail.xhr.responseText);
             });
 
             const gridData = {{ problem | tojson }};
@@ -281,13 +317,13 @@
             });
 
             function submitBtn() {
-                submit(true);
+                submitSolution(true);
             }
             function testBtn() {
-                submit(false);
+                submitSolution(false);
             }
 
-            function submit(saveFile) {
+            function submitSolution(saveFile) {
                 const code = submission.value;
                 if (code.trim() === '') {
                     alert('Please enter your code before submitting.');
