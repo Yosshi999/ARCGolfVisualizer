@@ -65,14 +65,12 @@ class Comments_manager:
         return self.cache[task]
     
     def save_comment(self,task,comment):
-        print("save",task,comment)
         (COMMENTS / task).mkdir(exist_ok=True)
         fp = COMMENTS / task / f"{comment.id}.comment"
         fp.write_bytes(comment.text.encode("utf-8"))
         self.cache[task].add(comment)
 
     def delete_comment(self,task,commentid):
-        print("delete",task,commentid)
         path = COMMENTS / task / f"{commentid}.comment"
         path.unlink()
         self.cache[task] = {*filter(lambda c: c.id!=commentid,self.cache[task])}

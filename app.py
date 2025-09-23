@@ -122,7 +122,6 @@ def problem(task):
     hints = collect_hints(problems[task])
     comments = comments_manager.get_comments(task)
     comments = sorted(comments,key=lambda c:c.id)
-    print("task",task,comments)
     return render_template(
         'problem.html',
         task=task,
@@ -275,7 +274,6 @@ def search(query):
     for task in task_names:
         comments = comments_manager.get_comments(task)
         for comment in comments:
-            print(repr(query),repr(comment.text),re.search(query,comment.text))
             if re.search(query,comment.text):
                 results.append({
                     "taskname": task,
