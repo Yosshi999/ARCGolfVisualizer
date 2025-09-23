@@ -183,9 +183,14 @@
                             <thead>
                                 <tr>
                                     <th>Comments</th>
+                                    <th>削除</th>
                                 </tr>
                             </thead>
-                            <tbody id="comment-list">
+                            <tbody id="comment-list"
+                                   hx-confirm="Delete comment?"
+                                   hx-target="closest tr"
+                                   hx-swap="outerHTML"
+                            >
                                 {% for comment in comments %}
                                     {% include "_comment.html" %}
                                 {% endfor %}

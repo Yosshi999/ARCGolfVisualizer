@@ -68,4 +68,9 @@ class Comments_manager:
         fp = COMMENTS / task / f"{comment.time}.comment"
         fp.write_bytes(comment.text.encode("utf-8"))
         self.cache[task].add(comment)
-    
+
+    def delete_comment(self,task,commentid):
+        print("delete",task,commentid)
+        path = COMMENTS / task / f"{commentid}.comment"
+        path.unlink()
+        self.cache[task] = {*filter(lambda c: c.time!=commentid,self.cache[task])}

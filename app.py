@@ -258,7 +258,12 @@ def comment(task):
     if comment.is_empty():
         return "Empty comment", 400
     comments_manager.save_comment(task,comment)
-    return render_template('_comment.html',comment=comment)
+    return render_template('_comment.html',task=task,comment=comment)
+
+@app.route('/comment/<task>/<commentid>', methods=['DELETE'])
+def comment_delete(task,commentid):
+    comments_manager.delete_comment(task,commentid)
+    return ''
 
 @app.route('/search/')
 def searchBase():
