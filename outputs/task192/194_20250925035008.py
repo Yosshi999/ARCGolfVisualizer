@@ -1,0 +1,1 @@
+def p(g,n=8):C=max({*(v:=sum(g,[]))}-{0},key=v.count);return n and p([[((c,((C+1,c+10)[C!=c>0<d==C],C)[c>20])[0<c!=C],(c,0)[0<c!=C])[n<2]for c,d in zip(v,(0,)+v)]for v in zip(*g)][::-1],n-1)or g

@@ -1,0 +1,1 @@
+p=lambda g,n=220,c=3:n and p([(w:=([c:=(c+3)%5]*l+v[l:]if{*v[:(l:=n//22)]}=={5}else v))[1:]+[0]*(n>218)+[w[0]]*(n>2)for*v,in zip(*g)],n-1,c)or g
