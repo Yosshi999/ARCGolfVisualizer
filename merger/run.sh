@@ -13,6 +13,9 @@ docker run --rm -it \
   -v "$(pwd)/../problems:/app/problems:ro" \
   -v "$(pwd)/../submission.zip:/mnt/submission.zip:ro" \
   -v "$(pwd)/../outputs:/app/outputs:rw" \
+  -v "$(pwd)/../compressed:/app/compressed:rw" \
+  -v "$(pwd)/../judge:/app/judge:ro" \
+  -e PYTHONPATH=/app \
   --tmpfs /tmp:rw,noexec,nosuid,size=128m \
   --network=none \
   --cap-drop=ALL \

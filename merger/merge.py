@@ -7,7 +7,7 @@ import copy
 import zlib
 import base64
 import re
-
+from judge.utils import get_local_shortest_submission
 
 def test(problem, code) -> bool:
     try:
@@ -45,52 +45,49 @@ for p in sorted(PROBLEM.glob('*.json')):
         problems[p.stem] = data["train"] + data["test"] + data["arc-gen"]
 print(f"found tasks: {len(problems)}")
 
-def get_local_shortest_submission(task: str):
-    subs = SUBMISSION / task
-    if not subs.exists():
-        return None
-    py_files = list(subs.glob("*.py"))
-    if not py_files:
-        return None
-    return min(py_files, key=lambda x: int(x.stem.split('_')[0]))
-
 def normalize_code(code: str) -> str:
     return code.strip().replace("\r\n", "\n")
 
 def get_local_shortest_bytes(task: str):
-    sub = get_local_shortest_submission(task)
+    sub = get_local_shortest_submission(SUBMISSION, task, encoding='L1')
     if sub is None:
         return float('inf')
-    return int(sub.stem.split('_')[0])
+    return len(sub.read_text(encoding='L1'))
 
 def get_local_shortest_compressed_bytes(task: str):
-    subs = COMPRESSED / task
-    if not subs.exists():
+    sub = get_local_shortest_submission(COMPRESSED, task, encoding='L1')
+    if sub is None:
         return float('inf')
-    py_files = list(subs.glob("*.py"))
-    if not py_files:
-        return float('inf')
-    return min(int(x.stem.split('_')[0]) for x in py_files)
+    return len(sub.read_text(encoding='L1'))
 
 def is_zlib_code(code: str) -> bool:
     return code.startswith("#coding:L1")
 
 def decode_zlib(code: str) -> str:
-    # zlib.decompress(...) の呼び出し部分を抜き出す
-    m = re.search(r'(zlib\.decompress\s*\(.*\))', code, re.S)
+    m = re.search(r'zlib\.decompress\(.*\)', code, re.S)
     if not m:
         raise ValueError("Unable to find zlib.decompress(...) expression")
-    expr = m.group(1)
+    expr = m.group(0)
+
+    # 右から2個目の ')' の位置を探す
+    idx = [i for i, c in enumerate(expr) if c == ')']
+    if len(idx) < 1:
+        raise ValueError("No closing parenthesis found in expression")
+    cut = idx[-1]   # exec(...) の ')'
+    if len(idx) >= 2:
+        cut = idx[-2]  # zlib.decompress(...) の ')'
+    expr = expr[:cut+1]
+
     # zlib と bytes だけを許可して評価
     data = eval(expr, {"zlib": zlib, "bytes": bytes})
-    return data.decode("utf-8")
+    return data.decode("L1")
 
 with zipfile.ZipFile(args.zip, 'r') as zip_ref:
     for name in zip_ref.namelist():
         if name.endswith('.py'):
             with zip_ref.open(name) as f:
                 task_name = name.split("/")[-1].split(".")[0]
-                code = normalize_code(f.read().decode('utf-8'))
+                code = normalize_code(f.read().decode('L1'))
                 print(f"Processing {task_name}...")
 
                 if not task_name in problems:
@@ -99,14 +96,14 @@ with zipfile.ZipFile(args.zip, 'r') as zip_ref:
 
                 if not is_zlib_code(code):
                     # normal case
-                    if get_local_shortest_bytes(task_name) < len(code):
+                    if get_local_shortest_bytes(task_name) <= len(code):
                         print(f"> Skipped. Local shortest submission is shorter.")
                         continue
                     if test(problems[task_name], code):
                         print(f"> Passed. size: {len(code)}")
                         SUBS = SUBMISSION / task_name
                         SUBS.mkdir(exist_ok=True)
-                        (SUBS / f"{len(code):03d}_{args.comment}.py").write_bytes(code.encode("utf-8"))
+                        (SUBS / f"{len(code):03d}_{args.comment}.py").write_bytes(code.encode("L1"))
                 else:
                     # zlib case
                     try:
@@ -123,7 +120,7 @@ with zipfile.ZipFile(args.zip, 'r') as zip_ref:
                     ok = False
                     if plain_len <= out_best:
                         ok = True
-                    elif comp_len <= comp_best + 20:
+                    elif comp_len <= min(out_best, comp_best) + 20:
                         ok = True
 
                     if not ok:
@@ -134,7 +131,4 @@ with zipfile.ZipFile(args.zip, 'r') as zip_ref:
                         print(f"> Passed. plain size: {plain_len}, comp size: {comp_len}")
                         SUBS = SUBMISSION / task_name
                         SUBS.mkdir(exist_ok=True)
-                        (SUBS / f"{plain_len:03d}_{args.comment}.py").write_bytes(plain_code.encode("utf-8"))
-                        COMP = COMPRESSED / task_name
-                        COMP.mkdir(exist_ok=True)
-                        (COMP / f"{comp_len:03d}_{args.comment}.py").write_bytes(code.encode("utf-8"))
+                        (SUBS / f"{plain_len:03d}_{args.comment}.py").write_bytes(plain_code.encode("L1"))

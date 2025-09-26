@@ -6,7 +6,6 @@ import traceback
 import contextlib
 import copy
 from typing import Dict, Any
-import numpy
 from pathlib import Path
 import sys
 
@@ -17,6 +16,8 @@ def normalize_code(code: str) -> str:
 
 # Core judging logic: accepts a loaded module and runs tests
 def judge_core(module, examples: list) -> Dict[str, Any]:
+    import numpy
+
     if not hasattr(module, "p"):
         return {"success": False, "error_type": "function_missing", "error_message": "Unable to locate function p()."}
     program = getattr(module, "p")
