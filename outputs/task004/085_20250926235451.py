@@ -1,0 +1,1 @@
+p=lambda g,d=0,i=0:[[d+w-(d:=w*(w in sum(g[1:],[])[(i:=i+1):]))for w in v]for v in g]
