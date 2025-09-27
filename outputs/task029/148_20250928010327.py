@@ -1,0 +1,1 @@
+p=lambda g:[v[v.index(C)+1:bytes(v).rfind(C)]for v in g if(C:=min(c for c in sum(g,[])if len(l:={v.count(c)for v in g}-{0,2})==1<max(l)))in v][1:-1]

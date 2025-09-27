@@ -1,0 +1,1 @@
+p=lambda g:[[x and sum(g[w.index(5)])/5for*w,x in zip(*g,v)]for v in g]
