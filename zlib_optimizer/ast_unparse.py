@@ -913,6 +913,11 @@ class Unparser(NodeVisitor):
     def visit_Call(self, node):
         self.set_precedence(_Precedence.ATOM, node.func)
         self.traverse(node.func)
+        if len(node.keywords) == 0 and len(node.args) == 1 and isinstance(node.args[0], GeneratorExp):
+            # special case: f(g(x) for x in y), no parentheses needed
+            self.set_precedence(_Precedence.OMIT, node.args[0])
+            self.traverse(node.args[0])
+            return
         with self.delimit("(", ")"):
             comma = False
             for e in node.args:
