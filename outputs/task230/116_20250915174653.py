@@ -1,0 +1,1 @@
+def p(g):r=range(len(g));return[g:=[[g[j][~i]+c*(g[j-2][1-i]>4<g[j-1][-i])for j in r]for i in r]for c in b''][3]

@@ -1,0 +1,1 @@
+p=lambda g:[[*map(max,*[v for v in g if~-any(x*y*(x-y)for x,y in zip(v,u))])]for u in g]

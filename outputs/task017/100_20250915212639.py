@@ -1,0 +1,1 @@
+p=lambda g:[[*map(max,*[v for v in g+[*zip(*g)]if all(x*y*(x-y)==0for x,y in zip(v,u))])]for u in g]

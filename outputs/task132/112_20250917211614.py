@@ -1,0 +1,1 @@
+p=lambda g:[g:=[[max(sum({*v}&{*u[:j+1]}&{*u[j:]})for u in g)for v in g]for j in range(len(g[0]))]for _ in g][3]

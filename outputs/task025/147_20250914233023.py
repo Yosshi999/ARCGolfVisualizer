@@ -1,0 +1,1 @@
+p=lambda g:any(min(g))and[*zip(*p([*zip(*g)]))]or[[sum({*map(min,g[i-(i>0):i+2])}&{*x[i::1|all(g[i-1])-1]})for x in zip(*g)]for i in range(len(g))]

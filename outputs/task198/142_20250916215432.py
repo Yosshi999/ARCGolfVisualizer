@@ -1,0 +1,1 @@
+p=lambda g,d=24:d and p([[a*(a!=3)or(a+1==b==4)*4or(max(v,key=v.count)not in[0,3,4])+3for a,b in zip(v,[0]+v)]for*v,in zip(*g)][::-1],d-1)or g

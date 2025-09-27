@@ -1,0 +1,1 @@
+p=lambda g,d=4:d and p([[sum({*v}&{e for u in g for e in{*u[:j+1]}&{*u[j:]}})for v in g]for j in range(len(g[0]))],d-1)or g

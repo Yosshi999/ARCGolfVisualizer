@@ -1,0 +1,1 @@
+def p(g):E=len({*sum(g,[])})-1;R=range(5*E);return[[g[Y:=y//E][X:=x//E]|2*(Y%3==2*(g[0][1]>0))*(X%3==2*(g[1][0]>0))*((y^-(Y<1))%E==(x^-(X<1))%E)for x in R]for y in R]

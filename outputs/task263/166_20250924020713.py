@@ -1,0 +1,1 @@
+p=lambda g:len(g)>3and[g[i:i+3]for i in range(0,len(g),3)if all({g[k+z//3][z%3]>0for k in range(0,len(g),3)if i^k}<{0,1}for z in range(9))][0]or[*zip(*p([*zip(*g)]))]

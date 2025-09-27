@@ -1,0 +1,1 @@
+p=lambda g:[g:=[[x or sum({*y%8*sum(g,[-8-y])})for x,y in zip(v,[0]+v)]for*v,in zip(*g)][::-1]for _ in g*16][-1]

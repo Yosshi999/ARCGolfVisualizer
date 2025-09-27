@@ -1,0 +1,1 @@
+p=lambda g:[g:=[[(x,(x+3)%5)[x*y>0]for x,y in zip(v,[0]+v)]for*v,in zip(*g)][::-1]for _ in g][3]

@@ -1,0 +1,1 @@
+p=lambda g:any(min(g))and[*zip(*p([*zip(*g)]))]or[[y[0]*(y[0]in(x[i:],x[:i])[y==w])for x in zip(*g)]if all(y:=max(u,w,key=all))else(min(g),v)[all(v)]for i,(u,v,w)in enumerate(zip(g[:1]+g,g,(g+g)[1:]))]

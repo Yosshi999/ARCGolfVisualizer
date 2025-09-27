@@ -1,0 +1,1 @@
+p=lambda g:[g:=[*zip(*sorted(g[:(i:=[*map(max,g)].index(8))],key=max)+g[i:])][::-1]for _ in g][3]

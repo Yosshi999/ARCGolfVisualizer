@@ -1,0 +1,1 @@
+p=lambda g:[g:=[[w[~i]or(5in w)*8*((5in w[~i:6])<i//5)for i in range(10)]for*w,in zip(*g)]for _ in g][3]

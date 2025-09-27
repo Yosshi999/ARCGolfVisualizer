@@ -1,0 +1,1 @@
+p=lambda g:[(c:=0)or[c|(c:=0)for*u,x in zip(*g,v)if~-any(u)or(c:=c|x)*0]+[c]for v,w in zip(g,g[1:]+[min(g)])if~-any(w)]

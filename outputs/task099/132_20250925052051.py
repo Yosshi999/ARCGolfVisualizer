@@ -1,0 +1,1 @@
+p=lambda g,n=20:n and p([[((c,d)[d>1>c==(116&1<<n>0)],c*(0<d+(c<2)))[n==13]for c,d in zip(v,(0,)+v)]for v in zip(*g)][::-1],n-1)or g

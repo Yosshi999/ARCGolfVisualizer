@@ -1,0 +1,1 @@
+p=lambda g:[g:=[[x or(c in w)*any(max(g[:i+1]))*any(max(g[i:]))*4for i,x in enumerate(w)]for w in zip(*g)]for c in[8,2]][1]

@@ -1,0 +1,1 @@
+p=lambda g,d={}:[[v[j]and(d:={j:(sum(v)==5)+(v==g[8])*2}|d)[j]for j in range(9)]for v in g]

@@ -1,0 +1,1 @@
+p=lambda g:any(min(g))and[*zip(*p([*zip(*g)]))]or[[sum({max(map(min,u))}&{*x[i::1|-all(u[2])]})for x in zip(*g)]for i,u in enumerate(zip(g[:1]+g,g,(g+g)[1:]))]

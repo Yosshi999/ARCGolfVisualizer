@@ -1,0 +1,1 @@
+p=lambda g:[g:=[[(4<sum(g,g).count(y))*y*(y in[x,z])for x,y,z in zip([0]+v,v,v[1:]+[0])]for*v,in zip(*g)]for _ in g][3]
