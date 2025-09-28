@@ -5,8 +5,9 @@ from typing import List, Optional, Tuple, Union, Set, Dict
 from contextlib import contextmanager
 import keyword
 import builtins
+import warnings
 
-from ast_unparse import unparse
+from .ast_unparse import unparse
 
 @dataclass
 class CFN:
@@ -366,7 +367,7 @@ class CFGConstructor(ast.NodeVisitor):
                 self._function_callers.append((node.func.id, self._prev))
         else:
             msg = f"Warning: Unresolvable function call {unparse(node)} at Line {node.lineno}"
-            print(msg)
+            warnings.warn(msg)
             # raise NotImplementedError(msg)
     
     def visit_TypeVar(self, node):

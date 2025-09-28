@@ -5,7 +5,7 @@ from contextlib import contextmanager, nullcontext
 from enum import IntEnum, auto
 from typing import List
 
-from terminals import Terminal, RESERVED, NAME, NUMBER, confusion_check
+from .terminals import Terminal, RESERVED, NAME, NUMBER, confusion_check
 
 # Large float and imaginary literals get turned into infinities in the AST.
 # We unparse those infinities to INFSTR.

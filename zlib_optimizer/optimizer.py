@@ -1,6 +1,6 @@
-from ast_unparse import unparse
-from var_conflict import construct_collision_graph
-from zip_src import zip_src
+from .ast_unparse import unparse
+from .var_conflict import construct_collision_graph
+from .zip_src import zip_src
 
 import ast
 from typing import List, Set, Dict
