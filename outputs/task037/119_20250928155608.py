@@ -1,0 +1,1 @@
+p=lambda g:[*zip(*[iter([max(e for d in[9,11]for e in{*sum(g,[])[k::d]}&{*sum(g,[])[k::-d]})for k in range(100)])]*10)]

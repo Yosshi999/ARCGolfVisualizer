@@ -1,0 +1,1 @@
+p=lambda g:min([[[a for*w,a in zip(*g,v)if c in w]for v in g if c in v]for c in{*sum(g,[])}],key=lambda x:(sum(e>0for e in sum(x,[]))<5,len(x)))

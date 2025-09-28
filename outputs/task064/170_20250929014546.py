@@ -1,0 +1,1 @@
+def p(g):G=sum(g,[]);C,B,A=sorted(sorted({*G}),key=G.count);return[g:=[[[w,C][(C in v[:i])*(B in v[i:])*w==A]for i,w in enumerate(v)]for v in zip(*g)][::-1]for _ in g][3]
