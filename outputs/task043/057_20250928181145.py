@@ -1,0 +1,1 @@
+p=lambda g:[[w|v[9]+x&2for w,x in zip(v,g[0])]for v in g]

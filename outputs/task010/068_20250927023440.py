@@ -1,0 +1,1 @@
+p=lambda g:[[x*sum(g[w.index(x)])/25for*w,x in zip(*g,v)]for v in g]

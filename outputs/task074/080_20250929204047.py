@@ -1,0 +1,1 @@
+p=lambda g:[g:=[[*map(min,v,[9,9]+w[::-1],w)]for*w,v in zip(*g,g)]for _ in g][2]

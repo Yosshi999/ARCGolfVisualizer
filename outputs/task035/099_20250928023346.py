@@ -1,0 +1,1 @@
+p=lambda g:exec('g[::-1]=[v[0]and v[:(i:=v.index(8))]+[v[0]]+v[i+1:]or v for*v,in zip(*g)];'*4)or g

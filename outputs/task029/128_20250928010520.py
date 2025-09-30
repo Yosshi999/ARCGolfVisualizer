@@ -1,0 +1,1 @@
+p=lambda g:max(h for c in sum(g,[])if(h:=[v[v.index(c)+1:bytes(v).rfind(c)]for v in g if c in v][1:-1])*(len({*map(len,h)})==1))

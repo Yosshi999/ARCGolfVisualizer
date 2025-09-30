@@ -1,0 +1,1 @@
+p=lambda g:[[(m:=max(v:=max(g,key=any)))*(m in[w]+u[v.index(m)+bytes(v).rfind(m)-j:][:1])for j,w in enumerate(u)]for u in g]
