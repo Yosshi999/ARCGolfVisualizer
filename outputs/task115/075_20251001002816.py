@@ -1,0 +1,1 @@
+p=lambda g:(v:=g[0])[0]-v[-1]and[[*dict(zip(v,v))]]or[*zip(*p([*zip(*g)]))]

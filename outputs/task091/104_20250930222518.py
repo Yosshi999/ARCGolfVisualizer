@@ -1,0 +1,1 @@
+p=lambda g:[g:=(f:=0)or[*zip(*[v for v,w in zip(g,g[t:]+g)if(f:=f|(5in w))])][::-1]for t in[1,0,1,0]][3]

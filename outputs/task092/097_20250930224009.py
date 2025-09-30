@@ -1,0 +1,1 @@
+p=lambda g:[g:=[[sum({*v[:i]}&{*v[i:]})or v[i]for v in g]for i in range(len(g[0]))]for _ in g][1]
