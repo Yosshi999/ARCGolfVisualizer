@@ -6,6 +6,7 @@ import urllib.parse
 import re
 from get_global_shortest import get_global_shortests
 from comments_manager import Comment, Comments_manager
+import zopfli.zlib
 
 # import common judge utilities
 from judge.core import normalize_code, judge_code
@@ -133,6 +134,7 @@ def problem(task):
         summary=summaries[task_names.index(task)][0],
         hardness=summaries[task_names.index(task)][1],
         global_shortest=global_shortest_byte_top3,
+        local_shortest={"normal": shortest_sub.normal_bytes, "zlib": shortest_sub.compressed_bytes},
         comments=comments,
     )
 
@@ -264,3 +266,10 @@ def search(query):
     sort_by = request.args.get('sort', 'taskname')
     results.sort(key=lambda v: v[sort_by])
     return render_template('search.html',query=urllib.parse.quote(query),results=results)
+
+@app.route("/compressed-len", methods=["POST"])
+def get_compressed_len():
+    data = request.json
+    code = data.get("code", "")
+    size = 57 + len(zopfli.zlib.compress(code.encode()))
+    return jsonify({"compressed_len": size})

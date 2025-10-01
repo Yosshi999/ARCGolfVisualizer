@@ -120,6 +120,12 @@
                         {% endif %}
                         - 🥈{{ global_shortest[1] }} - 🥉{{ global_shortest[2] }} bytes
                     </div>
+                    <div class="text-muted">
+                        Shortest (Local): {{ local_shortest.normal }} bytes
+                        {% if local_shortest.zlib != None %}
+                            (zlib: {{ local_shortest.zlib }} bytes)
+                        {% endif %}
+                    </div>
 
                     <div class="mb-4">
                         <div class="form-check">
@@ -169,7 +175,11 @@
                     <div class="mb-4">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <label for="submission" class="form-label">Submission</label>
-                            <div id="submission-length" class="text-muted">{{ code | length }}</div>
+                            <div class="text-muted">
+                                <span id="submission-length">{{ code | length }}</span> chars
+                                /
+                                <span id="compressed-length">...</span> bytes (compressed)
+                            </div>
                         </div>
                         <textarea class="form-control" id="submission" rows="10">{{ code }}</textarea>
                         <div class="d-flex">
@@ -309,12 +319,33 @@
 
             updateDisplay();
 
-
+            let timer = null;
             const textLength = document.getElementById('submission-length');
+            const compressedLength = document.getElementById('compressed-length');
             const submission = document.getElementById('submission');
             submission.addEventListener('input', (e) => {
                 textLength.textContent = e.target.value.length;
+                clearTimeout(timer);
+                timer = setTimeout(() => {
+                    updateCompressedLen(submission.value);
+                }, 500);
             });
+
+            async function updateCompressedLen(code) {
+                compressedLength.textContent = "…"; // 計算中の表示
+                try {
+                    const res = await fetch("/compressed-len", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ code }),
+                    });
+                    const data = await res.json();
+                    compressedLength.textContent = data.compressed_len;
+                } catch (err) {
+                    console.error(err);
+                    compressedLength.textContent = "error";
+                }
+            }
 
             function submitBtn() {
                 submitSolution(true);
