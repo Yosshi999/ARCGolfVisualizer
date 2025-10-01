@@ -83,8 +83,10 @@ def index():
         overall_score += score
     # Sort tasks based on the query parameter
     sort_by = request.args.get('sort', 'name')
-    other = "score" if sort_by == "hardness" else "hardness"
-    tasks_info.sort(key=lambda v: (v[sort_by], v[other]))
+    other = "score" if sort_by == "hardness" else "hardness"    
+    order = request.args.get("order", 'asc')    # デフォルトは asc
+    reverse = (order == 'desc')
+    tasks_info.sort(key=lambda v: (v[sort_by], v[other]), reverse=reverse)
     return render_template('index.html', tasks_info=tasks_info, overall_score=overall_score)
 
 def collect_hints(problem):

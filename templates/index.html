@@ -1,3 +1,18 @@
+{% macro sortable_column(label, key) %}
+    <th>
+        {{ label }}
+        {% if request.args.get("sort") == key %}
+            {% if request.args.get("order", "asc") == "asc" %}
+                <a href="/?sort={{ key }}&order=desc">▼</a>
+            {% else %}
+                <a href="/?sort={{ key }}&order=asc">▲</a>
+            {% endif %}
+        {% else %}
+            <a href="/?sort={{ key }}&order=asc">▲</a>
+        {% endif %}
+    </th>
+{% endmacro %}
+
 <!DOCTYPE html>
 <html lang="ja">
     <head>
@@ -53,12 +68,12 @@
                         <table class="table table-striped">
                             <thead>
                                 <tr>
-                                    <th>Task <a href="/?sort=name">▼</a></th>
+                                    {{ sortable_column("Task", "name") }}
                                     <th>Summary</th>
-                                    <th>Hardness <a href="/?sort=hardness">▼</a></th>
-                                    <th>Shortest <a href="/?sort=global_shortest">▼</a></th>
-                                    <th>Size</th>
-                                    <th>Score <a href="/?sort=score">▼</a></th>
+                                    {{ sortable_column("Hardness", "hardness") }}
+                                    {{ sortable_column("Shortest", "global_shortest") }}
+                                    {{ sortable_column("Size", "size") }}
+                                    {{ sortable_column("Score", "score") }}
                                 </tr>
                             </thead>
                             <tbody>
