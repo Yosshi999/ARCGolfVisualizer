@@ -1,0 +1,1 @@
+p=lambda g,n=8:n and p([[(1//sum(g,g).count(c)*c,c or(d>0)*2)[n<5]for c,d in zip(v,[0]+v)]for*v,in zip(*g)][::-1],n-1)or g
