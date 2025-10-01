@@ -6,7 +6,7 @@ import urllib.parse
 import re
 from get_global_shortest import get_global_shortests
 from comments_manager import Comment, Comments_manager
-import zopfli.zlib
+from zlib_optimizer.zip_src import zip_src
 
 # import common judge utilities
 from judge.core import normalize_code, judge_code
@@ -271,5 +271,5 @@ def search(query):
 def get_compressed_len():
     data = request.json
     code = data.get("code", "")
-    size = 57 + len(zopfli.zlib.compress(code.encode()))
+    size = len(zip_src(code.encode()))
     return jsonify({"compressed_len": size})
