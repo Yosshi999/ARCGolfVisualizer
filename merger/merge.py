@@ -48,18 +48,6 @@ print(f"found tasks: {len(problems)}")
 def normalize_code(code: str) -> str:
     return code.strip().replace("\r\n", "\n")
 
-def get_local_shortest_bytes(task: str):
-    sub = get_local_shortest_submission(SUBMISSION, task, encoding='L1')
-    if sub is None:
-        return float('inf')
-    return len(sub.read_text(encoding='L1'))
-
-def get_local_shortest_compressed_bytes(task: str):
-    sub = get_local_shortest_submission(COMPRESSED, task, encoding='L1')
-    if sub is None:
-        return float('inf')
-    return len(sub.read_text(encoding='L1'))
-
 def is_zlib_code(code: str) -> bool:
     return code.startswith("#coding:L1")
 
@@ -87,6 +75,7 @@ with zipfile.ZipFile(args.zip, 'r') as zip_ref:
         if name.endswith('.py'):
             with zip_ref.open(name) as f:
                 task_name = name.split("/")[-1].split(".")[0]
+                local_shortest = get_local_shortest_submission(task_name, SUBMISSION, COMPRESSED)
                 code = normalize_code(f.read().decode('L1'))
                 print(f"Processing {task_name}...")
 
@@ -96,7 +85,7 @@ with zipfile.ZipFile(args.zip, 'r') as zip_ref:
 
                 if not is_zlib_code(code):
                     # normal case
-                    if get_local_shortest_bytes(task_name) <= len(code):
+                    if local_shortest.normal_bytes <= len(code):
                         print(f"> Skipped. Local shortest submission is shorter.")
                         continue
                     if test(problems[task_name], code):
@@ -114,13 +103,10 @@ with zipfile.ZipFile(args.zip, 'r') as zip_ref:
                     plain_len = len(plain_code)
                     comp_len = len(code)
 
-                    out_best = get_local_shortest_bytes(task_name)
-                    comp_best = get_local_shortest_compressed_bytes(task_name)
-
                     ok = False
-                    if plain_len <= out_best:
+                    if plain_len <= local_shortest.normal_bytes:
                         ok = True
-                    elif comp_len <= min(out_best, comp_best) + 20:
+                    elif comp_len <= local_shortest.best_bytes + 20:
                         ok = True
 
                     if not ok:
