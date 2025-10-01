@@ -70,10 +70,10 @@
                                 <tr>
                                     {{ sortable_column("Task", "name") }}
                                     <th>Summary</th>
-                                    {{ sortable_column("Hardness", "hardness") }}
                                     {{ sortable_column("Shortest", "global_shortest") }}
-                                    {{ sortable_column("Size", "size") }}
-                                    {{ sortable_column("Score", "score") }}
+                                    {{ sortable_column("Size", "normal") }}
+                                    {{ sortable_column("Size w/ zlib", "best") }}
+                                    {{ sortable_column("Δ", "diff") }}
                                 </tr>
                             </thead>
                             <tbody>
@@ -83,18 +83,10 @@
                                         <a href="/problem/{{ task.name }}">{{ task.name }}</a>
                                     </td>
                                     <td> {{ task.summary }} </td>
-                                    <td> {{ task.hardness }} </td>
                                     <td> {{ task.global_shortest }} bytes </td>
-                                    <td>
-                                        {% if task.exists %}
-                                            {{ task.size }} bytes
-                                        {% else %}
-                                            N/A
-                                        {% endif %}
-                                    </td>
-                                    <td>
-                                        {{ task.score }}
-                                    </td>
+                                    <td> {{ task.normal }} bytes </td>
+                                    <td> {{ task.best }} bytes </td>
+                                    <td> {{ task.diff }} bytes </td>
                                 </tr>
                                 {% endfor %}
                             </tbody>

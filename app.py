@@ -64,7 +64,7 @@ def index():
     global_shortest_bytes = get_cached_global_shortest()
     for i, task in enumerate(task_names):
         shortest_sub = get_local_shortest_submission(task, SUBMISSION, ZLIB_SUBMISSION)
-        score = max(1, 2500 - shortest_sub.normal_bytes) if shortest_sub.normal_bytes else 0
+        score = max(1, 2500 - shortest_sub.best_bytes) if shortest_sub.best_bytes else 0
 
         # 上位3つのバイト数を取得し、最小値を使用
         global_shortest_list = global_shortest_bytes.get(task, [])
@@ -74,16 +74,17 @@ def index():
             "name": task,
             "exists": shortest_sub.best_path is not None,
             "summary": summaries[i][0],
-            "hardness": summaries[i][1],
             "global_shortest_top3": global_shortest_list,
             "global_shortest": global_shortest_min,
-            "size": shortest_sub.normal_bytes,
+            "normal": shortest_sub.normal_bytes,
+            "best": shortest_sub.best_bytes,
             "score": score,
+            "diff": shortest_sub.best_bytes - global_shortest_min
         })
         overall_score += score
     # Sort tasks based on the query parameter
     sort_by = request.args.get('sort', 'name')
-    other = "score" if sort_by == "hardness" else "hardness"    
+    other = "score" if sort_by == "name" else "name"
     order = request.args.get("order", 'asc')    # デフォルトは asc
     reverse = (order == 'desc')
     tasks_info.sort(key=lambda v: (v[sort_by], v[other]), reverse=reverse)
