@@ -1,0 +1,1 @@
+p=lambda g,d=8:d and p([(v,v[:(a:=(V:=bytes(v)).find(s:=d&4^7))]+[0]+v[a+1:(b:=V.find(11-s>>2))-1]+[s]+v[b:])[-1<a<b]for*v,in zip(*g)][::-1],d-1)or g

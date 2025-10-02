@@ -1,0 +1,2 @@
+e=enumerate
+p=lambda g:[g:=(f:=0)or[(v,[w or sum({*sum(g,[-5])})*(5in(u:=[*map(max,g)])[:j])*(5in u[j+1:])for j,w in e(v)])[f<(f:=f|(i and any([*zip(*g)][i-1])))]for i,(*v,)in e(zip(*g))][::-1]for _ in g][3]

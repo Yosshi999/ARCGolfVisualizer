@@ -1,0 +1,1 @@
+p=lambda g:[g:=[[c or 0<d<3for c,d in zip(v,[0]+v)]for*v,in zip(*g)][::-1]for _ in g][3]

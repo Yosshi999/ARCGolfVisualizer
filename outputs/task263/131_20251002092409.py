@@ -1,0 +1,1 @@
+p=lambda g:[g:=[*zip(*min(L:=[*zip(*[iter(g)]*3)],key=lambda x:len({(*[v.count(0)for v in e],)for e in L if e!=x})))]for _ in g][1]
