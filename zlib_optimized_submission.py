@@ -25,7 +25,7 @@ if not PROBLEM_DIR.exists():
 problems = load_problems_from_dir(PROBLEM_DIR)
 all_tasks = sorted(problems.keys())
 
-results = []
+results = []  # succeeded results
 score = 0
 
 workspace = Path("submission")
@@ -39,7 +39,7 @@ for task in all_tasks:
     # original shortest
     path = get_local_shortest_submission(SUBMISSION_DIR, task)
     if path is None:
-        print(f"[FAIL] {task}: No submission found")
+        print(f"[FAIL] {task} ❌ No submission found")
         continue
 
     code = normalize_code(path.read_text("utf-8"))
@@ -47,39 +47,30 @@ for task in all_tasks:
     res = judge_code(task, code, problems[task])
     elapsed_time = time.time() - start_time
 
-    plain_score = 0
+    # plain input
+    best_score = 0
+    best_candidate = None
+    result = None
     if res.get("success"):
-        print(f"[OK] {task} ✅ (file={path.name}, time={elapsed_time:.2f}s)")
-        results.append({
+        best_candidate = code.encode('L1')
+        best_score = max(1, 2500 - len(code.encode('L1')))
+        result = {
             "task": task,
             "file_name": path.name,
             "zlib": False,
             "unfold_renaming": False,
             "variable_renaming": False,
             "file_size": len(code.encode('L1')),
-            "status": True,
             "judge_time": elapsed_time,
-            "message": "OK",
-        })
-        submission_candidates.append(code.encode('L1'))
-        plain_score = max(1, 2500 - len(code.encode('L1')))
+        }
+        print(f"[OK] {task} plain (score={best_score}, file={path.name}, time={elapsed_time:.2f}s)")
     else:
         error_type = res.get("error_type", "unknown")
         msg = res.get("error_message") or str(res)
         msg = msg.split('\n')[0][:200]
-        print(f"[FAIL] {task}: {error_type} → {msg} (file={path.name}, time={elapsed_time:.2f}s)")
-        results.append({
-            "task": task,
-            "file_name": path.name,
-            "zlib": False,
-            "unfold_renaming": False,
-            "variable_renaming": False,
-            "file_size": len(code.encode('L1')),
-            "status": False,
-            "judge_time": elapsed_time,
-            "message": msg,
-        })
+        print(f"[FAIL] {task} plain: {error_type} → {msg} (file={path.name}, time={elapsed_time:.2f}s)")
 
+    # zlib optimized
     submission_files = (SUBMISSION_DIR / task).glob("*.py")
     for file in submission_files:
         code = normalize_code(file.read_text("utf-8"))
@@ -93,8 +84,8 @@ for task in all_tasks:
                 optimized_code: bytes = zip_src(optimize_code(code, **options).encode())
 
                 optimized_score = max(1, 2500 - len(optimized_code))
-                if optimized_score <= plain_score:
-                    print(f"[SKIP] {task}: No improvement over plain (file={file.name}, size={len(optimized_code)})", options)
+                if optimized_score <= best_score:
+                    print(f"[SKIP] {task}: No improvement (score={optimized_score}, file={file.name})", options)
                     continue
 
                 start_time = time.time()
@@ -102,54 +93,34 @@ for task in all_tasks:
                 elapsed_time = time.time() - start_time
 
                 if res.get("success"):
-                    print(f"[OK] {task} ✅ (file={file.name}, time={elapsed_time:.2f}s)", options)
-                    results.append({
+                    best_score = optimized_score
+                    best_candidate = optimized_code
+                    result = {
                         "task": task,
                         "file_name": file.name,
                         "zlib": True,
                         **options,
                         "file_size": len(optimized_code),
-                        "status": True,
                         "judge_time": elapsed_time,
-                        "message": "OK",
-                    })
-                    submission_candidates.append(optimized_code)
+                    }
+                    print(f"[OK] {task} zlib (score={optimized_score}, file={file.name}, time={elapsed_time:.2f}s)", options)
                 else:
                     error_type = res.get("error_type", "unknown")
                     msg = res.get("error_message") or str(res)
                     msg = msg.split('\n')[0][:200]
-                    print(f"[FAIL] {task}: {error_type} → {msg} (file={file.name}, time={elapsed_time:.2f}s)", options)
-                    results.append({
-                        "task": task,
-                        "file_name": file.name,
-                        "zlib": True,
-                        **options,
-                        "file_size": len(optimized_code),
-                        "status": False,
-                        "judge_time": elapsed_time,
-                        "message": msg,
-                    })
+                    print(f"[FAIL] {task} zlib: {error_type} → {msg} (file={file.name}, time={elapsed_time:.2f}s)", options)
 
             except Exception as e:
-                print(f"[ERROR] {task}: Optimization failed (file={file.name})", options)
-                results.append({
-                    "task": task,
-                    "file_name": file.name,
-                    "zlib": True,
-                    **options,
-                    "file_size": len(optimized_code),
-                    "status": False,
-                    "judge_time": elapsed_time,
-                    "message": "Optimization failed",
-                })
+                print(f"[ERROR] {task} zlib: Optimization failed (file={file.name})", options)
                 continue
-    if submission_candidates:
-        best_candidate = min(submission_candidates, key=len)
-    else:
-        print(f"[SUMMARY] [FAIL] {task}: No valid submission found")
+    
+    # summary
+    if best_candidate is None:
+        print(f"[SUMMARY] [FAIL] {task} ❌ No valid submission found")
         continue
 
-    print(f"[SUMMARY] [OK] {task}: Best submission size {len(best_candidate)} bytes")
+    print(f"[SUMMARY] [OK] {task} ✅ Best submission size {len(best_candidate)} bytes")
+    results.append(result)
     workfile = workspace / f"{task}.py"
     workfile.write_bytes(best_candidate)
     print(f"  Saved to {workfile}\n")
