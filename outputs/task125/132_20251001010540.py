@@ -1,0 +1,1 @@
+p=lambda g,n=40:n and[[((c,d)[c>7>5>d],12-c,(c,3)[c>7>1>d%3])[n//37+n//34]for c,d in zip(v,[4]+v)]for*v,in zip(*p(g,n-1)[::-1])]or g

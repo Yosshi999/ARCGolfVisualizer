@@ -6,6 +6,7 @@ import urllib.parse
 import re
 from get_global_shortest import get_global_shortests
 from comments_manager import Comment, Comments_manager
+from zlib_optimizer.zip_src import zip_src
 
 # import common judge utilities
 from judge.core import normalize_code, judge_code
@@ -61,17 +62,12 @@ comments_manager = Comments_manager()
 def index():
     tasks_info = []
     overall_score = 0
+    overall_best_score = 0
     global_shortest_bytes = get_cached_global_shortest()
     for i, task in enumerate(task_names):
-        shortest_sub = get_local_shortest_submission(SUBMISSION, task)
-        if shortest_sub:
-            exists = True
-            code = len(normalize_code(shortest_sub.read_text()))
-            score = max(1, 2500 - code)
-        else:
-            exists = False
-            code = 0
-            score = 0
+        shortest_sub = get_local_shortest_submission(task, SUBMISSION, ZLIB_SUBMISSION)
+        normal_score = max(1, 2500 - shortest_sub.normal_bytes) if shortest_sub.normal_bytes else 0
+        best_score = max(1, 2500 - shortest_sub.best_bytes) if shortest_sub.best_bytes else 0
 
         # 上位3つのバイト数を取得し、最小値を使用
         global_shortest_list = global_shortest_bytes.get(task, [])
@@ -79,20 +75,27 @@ def index():
 
         tasks_info.append({
             "name": task,
-            "exists": exists,
+            "exists": shortest_sub.best_path is not None,
             "summary": summaries[i][0],
-            "hardness": summaries[i][1],
             "global_shortest_top3": global_shortest_list,
             "global_shortest": global_shortest_min,
-            "size": code,
-            "score": score,
+            "normal": shortest_sub.normal_bytes,
+            "best": shortest_sub.best_bytes,
+            "score": normal_score,
+            "diff": shortest_sub.best_bytes - global_shortest_min
         })
-        overall_score += score
+        overall_score += normal_score
+        overall_best_score += best_score
     # Sort tasks based on the query parameter
     sort_by = request.args.get('sort', 'name')
-    other = "score" if sort_by == "hardness" else "hardness"
-    tasks_info.sort(key=lambda v: (v[sort_by], v[other]))
-    return render_template('index.html', tasks_info=tasks_info, overall_score=overall_score)
+    other = "score" if sort_by == "name" else "name"
+    order = request.args.get("order", 'asc')    # デフォルトは asc
+    reverse = (order == 'desc')
+    tasks_info.sort(key=lambda v: (v[sort_by], v[other]), reverse=reverse)
+    return render_template('index.html',
+                           tasks_info=tasks_info,
+                           overall_score={"normal": overall_score, "best": overall_best_score},
+                           sort_by=sort_by, order=order)
 
 def collect_hints(problem):
     hints = []
@@ -117,8 +120,8 @@ def problem(task):
     if task not in problems:
         return jsonify({"error": "Task not found"}), 404
     global_shortest_byte_top3 = get_cached_global_shortest().get(task, float('inf'))
-    shortest_sub = get_local_shortest_submission(SUBMISSION, task)
-    code = shortest_sub.read_text() if shortest_sub else ""
+    shortest_sub = get_local_shortest_submission(task, SUBMISSION, ZLIB_SUBMISSION)
+    code = shortest_sub.normal_path.read_text()
     hints = collect_hints(problems[task])
     comments = comments_manager.get_comments(task)
     comments = sorted(comments,key=lambda c:c.id)
@@ -131,6 +134,7 @@ def problem(task):
         summary=summaries[task_names.index(task)][0],
         hardness=summaries[task_names.index(task)][1],
         global_shortest=global_shortest_byte_top3,
+        local_shortest={"normal": shortest_sub.normal_bytes, "zlib": shortest_sub.compressed_bytes},
         comments=comments,
     )
 
@@ -148,8 +152,7 @@ def submit():
             "error_message": "Task not found",
         }), 404
 
-    old_path = get_local_shortest_submission(SUBMISSION, task)
-    old_code = old_path.read_text() if old_path else None
+    previous_shortest = get_local_shortest_submission(task, SUBMISSION, ZLIB_SUBMISSION)
 
     result = judge_code(task, code, problems[task])
     if not result.get("success"):
@@ -161,7 +164,7 @@ def submit():
         (SUBMISSION / task).mkdir(exist_ok=True)
         new_sub = SUBMISSION / task / f"{len(code):03d}_{datetime.now().strftime('%Y%m%d%H%M%S')}.py"
         new_sub.write_bytes(code.encode("utf-8"))
-    return jsonify({"success": True, "size": len(code), "score": max(1, 2500 - len(code)), "shortest": old_code is None or len(code) < len(old_code)})
+    return jsonify({"success": True, "size": len(code), "score": max(1, 2500 - len(code)), "shortest": len(code) < previous_shortest.normal_bytes})
 
 @app.route('/download')
 def download():
@@ -174,16 +177,9 @@ def download():
     zip_buffer = BytesIO()
     with zipfile.ZipFile(zip_buffer, 'w', zipfile.ZIP_DEFLATED) as zip_file:
         for task in task_names:
-            shortest_sub = get_local_shortest_submission(SUBMISSION, task)
-            shortest_sub_zlib = get_local_shortest_submission(ZLIB_SUBMISSION, task, encoding='L1')
-            if shortest_sub_zlib:
-                len_bytes = len(normalize_code(shortest_sub.read_text()))
-                len_bytes_zlib = len(normalize_code(shortest_sub_zlib.read_text(encoding='L1'))) if shortest_sub else float('inf')
-                if len_bytes_zlib < len_bytes:
-                    shortest_sub = shortest_sub_zlib
-
+            local_shortest_path = get_local_shortest_submission(task, SUBMISSION, ZLIB_SUBMISSION).best_path
             workfile = workspace / f"{task}.py"
-            text = normalize_code(shortest_sub.read_text("L1"))
+            text = normalize_code(local_shortest_path.read_text("L1"))
             workfile.write_bytes(text.encode("L1"))
             zip_file.write(str(workfile), arcname=f"{task}.py")
 
@@ -205,19 +201,7 @@ def explorer():
     global_shortest_bytes = get_cached_global_shortest()
     
     for i, task in enumerate(task_names):
-        shortest_sub = get_local_shortest_submission(SUBMISSION, task)
-        shortest_sub_zlib = get_local_shortest_submission(ZLIB_SUBMISSION, task, encoding='L1')
-        
-        if shortest_sub:
-            local_bytes = len(normalize_code(shortest_sub.read_text()))
-        else:
-            local_bytes = None
-
-        if shortest_sub_zlib:
-            local_bytes_with_zlib = min(local_bytes, len(normalize_code(shortest_sub_zlib.read_text(encoding='L1'))))
-        else:
-            local_bytes_with_zlib = local_bytes
-
+        shortest_sub = get_local_shortest_submission(task, SUBMISSION, ZLIB_SUBMISSION)
         global_bytes_list = global_shortest_bytes.get(task, [])
         global_bytes_min = min(global_bytes_list) if global_bytes_list and type(global_bytes_list) is list else float('inf')
         
@@ -225,23 +209,23 @@ def explorer():
             "name": task,
             "global_top3": global_bytes_list,
             "global": global_bytes_min,
-            "local_no_zlib": local_bytes,
-            "local_with_zlib": local_bytes_with_zlib,
+            "local_no_zlib": shortest_sub.normal_bytes,
+            "local_with_zlib": shortest_sub.best_bytes,
             "hardness": summaries[i][1],
             "summary": summaries[i][0][:50] + "..." if len(summaries[i][0]) > 50 else summaries[i][0],
-            "submitted": local_bytes is not None
+            "submitted": shortest_sub.best_path is not None
         }
         
-        if local_bytes is not None:
-            task_info["delta_no_zlib"] = local_bytes - global_bytes_min
-            task_info["ratio_no_zlib"] = local_bytes / global_bytes_min if global_bytes_min > 0 else float('inf')
+        if shortest_sub.normal_bytes is not None:
+            task_info["delta_no_zlib"] = shortest_sub.normal_bytes - global_bytes_min
+            task_info["ratio_no_zlib"] = shortest_sub.normal_bytes / global_bytes_min if global_bytes_min > 0 else float('inf')
         else:
             task_info["delta_no_zlib"] = None
             task_info["ratio_no_zlib"] = None
 
-        if local_bytes_with_zlib is not None:
-            task_info["delta_with_zlib"] = local_bytes_with_zlib - global_bytes_min
-            task_info["ratio_with_zlib"] = local_bytes_with_zlib / global_bytes_min if global_bytes_min > 0 else float('inf')
+        if shortest_sub.best_bytes is not None:
+            task_info["delta_with_zlib"] = shortest_sub.best_bytes - global_bytes_min
+            task_info["ratio_with_zlib"] = shortest_sub.best_bytes / global_bytes_min if global_bytes_min > 0 else float('inf')
         else:
             task_info["delta_with_zlib"] = None
             task_info["ratio_with_zlib"] = None
@@ -282,3 +266,10 @@ def search(query):
     sort_by = request.args.get('sort', 'taskname')
     results.sort(key=lambda v: v[sort_by])
     return render_template('search.html',query=urllib.parse.quote(query),results=results)
+
+@app.route("/compressed-len", methods=["POST"])
+def get_compressed_len():
+    data = request.json
+    code = data.get("code", "")
+    size = len(zip_src(code.encode()))
+    return jsonify({"compressed_len": size})

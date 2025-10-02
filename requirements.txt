@@ -6,3 +6,4 @@ interegular==0.3.3
 openjij==0.11.3
 jijmodeling
 ommx-openjij-adapter
+zopfli==0.2.3.post1

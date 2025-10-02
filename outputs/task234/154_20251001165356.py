@@ -1,0 +1,1 @@
+p=lambda g,c=0,w=[]:([v for v in g if v.count(0)^len(v)-1or(c:=c+1)==(w:=v)]+[min(g)]*c)*({*w}&{*max(g,key=any)}=={0})or[*zip(*p([*zip(*g[::-1])]))][::-1]

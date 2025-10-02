@@ -8,6 +8,7 @@ from judge.core import judge_file
 BASE_DIR = Path(__file__).parent
 PROBLEM_DIR = BASE_DIR / 'problems'
 SUBMISSION_DIR = BASE_DIR / 'outputs'
+ZLIB_SUBMISSION_DIR = Path(__file__).parent / 'compressed'
 
 if not PROBLEM_DIR.exists():
     print("❌ Problem directory not found: expected 'problems/' with JSON files.")
@@ -21,7 +22,7 @@ failed = []
 print(f"🔍 Starting validation for {len(all_tasks)} tasks...\n")
 
 for task in all_tasks:
-    path = get_local_shortest_submission(SUBMISSION_DIR, task)
+    path = get_local_shortest_submission(task, SUBMISSION_DIR, ZLIB_SUBMISSION_DIR).normal_path
     if path is None:
         failed.append((task, "No submission"))
         print(f"[FAIL] {task}: No submission found")

@@ -1,0 +1,1 @@
+p=lambda g:[[[(w,5)[w==c]for w in v]for v in g]for c in sorted(sum(g,g),key=sum(g,g).count)for k in range(1,64)if all((g[i][j]>0)==(g[k//8+i][k%8+j]==c)for i in[0,1,2]for j in[0,1,2])][0]

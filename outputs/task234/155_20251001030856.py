@@ -1,0 +1,1 @@
+def p(g,d=44):c=max(m:=max(g,key=lambda x:any(x)*x.count(0)));i=g.index(m);g[1:i+1]=g[1-(c==sum(m)in g[i-1]):][:i];return d and p([*zip(*g[::-1])],d-1)or g

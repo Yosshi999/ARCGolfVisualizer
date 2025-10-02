@@ -1,0 +1,1 @@
+p=lambda g:[[v:=G[k-14:k-11],[G[k-1],max(v),G[k+1]],G[k+12:k+15]]for k in range(169)if(G:=sum(g,[]))[k]==8][0]

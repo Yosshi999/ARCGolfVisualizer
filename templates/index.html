@@ -1,3 +1,18 @@
+{% macro sortable_column(label, key) %}
+    <th>
+        {{ label }}
+        {% if request.args.get("sort") == key %}
+            {% if request.args.get("order", "asc") == "asc" %}
+                <a href="/?sort={{ key }}&order=desc">▼</a>
+            {% else %}
+                <a href="/?sort={{ key }}&order=asc">▲</a>
+            {% endif %}
+        {% else %}
+            <a href="/?sort={{ key }}&order=asc">▲</a>
+        {% endif %}
+    </th>
+{% endmacro %}
+
 <!DOCTYPE html>
 <html lang="ja">
     <head>
@@ -40,7 +55,7 @@
                         <div>
                             <h2><a href="/download">👉Download submission.zip</a></h2>
                             <h2>Problems</h2>
-                            <h3>Current Estimated Score: {{ overall_score }}</h3>
+                            <h3>Current Estimated Score: {{ overall_score.normal }} ({{ overall_score.best }})</h3>
                         </div>
                         <div>
                             <button id="sync-shortest-btn" class="btn btn-primary">
@@ -53,12 +68,12 @@
                         <table class="table table-striped">
                             <thead>
                                 <tr>
-                                    <th>Task <a href="/?sort=name">▼</a></th>
+                                    {{ sortable_column("Task", "name") }}
                                     <th>Summary</th>
-                                    <th>Hardness <a href="/?sort=hardness">▼</a></th>
-                                    <th>Shortest <a href="/?sort=global_shortest">▼</a></th>
-                                    <th>Size</th>
-                                    <th>Score <a href="/?sort=score">▼</a></th>
+                                    {{ sortable_column("Shortest", "global_shortest") }}
+                                    {{ sortable_column("Size", "normal") }}
+                                    {{ sortable_column("Size w/ zlib", "best") }}
+                                    {{ sortable_column("Δ", "diff") }}
                                 </tr>
                             </thead>
                             <tbody>
@@ -68,18 +83,10 @@
                                         <a href="/problem/{{ task.name }}">{{ task.name }}</a>
                                     </td>
                                     <td> {{ task.summary }} </td>
-                                    <td> {{ task.hardness }} </td>
                                     <td> {{ task.global_shortest }} bytes </td>
-                                    <td>
-                                        {% if task.exists %}
-                                            {{ task.size }} bytes
-                                        {% else %}
-                                            N/A
-                                        {% endif %}
-                                    </td>
-                                    <td>
-                                        {{ task.score }}
-                                    </td>
+                                    <td> {{ task.normal }} bytes </td>
+                                    <td> {{ task.best }} bytes </td>
+                                    <td> {{ task.diff }} bytes </td>
                                 </tr>
                                 {% endfor %}
                             </tbody>

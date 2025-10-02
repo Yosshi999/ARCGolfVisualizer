@@ -1,0 +1,1 @@
+p=lambda g:[[m:=max(g[2+i-i%5]),*[m*(645>>i&1)]*8,m]for i in range(10)]

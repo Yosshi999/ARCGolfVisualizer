@@ -1,0 +1,1 @@
+p=lambda g:[*zip(*[v[(d:=(f:=lambda c:min(g.index(w)for w in g if c in w))(max(v))-f(1)):]+v[:d]for v in zip(*g)])]

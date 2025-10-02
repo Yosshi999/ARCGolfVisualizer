@@ -1,0 +1,1 @@
+p=lambda g,d=4,f=0:d and p([*zip(*[v[::-1]for v,w in zip(g,g[~d%2:]+g)if(f:=f|(5in w))])],d-1)or g

@@ -1,0 +1,1 @@
+p=lambda g:[g:=[[x or(l:=bytes(v).rfind(1,0,i),r:=bytes(v).find(1,i),(-1<l<r*all(w[l:r]))*(7-(r-l)%2*5))[2]for i,x in enumerate(v)]for v,w in zip(g,g[-1:]+g)]for _ in g][7]
