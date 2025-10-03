@@ -1,0 +1,1 @@
+p=lambda g,n=40:n and[[(c+(c*d>0),min(c,(c<3or-~c,d+(d<1)*c)[n>8]))[n>4]for c,d in zip(v,[0]+v)]for*v,in zip(*p(g,n-1)[::-1])]or g

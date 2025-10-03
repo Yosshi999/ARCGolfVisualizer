@@ -1,0 +1,1 @@
+p=lambda g:[g:=[[(4<sum(g,g).count(y))*y*(y in v[i-1:i+2:2])for i,y in enumerate(v)]for*v,in zip(*g)]for _ in g][3]
