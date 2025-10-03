@@ -1,0 +1,1 @@
+p=lambda g:[g:=[*zip(*[g[min(i,2*g.index(max(g,key=max))+1-i)]for i in range(len(g))])]for _ in g][1]
