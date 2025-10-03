@@ -1,0 +1,1 @@
+p=lambda g:eval('[[*map(max,w,w[-9:]+[4]+w)]for*w,in zip(*'*4+'g'+')]'*4)

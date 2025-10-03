@@ -1,0 +1,1 @@
+p=lambda g,a=0:[(a:=a+v[b:=0],[(b:=b+x,x or(a+b<1)+((d:=sum(v)-b)+(c:=sum(w)-a)<1)*3+(a==c)*(b==d)*2)[1]for*w,x in zip(*g,v)])[1]for v in g]

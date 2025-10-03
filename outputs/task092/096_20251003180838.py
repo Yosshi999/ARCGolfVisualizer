@@ -1,0 +1,1 @@
+p=lambda g:eval('[[w or sum({*v[:i]}&{*v[i:]})for i,w in enumerate(v)]for v in zip(*'*2+'g)])]')

@@ -1,0 +1,1 @@
+p=lambda g:[g:=[*zip(*[[0]*10]*~-(I:=g.index(max(g,key=lambda x:2in x)))+[[*map(max,*g[:I])]]+g[I:])][::-1]for _ in g][3]

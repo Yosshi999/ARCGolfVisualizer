@@ -1,0 +1,1 @@
+p=lambda g:eval('[v for*v,in zip(*'*2+'g'+')if max(range(1,10),key=sum(g,g).count)in v]'*2)

@@ -1,0 +1,1 @@
+def p(g):i,j=divmod(sum(g,[]).index(5),len(g[0]));g[i][j]=k=0;h=[*eval('zip(*filter(max,'*2+'g))))')];exec('g[i+k-1][j-1:j+2]=h[k];k+=1;'*3);return g

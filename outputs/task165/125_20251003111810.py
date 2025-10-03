@@ -1,0 +1,1 @@
+p=lambda g:[*zip(*[(v,v[:(b:=bytes(v).rfind([*{c:0for c in sum(g,[])[::-1]}][2])+1)]+20*[max(v[b:])])[b>0]for*v,in zip(*g)])]

@@ -1,0 +1,1 @@
+p=lambda g,r=1:[v[::~r]for v in(g[r]!=g[0])*g[::r+1]]or p(g,r+1)
