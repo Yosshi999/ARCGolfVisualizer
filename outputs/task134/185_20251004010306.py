@@ -1,0 +1,1 @@
+def p(g):G=sum(g,[]);c=[v for i,v in enumerate(G[1:-1])if G[i]+G[i+2]==0<v][0];return[(u:=[c*(0<a!=c)for*w,a in zip(*g,v)if{*w}-{0,c}])[::len(u)//3]for v in g if{*v}-{0,c}][::len(u)//3]

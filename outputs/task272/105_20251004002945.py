@@ -1,0 +1,1 @@
+p=lambda g,n=8:n and p([[(c|(c*d>0),c-(c>0))[n<2]for c,d in zip(v,[0]+v)]for*v,in zip(*g)][::-1],n-1)or g
