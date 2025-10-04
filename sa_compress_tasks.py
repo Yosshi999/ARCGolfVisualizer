@@ -39,7 +39,8 @@ def process_single_task(task_num: int, problems):
             print(f"  エラー読み取り {py_file}: {e}")
             continue
 
-    min_size = get_local_shortest_submission(f"task{task_num:03d}", SUBMISSION, ZLIB_SUBMISSION).best_bytes
+    min_original_size = get_local_shortest_submission(f"task{task_num:03d}", SUBMISSION, ZLIB_SUBMISSION).best_bytes
+    min_size = min_original_size
 
     # 圧縮
     compressed_results = []
