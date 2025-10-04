@@ -1,0 +1,1 @@
+p=lambda g,n=12:n and p([[(c|(c*d>0),(c or(d>2)*4,c-c//3)[n<2])[n<6]for c,d in zip(v,[0]+v)]for*v,in zip(*g)][::-1],n-1)or g
