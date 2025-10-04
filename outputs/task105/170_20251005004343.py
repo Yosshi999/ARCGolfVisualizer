@@ -1,0 +1,1 @@
+def p(g,d=4):m=0;u=[*map(max,g)];return d and p([m+v.count(0)<len(v)>(m:=3)and[w or any(u[:j+1])*any(u[j:])*2for j,w in enumerate(v)]or v for*v,in zip(*g)][::-1],d-1)or g

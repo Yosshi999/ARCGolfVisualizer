@@ -1,0 +1,1 @@
+p=lambda g,n=16,i=9:n and p([[((c==2)<<(i:=i+1)or c,c|d*(c>0))[n<16]for c,d in zip(v,[0]+v)]for*v,in zip(*g)][::-1],n-1)or[[max(sum(g,[])).bit_count()-1&8]]

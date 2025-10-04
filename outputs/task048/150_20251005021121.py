@@ -1,0 +1,1 @@
+p=lambda g,n=96,i=0:n and p([[(c+c*((i:=i+(c==2))<2),c and d&4or c)[n<96]for c,d in zip(v,[0]+v)]for*v,in zip(*g)][::-1],n-1)or[[8-8*(2in sum(g,[]))]]

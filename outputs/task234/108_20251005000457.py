@@ -1,0 +1,1 @@
+p=lambda g:exec('g[:]=zip(*[v for v in g[::-1]+g[:1]*11if v.count(max(max(g,key=any)))^1][:len(g)]);'*4)or g

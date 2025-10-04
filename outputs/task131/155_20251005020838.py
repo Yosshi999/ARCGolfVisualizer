@@ -1,0 +1,1 @@
+p=lambda g:exec('g[:]=zip(*g[::-1]);i,*_,j,k=[i for i,v in enumerate(g)if any(v)]\nif{*g[k]}=={2}:g[:k]=g[-1:]*(k-j+i-2)+[[8]*len(g[0])]+g[i:j+1]\n'*4)or g

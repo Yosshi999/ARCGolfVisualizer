@@ -1,0 +1,1 @@
+p=lambda g:[g:=[*zip(*[v for v in g[::-1]+g[:1]*11if v.count(max(max(g,key=any)))^1][:len(g)])]for _ in g][3]
