@@ -1,4 +1,5 @@
 import ast
+import symtable
 from dataclasses import dataclass, field
 import heapq
 from typing import List, Optional, Tuple, Union, Set, Dict
@@ -25,34 +26,13 @@ class CFN:
 
 
 def collect_free_vars(root: CFN) -> Set[str]:
-    # Resolve function call uevar
-    minimum_vars: Dict[int, Set[str]] = {}  # minumum defined vairables at beginning in each node
-    externals: Set[str] = set()  # variables used but not defined in this scope
-    @dataclass(order=True)
-    class Item:
-        size: int
-        node: CFN = field(compare=False)
-        prev_vars: Set[str] = field(compare=False, default_factory=set)
-    queue = [Item(0, root, set())]
-    heapq.heapify(queue)
-    while queue:
-        item = heapq.heappop(queue)
-        node = item.node
-        if id(node) in minimum_vars and (minimum_vars[id(node)] & item.prev_vars) == minimum_vars[id(node)]:
-            # no update
-            continue
-        if id(node) not in minimum_vars:
-            minimum_vars[id(node)] = set(item.prev_vars)
-        else:
-            minimum_vars[id(node)] &= item.prev_vars
-        # add newly defined variables
-        current_vars = node.varkill | minimum_vars[id(node)]
-        node.minimum_env = set(current_vars)
-        # add used but not defined variables to externals
-        externals |= node.uevar - current_vars
-
-        for child in node.children:
-            heapq.heappush(queue, Item(len(current_vars), child, current_vars))
+    """Collect free variables which are not defined in the current scope."""
+    table = symtable.symtable(unparse(root), "<string>", "exec")
+    assert len(table.get_children()) == 1
+    externals = set()
+    for sym in table.get_children()[0].get_symbols():
+        if not sym.is_local():
+            externals.add(sym.get_name())
     return externals
 
 
@@ -77,7 +57,7 @@ class CFGConstructor(ast.NodeVisitor):
             super().visit(node)
     
     @contextmanager
-    def scope(self, name: Optional[str] = None):
+    def scope(self, node: ast.AST, name: Optional[str] = None):
         """Isolate a new scope for functions, classes, comprehensions, etc."""
         if name is None:
             name = f"anon-{self._anon_counter}"
@@ -88,7 +68,7 @@ class CFGConstructor(ast.NodeVisitor):
         yield name
         self._subgraph[name] = subgraph
 
-        externals = collect_free_vars(subgraph)
+        externals = collect_free_vars(node)
         subgraph.uevar |= externals
 
         # Update callers
@@ -196,7 +176,7 @@ class CFGConstructor(ast.NodeVisitor):
             CFN(parents=[], children=[], uevar=set(), varkill={node.name}, liveout=set())
         )
         self._prev = self._prev.children[-1]
-        with self.scope(node.name):
+        with self.scope(node, node.name):
             for arg in node.args.args:
                 self._prev.varkill.add(arg.arg)
             if node.args.vararg:
@@ -209,7 +189,7 @@ class CFGConstructor(ast.NodeVisitor):
         raise NotImplementedError(f"Untrackable lambda function at L{node.lineno}")
     
     def _trackable_lambda(self, node, assigned_name: str):
-        with self.scope(assigned_name):
+        with self.scope(node, assigned_name):
             for arg in node.args.args:
                 self._prev.varkill.add(arg.arg)
             if node.args.vararg:
@@ -307,7 +287,7 @@ class CFGConstructor(ast.NodeVisitor):
             self._prev = merge_node
     
     def visit_ListComp(self, node):
-        with self.scope() as funcname:
+        with self.scope(node) as funcname:
             self._generator_helper(node.generators)
             self.traverse(node.elt)
         self._prev.append_child(
@@ -315,7 +295,7 @@ class CFGConstructor(ast.NodeVisitor):
         )
         self._prev = self._prev.children[-1]
     def visit_SetComp(self, node):
-        with self.scope() as funcname:
+        with self.scope(node) as funcname:
             self._generator_helper(node.generators)
             self.traverse(node.elt)
         self._prev.append_child(
@@ -323,7 +303,7 @@ class CFGConstructor(ast.NodeVisitor):
         )
         self._prev = self._prev.children[-1]
     def visit_GeneratorExp(self, node):
-        with self.scope() as funcname:
+        with self.scope(node) as funcname:
             self._generator_helper(node.generators)
             self.traverse(node.elt)
         self._prev.append_child(
@@ -334,7 +314,7 @@ class CFGConstructor(ast.NodeVisitor):
         # Not supported due to complexity of tracking evaluation
         # raise NotImplementedError("Generator expressions are not supported")
     def visit_DictComp(self, node):
-        with self.scope() as funcname:
+        with self.scope(node) as funcname:
             self._generator_helper(node.generators)
             self.traverse(node.key)
             self.traverse(node.value)
@@ -448,7 +428,7 @@ def construct_collision_graph(tree: ast.AST) -> Tuple[Dict[str, CFN], Dict[str, 
 
     return cfg, collision, reserved_names
 
-def visualize_cfg(cfg: Dict[str, CFN]) -> str:
+def visualize_cfg(src: str, cfg: Dict[str, CFN]) -> str:
     """Construct a control flow graph (CFG) from an AST node. Returns the root CFN."""
     visualized = ""
     visualized += f"```python\n{src}\n```\n"
@@ -482,7 +462,7 @@ def p(g):
 """
     tree = ast.parse(src)
     cfg, collision, _ = construct_collision_graph(tree)
-    visualized = visualize_cfg(cfg)
+    visualized = visualize_cfg(src, cfg)
 
     visualized += "## Variable Collision Graph\n"
     visualized += "```mermaid\ngraph TB\n"
