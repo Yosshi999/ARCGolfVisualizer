@@ -1,0 +1,2 @@
+e=enumerate
+p=lambda g:[[max((0,W,g[I+1][J+1])[-((d:=(V[J+3]>0)+2)>i-I>0<j-J<d)+(0<=i-I<=d)*(-d<j-J<2*d)+(0<=j-J<=d)*(-d<i-I<2*d)]for I,V in e(g)for J,W in e(V)if W>0>=V[J-1]+g[I-1][J])for j,w in e(v)]for i,v in e(g)]
