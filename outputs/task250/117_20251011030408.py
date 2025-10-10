@@ -1,0 +1,1 @@
+p=lambda g:exec('g[::-1]=zip(*[[0]*10]*~-(I:=g.index(max(g,key=lambda x:2in x)))+[[*map(max,*g[:I])]]+g[I:]);'*4)or g
