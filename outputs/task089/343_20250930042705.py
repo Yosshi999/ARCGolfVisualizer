@@ -1,0 +1,2 @@
+e=enumerate
+def p(g):F={C:[(y,x)for y,v in e(g)for x,c in e(v)if c==C]for C in range(10)};D=dict(sum([min((max(abs(y-Y),abs(x-X)),[((B-y+b,(x-A)*(-1)**P+a),c)for(B,A)in F[c]for(b,a)in{*F[P]}-{(y,x)}])for(Y,X)in F[c]for P in[2,3]for(y,x)in F[P])[1]for c in F if(c==1or c>3)*len(F[c])],[]));return[[D.get((y,x),c)for x,c in e(v)]for y,v in e(g)]
