@@ -1,0 +1,1 @@
+def p(g):G=sum(g,[]);i=G.index(8);return[v:=G[i-14:i-11],[G[i-1],max(v),G[i+1]],G[i+12:i+15]]

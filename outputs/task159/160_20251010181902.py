@@ -1,0 +1,1 @@
+def p(g):q=lambda G:filter(lambda v:{*v}-{0,2},zip(*G));r=lambda G:[[2]+sum([sum(g,[]).count(2)//12*[w]for w in v],[])+[2]for v in zip(*G)];return r(r(q(q(g))))
