@@ -1,0 +1,1 @@
+p=lambda g:[g:=[sum(zip(*[v]*c),(2,))+(2,)for v in zip(*g)if{0}!={*v}!={0,2}]for c in[sum(g,g).count(2)//12]*2][1]

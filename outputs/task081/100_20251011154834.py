@@ -1,0 +1,1 @@
+p=lambda g:[g:=[[v[~i]or i>0<9<v[-i]*w[~i]for v,w in zip(g,g[:1]+g)]for i in range(7)]for _ in g][3]

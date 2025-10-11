@@ -1,0 +1,1 @@
+p=lambda g:[g:=[[v[~j]or b'\0$$'[v[-j]]for v in g]for j in range(len(g))]for _ in g][3]

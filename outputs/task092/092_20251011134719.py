@@ -1,0 +1,1 @@
+p=lambda g,c=0:[g:=[[(c:=c^v.count(w)//2*w,w)[w>0]for w in v]for v in zip(*g)]for _ in g][1]

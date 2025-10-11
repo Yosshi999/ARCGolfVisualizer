@@ -1,0 +1,1 @@
+p=lambda g,n=24,i=0:n and p([[(c<<(i:=i+9),(c|d*(c>0),(c.bit_count()==12)+(c>0))[n<2])[n<24]for c,d in zip(v,[0]+v)]for*v,in zip(*g)][::-1],n-1)or g

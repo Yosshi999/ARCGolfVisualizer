@@ -1,0 +1,1 @@
+p=lambda g:[g:=[[sum({*v[:j]}&{*v[j:]}|{*v}&{*w})for v in g]for j,w in enumerate(zip(*g))]for _ in g][3]

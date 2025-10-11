@@ -1,0 +1,1 @@
+p=lambda g:[g:=[[(x:=v[~i],(x+3)%5)[x*v[-i]*i>0]for v in g]for i in range(10)]for _ in g][3]
