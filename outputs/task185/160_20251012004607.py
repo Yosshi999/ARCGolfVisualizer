@@ -1,0 +1,1 @@
+def p(g):c=max(g[0]);return eval('[[x*(x==y)for x,y in zip(v,v[1:])]for v in zip(*'*2+'[[a*(a!=c)for*w,a in zip(*g,v)if{*w}-{0,c}]for v in g if{*v}-{0,c}])])]')
