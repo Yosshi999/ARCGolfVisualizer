@@ -1,0 +1,1 @@
+p=lambda g:[g:=(w:=[0])and[t*[x or(y%8>0)*8for x,y in zip(v,[0]+w*99)if(w:=v)]for*v,in zip(*g)][::-1]for t in[2,2]+[1]*6][7]
