@@ -1,0 +1,1 @@
+p=lambda g:(Y:=[])+[([p:=Y.pop()]and[w or p*8for w in v]if max(g,key=any)[0]!=v[0]else[Y:=[8in v]+Y]and[w-w//4*2or any(v[:k])*any(v[k:])*8for k,w in enumerate(v)])if any(v)else v for v in g]
