@@ -37,7 +37,7 @@ for task in all_tasks:
 
     print(f"--- Task: {task} ---")
     # original shortest
-    path = get_local_shortest_submission(SUBMISSION_DIR, task)
+    path = get_local_shortest_submission(task, SUBMISSION_DIR, SUBMISSION_DIR).normal_path
     if path is None:
         print(f"[FAIL] {task} ❌ No submission found")
         continue
