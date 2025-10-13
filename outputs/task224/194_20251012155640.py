@@ -1,0 +1,1 @@
+p=lambda g:(c:=sum({*sum(g,[-5])}))and[g:=(f:=0)or[*zip(*[(v,(m:=0)or[w|c*(0<m)*(0<(m:=m+h.count(5))<4)for w,h in zip(v,zip(*g))])[f<(f:=f|any(V))]for v,V in zip(g,[[]]+g)][::-1])]for _ in g][3]

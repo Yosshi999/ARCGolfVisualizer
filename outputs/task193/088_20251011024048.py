@@ -1,0 +1,1 @@
+p=lambda g:eval('[[y&(x|z)for x,y,z in zip([0]+v,v,v[1:]+[0])]for*v,in zip(*'*2+'g)])]')

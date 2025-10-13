@@ -1,0 +1,1 @@
+p=lambda g,n=72:n and p([[(c,(c+1,2,c+1,4,1,6)[F:=sum(n<i for i in(69,45,41,25,21))])[(d>0<c,d&2>1<=c,d<n%2<=c>4,c&5>4==d,c|2==6,c>0<2<d)[F]]for c,d in zip(v,(0,)+v)]for v in zip(*g)][::-1],n-1)or g

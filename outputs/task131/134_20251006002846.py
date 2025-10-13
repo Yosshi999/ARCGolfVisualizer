@@ -1,0 +1,1 @@
+p=lambda g:[g:=[*zip(*(g,(g[:g.index(v:=(h:=[*filter(any,g)])[0])]+h+[[8]*len(v)]+g[:1]*12)[:len(g)])[{2}=={*v}])][::-1]for _ in g][3]

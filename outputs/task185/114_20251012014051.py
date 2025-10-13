@@ -1,0 +1,1 @@
+p=lambda g,y=0:[g:=[[x*(y==(y:=x)!=max(g[0]))for w,x in zip(g,v)if{*w}-{*g[0]}][1:]for v in zip(*g)]for _ in g][1]

@@ -1,0 +1,2 @@
+e=enumerate
+def p(g):F={C:[y*13+x for y,v in e(g)for x,c in e(v)if c==C]for C in range(10)};D=dict(sum([min((max(abs(z//13-Z//13),abs(z%13-Z%13)),[(A-z+a-(A%13-z%13)*2*(P==2),c)for A in F[c]for a in{*F[P]}-{z}])for Z in F[c]for P in[2,3]for z in F[P])[1]for c in F if(c==1or c>3)*len(F[c])],[]));return[[D.get(y*13+x,c)for x,c in e(v)]for y,v in e(g)]

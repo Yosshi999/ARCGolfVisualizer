@@ -1,0 +1,1 @@
+def p(g):r=range(len(g));return[[max(g[x][y]for x in r for y in r if(i-x)**2==(j-y)**2)for j in r]for i in r]

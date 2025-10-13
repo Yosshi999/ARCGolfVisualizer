@@ -1,0 +1,1 @@
+p=lambda g:[g:=[*zip(*[v[(d:=(1in(u:=max(g,key=any)))-(max(v)in u)):]+v[:d]for v in zip(*g)])]for _ in g][-1]

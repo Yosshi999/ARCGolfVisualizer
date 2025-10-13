@@ -1,0 +1,1 @@
+p=lambda g:[g:=[[c*(c!=(q:=len(max(map(set,g)))-1))+d*(d==q)for c,d in zip(v,[0]+v)]for*v,in zip(*g)]for _ in g*2][7]

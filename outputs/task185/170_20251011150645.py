@@ -1,0 +1,1 @@
+def p(g):c=max(g[0]);g=[[a*(a!=c)for*w,a in zip(*g,v)if{*w}-{0,c}]for v in g if{*v}-{0,c}];return[[1//len({*s})*s[0]for s in zip(v,w,v[1:],w[1:])]for v,w in zip(g,g[1:])]

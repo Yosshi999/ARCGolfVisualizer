@@ -1,0 +1,1 @@
+p=lambda g:[g:=[[max([g[i+k*x-x+z//3-1][j+k*y-y+z%3-1]for x in[-4,0,4]for y in[-4,0,4]for k in[1,2,3]if 21>i+k*x>-1<j+k*y<21!=g[i+k*x][j+k*y]==c for z in range(9)]+[0])for j in range(21)]for i in range(21)]for c in[max(b'	',key=sum(g,g).count)]*3][2]

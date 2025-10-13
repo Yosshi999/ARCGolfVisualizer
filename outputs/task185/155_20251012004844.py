@@ -1,0 +1,1 @@
+p=lambda g:eval('[[x*(x==y)for x,y in zip(v,v[1:])]for v in zip(*'*2+'[[a*(a!=max(g[0]))for*w,a in zip(*g,v)if{*w}-{*g[0]}]for v in g if{*v}-{*g[0]}])])]')

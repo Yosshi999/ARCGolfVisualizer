@@ -1,0 +1,1 @@
+p=lambda g,b=0:[[b:=b+v[c:=0]]and[-c+(c:=c+w)or(0,2,0,4,6,3,0,1,0)[c+b*3>>3]for w in v]for v in g]
