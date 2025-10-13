@@ -18,6 +18,8 @@ class CFN:
     uevar: Set[str]  # Upward Exposure Variables
     varkill: Set[str]  # Variables killed (redefined) in this node
     liveout: Set[str]  # Variables live on exit
+    bound: Set[str] = field(default_factory=set)  # Variables bound in this scope (for only root)
+    free: Set[str] = field(default_factory=set)  # Free variables in this scope (for only root)
 
     def append_child(self, child: "CFN"):
         self.children.append(child)
@@ -40,6 +42,7 @@ class CFGConstructor(ast.NodeVisitor):
         self._graph = CFN(parents=[], children=[], uevar=set(), varkill=set(), liveout=set())
         self._subgraph: Dict[str, CFN] = {}
         self._scope_stack: List[CFN] = []
+        self._bind_stack: List[Set[str]] = [set()]  # variable names bounded by functions as free vars
         self._function_callers: List[Tuple[str, CFN]] = []  # (function name, caller node) to resolve uevar later
         self._anon_counter = 0  # for anonymous scopes
         self._prev = self._graph
@@ -62,13 +65,15 @@ class CFGConstructor(ast.NodeVisitor):
             name = f"anon-{self._anon_counter}"
             self._anon_counter += 1
         self._scope_stack.append(self._prev)
+        self._bind_stack.append(set())
         subgraph = CFN(parents=[], children=[], uevar=set(), varkill=set(), liveout=set())
         self._prev = subgraph
         yield name
         self._subgraph[name] = subgraph
+        subgraph.bound = self._bind_stack.pop()
 
         externals = collect_free_vars(node)
-        subgraph.uevar |= externals
+        subgraph.free = externals
 
         # Update callers
         resolved = []
@@ -96,12 +101,7 @@ class CFGConstructor(ast.NodeVisitor):
             raise NotImplementedError(f"Unknown context {node.ctx} for Name")
     
     def visit_Assign(self, node):
-        if len(node.targets) == 1 and isinstance(node.targets[0], ast.Name) and isinstance(node.value, ast.Lambda):
-            # Lambda assignment (e.g. f = lambda x: x+1)
-            # Record it as a function f
-            self._trackable_lambda(node.value, node.targets[0].id)
-        else:
-            self.traverse(node.value)
+        self.traverse(node.value)
         for target in node.targets:
             self.traverse(target)
     
@@ -183,12 +183,11 @@ class CFGConstructor(ast.NodeVisitor):
             if node.args.kwarg:
                 self._prev.varkill.add(node.args.kwarg.arg)
             self.traverse(node.body)
+        # bounded free variables are referenced somewhere in the scope
+        self._bind_stack[-1].update(self._subgraph[node.name].free)
     
     def visit_Lambda(self, node):
-        raise NotImplementedError(f"Untrackable lambda function at L{node.lineno}")
-    
-    def _trackable_lambda(self, node, assigned_name: str):
-        with self.scope(node, assigned_name):
+        with self.scope(node) as funcname:
             for arg in node.args.args:
                 self._prev.varkill.add(arg.arg)
             if node.args.vararg:
@@ -196,6 +195,8 @@ class CFGConstructor(ast.NodeVisitor):
             if node.args.kwarg:
                 self._prev.varkill.add(node.args.kwarg.arg)
             self.traverse(node.body)
+        # bounded free variables are referenced somewhere in the scope
+        self._bind_stack[-1].update(self._subgraph[funcname].free)
     
     def visit_alias(self, node):
         if node.asname:
@@ -289,36 +290,34 @@ class CFGConstructor(ast.NodeVisitor):
         with self.scope(node) as funcname:
             self._generator_helper(node.generators)
             self.traverse(node.elt)
+        # bounded free variables are referenced immediately
         self._prev.append_child(
-            CFN(parents=[], children=[], uevar=set(self._subgraph[funcname].uevar), varkill=set(), liveout=set())
+            CFN(parents=[], children=[], uevar=set(self._subgraph[funcname].free), varkill=set(), liveout=set())
         )
         self._prev = self._prev.children[-1]
     def visit_SetComp(self, node):
         with self.scope(node) as funcname:
             self._generator_helper(node.generators)
             self.traverse(node.elt)
+        # bounded free variables are referenced immediately
         self._prev.append_child(
-            CFN(parents=[], children=[], uevar=set(self._subgraph[funcname].uevar), varkill=set(), liveout=set())
+            CFN(parents=[], children=[], uevar=set(self._subgraph[funcname].free), varkill=set(), liveout=set())
         )
         self._prev = self._prev.children[-1]
     def visit_GeneratorExp(self, node):
         with self.scope(node) as funcname:
             self._generator_helper(node.generators)
             self.traverse(node.elt)
-        self._prev.append_child(
-            CFN(parents=[], children=[], uevar=set(self._subgraph[funcname].uevar), varkill=set(), liveout=set())
-        )
-        self._prev = self._prev.children[-1]
-
-        # Not supported due to complexity of tracking evaluation
-        # raise NotImplementedError("Generator expressions are not supported")
+        # bounded free variables are referenced somewhere in the scope
+        self._bind_stack[-1].update(self._subgraph[funcname].free)
     def visit_DictComp(self, node):
         with self.scope(node) as funcname:
             self._generator_helper(node.generators)
             self.traverse(node.key)
             self.traverse(node.value)
+        # bounded free variables are referenced immediately
         self._prev.append_child(
-            CFN(parents=[], children=[], uevar=set(self._subgraph[funcname].uevar), varkill=set(), liveout=set())
+            CFN(parents=[], children=[], uevar=set(self._subgraph[funcname].free), varkill=set(), liveout=set())
         )
         self._prev = self._prev.children[-1]
     
@@ -335,19 +334,6 @@ class CFGConstructor(ast.NodeVisitor):
         for kw in node.keywords:
             self.traverse(kw)
         self.traverse(node.func)
-        if isinstance(node.func, ast.Name):
-            if node.func.id in self._subgraph:
-                self._prev.append_child(
-                    CFN(parents=[], children=[], uevar=set(self._subgraph[node.func.id].uevar), varkill=set(), liveout=set())
-                )
-                self._prev = self._prev.children[-1]
-            else:
-                # resolve later
-                self._function_callers.append((node.func.id, self._prev))
-        else:
-            msg = f"Warning: Unresolvable function call {unparse(node)} at Line {node.lineno}"
-            warnings.warn(msg)
-            # raise NotImplementedError(msg)
     
     def visit_TypeVar(self, node):
         raise NotImplementedError()
@@ -381,9 +367,10 @@ def calculate_liveout(root: CFN):
                 changed = True
 
 def collect_dependents(cfg: Dict[str, CFN]) -> Dict[str, Set[str]]:
-    """Names of LiveOut and VarKill variables cannot be the same."""
+    """Names of LiveOut and VarKill variables and all bound variables cannot be the same."""
     ret: Dict[str, Set[str]] = {}
     for g in cfg.values():
+        bound = g.bound
         stack = [g]
         visited = set()
         while stack:
@@ -391,7 +378,7 @@ def collect_dependents(cfg: Dict[str, CFN]) -> Dict[str, Set[str]]:
             if id(node) in visited:
                 continue
             visited.add(id(node))
-            cluster = node.liveout | node.varkill
+            cluster = node.liveout | node.varkill | bound
             for name in cluster:
                 if name not in ret:
                     ret[name] = set()
@@ -404,6 +391,9 @@ def construct_collision_graph(tree: ast.AST) -> Tuple[Dict[str, CFN], Dict[str, 
     """Construct a control flow graph (CFG) and variable collision graph from an AST node."""
     constructor = CFGConstructor()
     graph, subgraphs = constructor.visit(tree)
+    graph.bound = constructor._bind_stack.pop()
+    assert len(constructor._bind_stack) == 0, "Unmatched scope stack"
+    # NOTE: no free variables for the top-level script
     cfg = {
         "__main__": graph,
         **subgraphs
@@ -453,10 +443,10 @@ def visualize_cfg(src: str, cfg: Dict[str, CFN]) -> str:
 if __name__ == "__main__":
     src = """
 def p(g):
- i=0
- h=[v==i for u in g for v in u]
- c=sum(h)
- g=[[v * c + i for v in u] for u in g]
+ i = 0
+ f = lambda x: x+i+g
+ j = 1  # must not rename to i
+ g += f(10 + j)
  return g
 """
     tree = ast.parse(src)
