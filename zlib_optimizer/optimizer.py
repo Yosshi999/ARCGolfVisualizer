@@ -7,11 +7,11 @@ from typing import List, Set, Dict
 from collections import Counter, namedtuple
 import string
 import math
+import copy
 
-import openjij as oj
-import jijmodeling as jm
-import ommx_openjij_adapter as oj_ad
 import numpy as np
+import optuna
+optuna.logging.set_verbosity(optuna.logging.WARNING)
 
 
 class VariableRenamer(ast.NodeTransformer):
@@ -111,66 +111,37 @@ def optimize_code(src: str, unfold_renaming = True, variable_renaming = True) ->
 
         code_alphabets = Counter(src)
         name_alphabets = Counter()
-        count_mult = {v: 0 for v in collision}
         for node in ast.walk(tree):
             if isinstance(node, ast.Name) and node.id in collision:
                 name_alphabets.update(node.id)
-                count_mult[node.id] += 1
 
-        template_alphabets = code_alphabets - name_alphabets
         possible_names = sorted(set(string.ascii_letters + "_") & set(code_alphabets) - reserved_names)
-        name_freq = {
-            c: (template_alphabets[c] + 0.1) / len(src)
-            for c in possible_names
-        }
-        name_cost = {
-            c: -math.log2(freq)
-            for c, freq in name_freq.items()
-        }
-
-        # Prepare QUBO
-        V = jm.Placeholder("V")  # the number of nodes (variables)
-        E = jm.Placeholder("E", ndim=2)  # the number of edges (collisions)
-        N = jm.Placeholder("N")  # the number of colors (new variable names)
-        C = jm.Placeholder("C", ndim=2)  # cost matrix (V x N)
-
-        x = jm.BinaryVar("x", shape=(V, N))  # assignment
-        v = jm.Element("v", (0, V))
-        n = jm.Element("n", (0, N))
-        e = jm.Element("e", E)
-        problem = jm.Problem("Variable Renaming")
-        problem += jm.Constraint("OneColorPerNode", x[v, :].sum() == 1, forall=v)
-        problem += jm.Constraint("EdgeCollision", x[e[0], n] * x[e[1], n] == 0, forall=[e, n])
-        problem += jm.sum([v, n], C[v, n] * x[v, n])
-
         variables = list(collision.keys())
-        names = list(name_cost.keys())
-        cost_matrix = np.array([*count_mult.values()])[:, None] * np.array([*name_cost.values()])[None, :]
-        edge_matrix = np.array([[variables.index(u), variables.index(v)] for u in collision for v in collision[u]])
 
-        instance_data = {
-            "V": len(variables),
-            "E": edge_matrix,
-            "N": len(names),
-            "C": cost_matrix / cost_matrix.max()
-        }
-        # compile
-        instance = jm.Interpreter(instance_data).eval_problem(problem)
-        # get qubo model
-        qubo, const = instance.to_qubo()
-        # set sampler
-        sampler = oj.SASampler()
-        # solve problem
-        result = sampler.sample_qubo(qubo, num_reads=100)
-        # decode result
-        adapter = oj_ad.OMMXOpenJijSAAdapter(instance)
-        sampleset = adapter.decode_to_sampleset(result)
-        feasible_sample = sampleset.best_feasible_unrelaxed
-        decision = feasible_sample.extract_decision_variables("x")
+        study = optuna.create_study(direction="minimize")
+        def objective(trial: optuna.Trial) -> float:
+            trial_tree = copy.deepcopy(tree)
+            mapper = {}
+            for v in variables:
+                n = trial.suggest_categorical(v, list(possible_names))
+                mapper[v] = n
+
+            new_tree = VariableRenamer(mapper).visit(trial_tree)
+            new_src = unparse(new_tree)
+            zipped = zip_src(new_src.encode())
+            cost = len(zipped)
+            for u in collision.keys():
+                for v in collision[u]:
+                    if mapper[u] == mapper[v]:
+                        cost += 10000  # penalty for conflict
+            return cost
+        study.optimize(objective, n_trials=100)
+        print(f"Best zlib size: {study.best_trial.value}", study.best_trial.params)
+        assert study.best_trial.value < 1000, "No feasible solution found"
+
         mapper = {}
-        for (v, n), val in decision.items():
-            if val == 1:
-                mapper[variables[v]] = names[n]
+        for v, n in study.best_trial.params.items():
+            mapper[v] = n
 
         tree = VariableRenamer(mapper).visit(tree)
 
