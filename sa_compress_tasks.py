@@ -45,12 +45,15 @@ def process_single_task(task_num: int, problems):
     # 圧縮
     compressed_results = []
     for py_file, content in file_contents.items():
+        sample_case = problems[f"task{task_num:03d}"][-5:]
+
         try:
-            sample_case = problems[f"task{task_num:03d}"][-2:]
-            try:
-                code = optimize_code(content.decode("L1"))
-            except Exception as e:
-                code = content.decode("L1")
+            code = optimize_code(content.decode("L1"))
+        except Exception as e:
+            print(f"  最適化エラー {py_file}: {e}")
+            code = content.decode("L1")
+
+        try:
             print(f"  圧縮中: {py_file} (start: {len(content)} bytes -> {len(code)} bytes)")
             compressed = run_optimizer(task_num, code, sample_case,
                                        pruning_threshold=min_size)
