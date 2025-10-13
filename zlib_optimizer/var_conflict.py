@@ -18,7 +18,6 @@ class CFN:
     uevar: Set[str]  # Upward Exposure Variables
     varkill: Set[str]  # Variables killed (redefined) in this node
     liveout: Set[str]  # Variables live on exit
-    minimum_env: Set[str] = field(default_factory=set)  # FOR DEBUG: minimum variables defined in the node
 
     def append_child(self, child: "CFN"):
         self.children.append(child)
@@ -442,7 +441,7 @@ def visualize_cfg(src: str, cfg: Dict[str, CFN]) -> str:
             if id(node) in checked:
                 return
             checked.add(id(node))
-            label = f"\"ld({','.join(sorted(node.uevar))}) st({','.join(sorted(node.varkill))}) LO({','.join(sorted(node.liveout))}) ENV({','.join(sorted(node.minimum_env))})\""
+            label = f"\"ld({','.join(sorted(node.uevar))}) st({','.join(sorted(node.varkill))}) LO({','.join(sorted(node.liveout))})\""
             visualized += f'  N{id(node)}[{label}]\n'
             for child in node.children:
                 visualized += f'  N{id(node)} --> N{id(child)}\n'
