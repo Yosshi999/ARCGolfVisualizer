@@ -1,0 +1,1 @@
+p=lambda g,c=0:[g:=[[c|(c:=0)for u,x in zip(g+[[]],v+v)if~-any(u)or(c:=c|x)*0]for v in zip(*g)]for _ in g][1]

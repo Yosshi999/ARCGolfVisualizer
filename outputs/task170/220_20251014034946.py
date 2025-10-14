@@ -1,0 +1,1 @@
+def p(g):I=g.index(u:=max(g[::-1],key=any));J=u.index(max(u,key=bool));s=3+(u[J+3]>0);q=[*eval('zip(*filter(max,'*2+'g[:I-s+1]))))')];d=-~len(q)//s;r=range(s);return[[g[I-s+1+i][J+j]*(q[d*i][d*j]>0)for j in r]for i in r]

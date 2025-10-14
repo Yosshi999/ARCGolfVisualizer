@@ -13,6 +13,9 @@ class RESERVED(Terminal):
 regex_patterns = {
     "NAME": "[^\\W\\d]\\w*",
     "NUMBER": "(\\d+(\\.\\d*)?|\\.\\d+)([eE][+-]?\\d+)?j?",
+    "BIN_INT": "0[bB]([01_]+)",
+    "OCT_INT": "0[oO]([0-7_]+)",
+    "HEX_INT": "0[xX]([0-9a-fA-F_]+)",
 }
 
 regex_fsms = {}
@@ -29,10 +32,10 @@ class RegexTerminal(Terminal):
         assert regex_fsms[self.name].accepts(value), f"Value '{value}' does not match regex {self.name}"
 
 class NAME(RegexTerminal):
-    name: "NAME"
+    name="NAME"
 
 class NUMBER(RegexTerminal):
-    name: "NUMBER"
+    name="NUMBER"
 
 def alive(self: interegular.FSM, lives, test: str):
     state = self.initial
@@ -61,3 +64,4 @@ if __name__ == "__main__":
     print("return123", confusion_check(RESERVED("return"), NUMBER("123")))
     print("123if", confusion_check(NUMBER("123"), RESERVED("if")))
     print("123else", confusion_check(NUMBER("123"), RESERVED("else")))
+    print("0or", confusion_check(NUMBER("0"), RESERVED("or")))
