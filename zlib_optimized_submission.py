@@ -17,6 +17,7 @@ from judge.core import judge_code, normalize_code
 BASE_DIR = Path(__file__).parent
 PROBLEM_DIR = BASE_DIR / 'problems'
 SUBMISSION_DIR = BASE_DIR / 'outputs'
+ZLIB_SUBMISSION_DIR = BASE_DIR / 'compressed'
 
 if not PROBLEM_DIR.exists():
     print("❌ Problem directory not found: expected 'problems/' with JSON files.")
@@ -37,7 +38,7 @@ for task in all_tasks:
 
     print(f"--- Task: {task} ---")
     # original shortest
-    path = get_local_shortest_submission(SUBMISSION_DIR, task)
+    path = get_local_shortest_submission(task, SUBMISSION_DIR, ZLIB_SUBMISSION_DIR).normal_path
     if path is None:
         print(f"[FAIL] {task} ❌ No submission found")
         continue
@@ -51,9 +52,11 @@ for task in all_tasks:
     best_score = 0
     best_candidate = None
     result = None
+    current_best = 0
     if res.get("success"):
         best_candidate = code.encode('L1')
         best_score = max(1, 2500 - len(code.encode('L1')))
+        current_best = best_score
         result = {
             "task": task,
             "file_name": path.name,
@@ -125,6 +128,13 @@ for task in all_tasks:
     workfile.write_bytes(best_candidate)
     print(f"  Saved to {workfile}\n")
     score += max(1, 2500 - len(best_candidate))
+
+    if current_best < best_score:
+        print(f"  Improvement: {current_best} -> {best_score}\n")
+        subm = ZLIB_SUBMISSION_DIR / task / f"{len(best_candidate)}_compressed.py"
+        subm.write_bytes(best_candidate)
+        print(f"  Compressed submission saved to {subm}\n")
+
 
 print("\n===== Summary =====")
 print(f"Total Score: {score}")
