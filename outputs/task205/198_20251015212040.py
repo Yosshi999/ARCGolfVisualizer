@@ -1,0 +1,1 @@
+def p(g,d=0):C,*_,c=sorted(v:=sum(g,[]),key=v.count);g=[[*v]for v in zip(*g)if v.count(c)>max(v.count(c)for v in zip(*g))*d-2];return d<1and p(g,d+.1)or[[(c,C)[C in v+w]for*w,in zip(*g)] for v in g]

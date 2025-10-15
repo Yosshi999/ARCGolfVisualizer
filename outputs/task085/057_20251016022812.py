@@ -1,0 +1,1 @@
+p=lambda g,b=0:[g:=[b:=c*(b*g!=c*v)for c in v]for v in g]
