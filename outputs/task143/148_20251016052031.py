@@ -1,0 +1,1 @@
+def p(g):G=sum(g,[]);F=G.index;return[*zip(*[iter([(c,5)[all((G[z+F(C:=max(G[1:11:9]))-F(c)]==C)==(G[z]==c!=C)for z in range(99))]for c in G])]*10)]
