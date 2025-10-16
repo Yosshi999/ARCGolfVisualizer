@@ -1,0 +1,1 @@
+p=lambda g:[(c:=(m:=0))or[v.pop((c:=c+((m:=2*m+w)&7==2))*0)or c%2and 7-(v.index(1)+(m&-m).bit_length())%2*5for w in[*v]]for v in g]
