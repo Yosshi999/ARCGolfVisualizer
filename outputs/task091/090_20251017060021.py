@@ -1,0 +1,1 @@
+p=lambda g,d=4,m=0:d and p([v[::-1]for v in zip(*g)if m+(m:=m+((5in v)^m*d%2))<4],d-1)or g

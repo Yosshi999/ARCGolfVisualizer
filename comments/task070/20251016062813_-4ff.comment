@@ -1,0 +1,1 @@
+`p=lambda g:[[a+a%2*2*(8in v)*(8in[hash(tuple(w))%709]+w)for*w,a in zip(*g,v)]for v in g]` (88byte)というのもあるが、hashを使ってちゃんと再現性があるかは不明
