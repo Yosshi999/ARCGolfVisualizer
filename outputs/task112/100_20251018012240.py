@@ -1,1 +1,0 @@
-p=lambda g:exec('g[:]=zip(*[g[min(i,2*g.index(max(g,key=max))+1-i)]for i in range(len(g))]);'*2)or g
