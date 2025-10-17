@@ -1,0 +1,1 @@
+p=lambda g:[g:=[(d:=0)or[c+d-(d:=c*(c==len({*max(g)})-1))for c in v]for*v,in zip(*g)]for _ in g*2][7]

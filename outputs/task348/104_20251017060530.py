@@ -1,0 +1,1 @@
+p=lambda g:[[7in v!=g.count(v)>=abs(k:=j-v.index(7))and k%2+7for j in range(len(g.pop(0)))]for v in[*g]]

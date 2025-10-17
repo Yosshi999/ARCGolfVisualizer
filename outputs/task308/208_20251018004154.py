@@ -1,0 +1,1 @@
+def p(g):b=max(G:=sum(g,[]),key=G.count);w=len(g[0]);l=max(d:={i-sum(L)//4:c for c in G if(L:=[i for i,v in enumerate(G)if b!=c==v])for i in L})//w;r=range(-l,l+1);return[[d.get(i*w+j,b)for j in r]for i in r]

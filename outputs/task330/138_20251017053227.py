@@ -1,0 +1,1 @@
+p=lambda g,n=24,i=0:n and p([[(c<<(i:=i+5),(c|d*(c>0),(~c%31<1)+(c>0))[n<2])[n<24]for c,d in zip(v,[0]+v)]for*v,in zip(*g)][::-1],n-1)or g

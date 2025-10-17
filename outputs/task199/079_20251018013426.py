@@ -1,0 +1,1 @@
+p=lambda g:[([0,4]*9)[(u:=max(g))[1::2]<u:][:len(u)]]*-~(i:=g.index(u))+g[i:-1]

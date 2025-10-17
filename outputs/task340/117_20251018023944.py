@@ -1,0 +1,1 @@
+p=lambda g:[g:=[[(w,w*(w>9)%10)[t]for w in v[::-1]+[10+n+m*(m in v),10+m]]for m,n,*v in zip(*g)]for t in[0]*7+[1]][7]
