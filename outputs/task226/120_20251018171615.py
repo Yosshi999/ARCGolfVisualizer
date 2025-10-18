@@ -1,0 +1,1 @@
+p=lambda g,a=0:[[a:=a+v[b:=0]]and[-b+(b:=b+x)or((c:=2*a/sum(w))==2*b/sum(v)+c%1*9)*(c+1)for*w,x in zip(*g,v)]for v in g]

@@ -1,0 +1,1 @@
+p=lambda g:[[w+(4==sum(sum(u[:j])+u[j]/4for u in g)%8>max(v))*2for j,w in enumerate(g.pop(0))]for v in[*g]]

@@ -1,0 +1,1 @@
+p=lambda g:[[(sum(u:=g[w.index(x)])^x<x)+(u==g[8])*2for*w,x in zip(*g,v)]for v in g]

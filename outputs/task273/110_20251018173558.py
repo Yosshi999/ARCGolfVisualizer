@@ -1,0 +1,1 @@
+p=lambda g:[g.pop(0)*0+[v[j]+(4==sum(sum(u[:j])+u[j]/4for u in g)%16>max(v))*2for j in range(10)]for v in[*g]]

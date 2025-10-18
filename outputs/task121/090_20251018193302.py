@@ -1,0 +1,1 @@
+p=lambda g:[v:=(G:=sum(g,g))[(i:=G.index(8))-14:i-11],[G[i-1],max(v),G[i+1]],G[i+12:i+15]]
