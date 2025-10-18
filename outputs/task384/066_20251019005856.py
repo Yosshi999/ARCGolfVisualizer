@@ -1,0 +1,1 @@
+p=lambda g:[g:=[*filter(max,zip(*sum(zip(g,g),())))]for _ in g][1]

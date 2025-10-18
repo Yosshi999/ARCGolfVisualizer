@@ -1,0 +1,1 @@
+p=lambda g:exec('g[:]=filter(max,zip(*sum(zip(g,g),())));'*2)or g

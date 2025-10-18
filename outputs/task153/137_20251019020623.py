@@ -1,0 +1,1 @@
+p=lambda g:[w for e in range(9000)if{*sum(w:=[[(G:=sum(g,[]))[e//100-i-j]|G[e%100-i-j]for j in[2,1,0]]for i in b''],[])}=={*G}-{0}][0]

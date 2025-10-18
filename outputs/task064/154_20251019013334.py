@@ -1,0 +1,1 @@
+p=lambda g:[g:=[[[w:=v[~i],C][v[-i]==C!=w!=B in v[:~i]*i]for v in g]for i in range(len(g[0]))]for*_,C,B,A in[sorted(range(10),key=sum(g,g).count)]*56][-1]
