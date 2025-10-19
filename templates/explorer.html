@@ -137,6 +137,7 @@
                         <option value="delta">差分</option>
                         <option value="hardness">難易度</option>
                         <option value="ratio">改善率</option>
+                        <option value="globalRank">グローバル順位相当</option>
                     </select>
                 </div>
             </div>
@@ -231,6 +232,16 @@
             if (ratio <= 1.2) return '#ffce56';
             return '#999999';
         }
+
+        // グローバルだと何位相当かで色分け
+        function getColorByGlobalRank(globalTop3, local) {
+            if (local === null) return '#999999';
+            if (local < globalTop3[0]) return '#9b59b6'; // 優勝
+            if (local === globalTop3[0]) return '#36a2eb'; // 完全一致
+            if (local <= globalTop3[1]) return '#00d084'; // 2位以内
+            if (local <= globalTop3[2]) return '#ffce56'; // 3位以内
+            return '#ff6384'; // 4位以下
+        }
         
         function updateStats() {
             const filterMode = document.getElementById('filter-select').value;
@@ -301,9 +312,13 @@
                     return getColorByDelta(delta, task.local !== null);
                 } else if (colorMode === 'hardness') {
                     return getColorByHardness(task.hardness);
-                } else { // ratio
+                } else if (colorMode === 'ratio') {
                     const ratio = task.local !== null ? task.local / task.global : null;
                     return getColorByRatio(ratio);
+                } else if (colorMode === 'globalRank') {
+                    return getColorByGlobalRank(task.global_top3, task.local);
+                } else {
+                    return '#999999';
                 }
             });
             
