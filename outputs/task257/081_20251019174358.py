@@ -1,0 +1,1 @@
+p=lambda g:[[v[i]|v[i+5]or max(w[i::5])for i in range(4)]for v,w in zip(g,g[5:])]

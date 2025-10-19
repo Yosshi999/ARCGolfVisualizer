@@ -1,0 +1,1 @@
+p=lambda g:[g:=[*zip(*[[w*(len({*v})<3or max(g).count(w)==v.count(w))for w in v]for v in g])]for _ in g][1]
