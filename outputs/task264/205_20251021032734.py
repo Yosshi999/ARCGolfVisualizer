@@ -1,0 +1,2 @@
+r=range
+p=lambda g:[[{((G[1]==5)+(G[7]!=5),(G[3]==5)+(G[5]!=5)):G[y%3*3+x%3]for i in r(len(g)-2)for j in r(len(g[0])-2)if all(G:=sum([u[j:j+3]for u in g[i:i+3]],[]))}[y//3,x//3]for x in r(9)]for y in r(9)]
