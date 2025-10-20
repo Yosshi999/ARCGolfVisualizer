@@ -21,8 +21,14 @@ failed = []
 
 print(f"🔍 Starting validation for {len(all_tasks)} tasks...\n")
 
+checklist = []
 for task in all_tasks:
-    path = get_local_shortest_submission(task, SUBMISSION_DIR, ZLIB_SUBMISSION_DIR).normal_path
+    shortest = get_local_shortest_submission(task, SUBMISSION_DIR, ZLIB_SUBMISSION_DIR)
+    checklist.append((task, shortest.normal_path))
+    if shortest.normal_path != shortest.best_path:
+        checklist.append((task, shortest.best_path))
+
+for task, path in checklist:
     if path is None:
         failed.append((task, "No submission"))
         print(f"[FAIL] {task}: No submission found")
