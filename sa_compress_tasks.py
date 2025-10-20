@@ -45,7 +45,7 @@ def process_single_task(task_num: int, problems):
     # 圧縮
     compressed_results = []
     for py_file, content in file_contents.items():
-        sample_case = problems[f"task{task_num:03d}"][-5:]
+        sample_case = problems[f"task{task_num:03d}"][-20:-10]
 
         try:
             code = optimize_code(content.decode("L1"))
