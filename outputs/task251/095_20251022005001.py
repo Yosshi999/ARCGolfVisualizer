@@ -1,0 +1,1 @@
+p=lambda g,n=64:n and[(d:=0)or[d:=c&2or d*c+1//n>0for c in v]for*v,in zip(*p(g,n-1)[::-1])]or g

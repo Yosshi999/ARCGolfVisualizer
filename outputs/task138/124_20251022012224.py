@@ -1,0 +1,1 @@
+p=lambda g,d=8,c=0:d and[(v[:(x:=v.index(C:=v[-1]))]+[C]*(len(v)-x),v)[5>d]for*v,in zip(*p(g,d-1)[::-1])if(c:=c|all(v))]or g
