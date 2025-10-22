@@ -1,0 +1,1 @@
+p=lambda g,n=80,i=8:n and p([[(i:=i*8,(c|d*(c>2<d))*(n>1)or c&2or(max(h:=[*map(f:=int.bit_count,{*sum(g,[])}-{2})])==f(c))+(min(h)==f(c))*8)[c>0]for c,d in zip(v,[0]+v)]for*v,in zip(*g)][::-1],n-1)or g

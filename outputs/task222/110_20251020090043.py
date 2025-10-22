@@ -1,0 +1,1 @@
+p=lambda g:[g:=[[(4<sum(g,g).count(y:=v[i]))*y*(y in v[i-1:i+2:2])for v in g]for i in range(16)]for _ in g][3]

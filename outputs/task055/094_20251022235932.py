@@ -1,0 +1,1 @@
+p=lambda g,b=0:[[b:=b+v[c:=0]]and[-c+(c:=c+w)or b''[c+b*3>>3]%7for w in v]for v in g]

@@ -1,0 +1,1 @@
+p=lambda g,n=24,k=8:n and p([[(k:=k*8,c|d*(c>0))[c!=8]for c,d in zip(v,[0]+v)]for*v,in zip(*g)][::-1],n-1)or(r:=range(len({*sum(g,[])})-1))and[[8*(i==j)for j in r]for i in r]

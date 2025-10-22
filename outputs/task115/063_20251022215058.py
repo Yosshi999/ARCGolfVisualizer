@@ -1,0 +1,1 @@
+p=lambda g:[[*g]for v in g if(g!=(g:=dict(zip(v,v))))*len(g)&5]

@@ -1,0 +1,2 @@
+e=enumerate
+def p(g):(u,l),*_,(d,r)=((i,j)for i,v in e(g)for j,x in e(v)if x&4);q=[*eval('filter(any,zip(*'*2+'g[d+1:]))))')];H=range(u,d+1);W=range(l,r+1);return[[[f(x,y)or g[y][x]for x in W]for y in H]for e in[2,3,4]for i in H for j in W if[f:=lambda x,y:len(q)>(I:=(y-i)//e)>-1<(J:=(x-j)//e)<len(q[0])and q[I][J]]*all(g[y][x]in[0,f(x,y)or 4]for y in H for x in W)][0]

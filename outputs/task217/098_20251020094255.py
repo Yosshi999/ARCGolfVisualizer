@@ -1,0 +1,1 @@
+p=lambda g:exec('g[:]=filter(any,zip(*g));'*2)or[[a&b for a in v for b in w]for v in g for w in g]
