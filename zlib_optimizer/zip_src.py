@@ -77,33 +77,45 @@ def create_template_from_function(code_string: str) -> (str, list):
   template = re.sub(r'\b' + re.escape(name) + r'\b', f'##{name}##', template)
  return template.replace("def ##p##", "def p").replace("##p##=lambda", "p=lambda").replace("##f##'", "f'").replace('##f##"', 'f"'), sorted(list(variable_names))
 
-import multiprocessing
+import threading
+from queue import Queue
 import traceback
 
-def validate_code(src: str, sample_case: dict, timeout_sec: float = 2.0) -> bool:
+def validation_worker(queue, src, sample_case, terminate_flag):
+  """
+  テストケースを分割して実行し、全体の結果をキューに格納する。停止命令があれば中断する。
+  """
+  try:
+   results = []
+   for case in sample_case:
+     if terminate_flag.is_set():
+      queue.put(False)
+      return
+     result = judge.core.judge_code('taskXXX', src, [case])
+     results.append(result.get("success", False) is True)
+   queue.put(all(results))
+  except Exception:
+   queue.put(False)
+
+def validate_code(src: str, sample_case: list, timeout_sec: float = 2.0) -> bool:
  """
  サブプロセスで validate_code を呼び出し、
  タイムアウト・例外・Kill された場合は False を返す。
  """
- def worker(queue):
-  try:
-   result = judge.core.judge_code('taskXXX', src, sample_case)
-   queue.put(result.get("success", False) is True)
-  except Exception:
-   queue.put(False)
 
- queue = multiprocessing.Queue()
- p = multiprocessing.Process(target=worker, args=(queue,))
+ queue = Queue()
+ terminate_flag = threading.Event()
+ p = threading.Thread(target=validation_worker, args=(queue, src, sample_case, terminate_flag))
  p.start()
  p.join(timeout_sec)
 
  if p.is_alive():
-  p.terminate()  # タイムアウトで強制終了
+  terminate_flag.set()  # タイムアウトで強制終了
   return False
 
  return queue.get_nowait()
 
-def run_optimizer(task_num: int, raw_function_string: str, sample_case: dict, pruning_threshold: int = 500) -> str:
+def run_optimizer(task_num: int, raw_function_string: str, sample_case: list, pruning_threshold: int = 500) -> str:
  """
  与えられたPython関数コード（def p(...) ...）を圧縮最適化し、
  焼きなまし探索 + 軽量 validate_code で最適化後のコード文字列を返す。

@@ -3,6 +3,8 @@ import glob
 from pathlib import Path
 from concurrent.futures import ProcessPoolExecutor, as_completed
 import multiprocessing
+import warnings
+warnings.simplefilter('ignore')
 
 from zlib_optimizer.zip_src import run_optimizer
 from judge.utils import load_problems_from_dir, get_local_shortest_submission
