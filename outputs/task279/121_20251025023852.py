@@ -1,0 +1,1 @@
+p=lambda g,n=72:n and[(d:=0)or[d:=(c%(9+d),(c,8)[d>c>0],c or 9)[n//61+n//45]for c in v]for*v,in zip(*p(g,n-1)[::-1])]or g

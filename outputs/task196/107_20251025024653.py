@@ -1,0 +1,1 @@
+p=lambda g,n=40:n and[(d:=0)or[d:=(c+(c*d>0),c>0<d<3or c)[n>4]for c in v]for*v,in zip(*p(g,n-1)[::-1])]or g

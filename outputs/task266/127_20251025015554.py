@@ -1,0 +1,1 @@
+p=lambda g:[g:=(u:=[])+[[w*(w!=c)|c*(y==2)for w,y in zip(v,u[1:]+[0]*9)if(u:=v)]for*v,in zip(*g)][::-1]for c in b''][7]
