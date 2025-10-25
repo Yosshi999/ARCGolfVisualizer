@@ -1,0 +1,1 @@
+p=lambda g,k=0:exec('for _ in(not(h:={*g[i:=k%8][j:=slice(k%9,k%9+2)]+g[l:=i+1][j]})&{0,3})*[*h]:l+=1;g[l][j]=3,3\nk+=1\n'*72)or g

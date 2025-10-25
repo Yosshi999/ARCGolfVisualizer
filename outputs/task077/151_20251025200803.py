@@ -1,0 +1,1 @@
+p=lambda g:[g:=[[(sum(20>>e&(x!=2)for e in[y]+w[i-(i>0):i+2])>1)*4or x for w,x,y in zip(g,v,[0,*v])]for i,v in enumerate(zip(*g))][::-1]for _ in g][11]

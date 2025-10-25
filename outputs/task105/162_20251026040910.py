@@ -1,0 +1,1 @@
+p=lambda g,d=4,m=0:d and p([(v,[w or any((u:=[*map(max,g)])[:j])*any(u[j:])*2for j,w in enumerate(v)])[m+v.count(0)<len(v)>(m:=3)]for*v,in zip(*g)][::-1],d-1)or g

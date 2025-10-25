@@ -1,0 +1,1 @@
+p=lambda g,c=0:all(h:=[(u:=[a for*w,a in zip(*g,v)if c in w])*(u==u[::-1])for v in g if c in v])*h or p(g,c+1)

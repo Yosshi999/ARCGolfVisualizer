@@ -1,0 +1,1 @@
+def p(g):c=[w for v in g for w in v if v.count(w)==1][0];return[(u:=[c*(0<a!=c)for*w,a in zip(*g,v)if{*w}-{0,c}])[::len(u)//3]for v in g if{*v}-{0,c}][::len(u)//3]
