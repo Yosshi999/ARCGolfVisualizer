@@ -1,0 +1,1 @@
+p=lambda g:exec('g[:]=zip(*[v*(g[i-(d:=1)]!=g[i+(i<9)])or[-d+(d:=d+w)or(1<d<sum(v))*8for w in v]for i,v in enumerate(g)]);'*2)or g
