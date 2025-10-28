@@ -1,0 +1,1 @@
+p=lambda g:[[{22:3,16:6,-18:7,-12:8}.get(str(g).index('2')-y-x*3,0)for x in range(5)]for y in[0,17,34]]
