@@ -1,0 +1,1 @@
+p=lambda g:[min(v:=[[e*(sum(v)>e)]for v in g[1:]for e in v],key=v.count)]

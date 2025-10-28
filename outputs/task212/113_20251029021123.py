@@ -1,0 +1,1 @@
+p=lambda g:[g:=(m:=g[f:=0])and[m:=[(f:=f|c)*0+c|d*(d==2-(f>4))for c,d in zip(v,m)]for v in g][::-1]for _ in g][1]

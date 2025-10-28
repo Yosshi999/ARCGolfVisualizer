@@ -1,0 +1,1 @@
+p=eval('lambda g:max((min(Q:=sum(q:=[v[j:l]for v in g[i:k]],[1])),Q.count(2),len(Q),q)'+'for %s in range(21)'*4%(*'ijkl',)+')[3]')
