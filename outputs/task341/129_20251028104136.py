@@ -1,0 +1,1 @@
+p=lambda g:[g:=[*zip(*[v*(g[i-(d:=i<9)]!=g[i+d])or[-d+(d:=d+w)or(1<d<sum(v))*8for w in v]for i,v in enumerate(g)])]for _ in g][1]
