@@ -1,0 +1,1 @@
+def p(g):l=len({*g[4]})+1;r=range(5*l);return[[g[I:=i//l][J:=j//l]|2*(1>(I+(g[0][1]>0))%3+(J+(g[1][0]>0))%3<=i%l==(j^-(J<1)^-(I<1))%l)for j in r]for i in r]

@@ -1,0 +1,1 @@
+p=eval('lambda g:[[sum(max(x:=abs(I-i),y:=abs(j+~J))<=2*all(u:=g[I][J:J+3])!=x*y and u[x==y]'+'for %s in range(12)%s'*4%(*'I J)j]i]',))

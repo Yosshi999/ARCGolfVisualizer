@@ -1,0 +1,1 @@
+p=lambda g,n=72:n and p([(d:=0)or[d:=c and(c+d//3,d&2,c+(d<n%2<4<c),4*(c&5>4==d),c|2==6,6*(d>2))[sum(n<i for i in(69,45,41,25,21))]or c for c in v]for v in zip(*g)][::-1],n-1)or g

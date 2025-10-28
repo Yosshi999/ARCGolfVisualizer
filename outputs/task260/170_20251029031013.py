@@ -1,0 +1,1 @@
+p=lambda g:[g:=(m:=[0]*10)and[m:=[(c|b or(d==5)*(5,sum({*max(g)}-{5}))[n>1])*(c*n!=95)for c,d,b in zip(v[::-1],[0]+v[::-1],[0]+m)]for v in g[::-1]]for n in range(20)][-1]

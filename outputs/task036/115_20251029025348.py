@@ -1,0 +1,1 @@
+p=lambda g:min((sum(x:=[[a for*w,a in zip(*g,v)if c in w]for v in g if c in v],g).count(0),x)for c in sum(g,[]))[1]

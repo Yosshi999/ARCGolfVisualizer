@@ -1,0 +1,1 @@
+p=eval('lambda g:[[max(g[x][y]*((i-x)**2==(j-y)**2)'+'for %s in range(len(g))%s'*4%(*'x y)j]i]',))
