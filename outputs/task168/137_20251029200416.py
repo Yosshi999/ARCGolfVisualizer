@@ -1,0 +1,1 @@
+p=eval("lambda g:[g:=([([g[i][~j]|max([g[I:=i-k][J:=9-j-k]*(k>1and I>0<J*g[I+1][J]*g[I][J+1"+"])for %s in range(10)"*4%(*"kij_",)+"][3]")
