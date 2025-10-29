@@ -1,0 +1,1 @@
+p=lambda g,n=24,i=8:n and p([[((c:=v[~j])and(c|v[-j]*(j>0),2-any(C*(c-C)*(C*(c&-c)==c*(C&-C))for C in sum(g,[])))[n<2],i:=i*2)[c==8]for v in g]for j in range(10)],n-1)or g

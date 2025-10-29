@@ -1,0 +1,1 @@
+p=eval('lambda g:max((i<k,max(y:=sum(x:=[([v+6*(i<=I<=k)*(j<=J<=l)'+'for %s,v in enumerate(%s)'*6%('J','v)]','I','g)],[]))<7,sum(y),x',*'igjvkglv')+')[3]')

@@ -1,0 +1,1 @@
+p=lambda g,n=20:n and[[c and(c-(d>0),(c-(c*d==9),min(d,c)or c)[n>8])[n>4]-n//20for c,d in zip(v,[0]+v)]for*v,in zip(*p(g,n-1)[::-1])]or g

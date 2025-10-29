@@ -1,0 +1,1 @@
+p=eval('lambda g:[[((D:=sorted([sum(T:=[abs(x-r),abs(y-c)]),~max(T)%2*v]'+'for %s in range(len(g))%s'*4%(*'x y','if(v:=g[x][y])))<[D[1][:1]])*D[0][1]',*'c]r]'))

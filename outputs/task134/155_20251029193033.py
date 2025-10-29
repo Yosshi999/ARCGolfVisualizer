@@ -1,0 +1,1 @@
+p=lambda g:[(u:=[c*(0<a!=c)for*w,a in zip(*g,v)if{*w}-{0,c}])[::len(u)//3]for v in g if{*v}-{0,c:=max(w*(v.count(w)<2)for v in g for w in v)}][::len(u)//3]
