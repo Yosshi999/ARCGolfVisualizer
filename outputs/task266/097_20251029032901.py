@@ -1,0 +1,1 @@
+p=lambda g:[[{0:3,6:6,40:7,34:8}.get(3*x+y-str(g).index('2'),0)for x in range(5)]for y in b"'8"]

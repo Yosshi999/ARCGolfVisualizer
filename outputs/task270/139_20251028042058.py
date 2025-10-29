@@ -1,0 +1,1 @@
+p=lambda g:[g:=[-1<(a:=(F:=bytes(v).find)(d))<(b:=F(11-d>>2))and exec("v[a]=0;v[b-1]=d")or v for*v,in zip(*g)][::-1]for d in[3]*4+[7]*4][7]

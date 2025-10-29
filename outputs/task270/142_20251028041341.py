@@ -1,0 +1,1 @@
+p=lambda g:[g:=[(v,v[:(a:=(F:=bytes(v).find)(d))]+[0,*v[a+1:(b:=F(11-d>>2))-1],d]+v[b:])[-1<a<b]for*v,in zip(*g)][::-1]for d in[3]*4+[7]*4][7]

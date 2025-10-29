@@ -1,0 +1,2 @@
+r=range(21)
+p=lambda g:[g:=[[max([g[I+x+z//3-1][J+z%3+3]for x in[4,0]for k in[1,2,3]if 0<(I:=i-k*x)<21>(J:=j-4*k)>0<c==g[I][J]for z in r[:9]]+[g[i][j]])for i in r]for j in r][::-1]for c in[max(b'	',key=sum(g,g).count)]*12][11]
