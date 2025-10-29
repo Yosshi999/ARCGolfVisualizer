@@ -1,0 +1,1 @@
+p=lambda g,Y=[]:[any(v)and((f:=max(g,key=any)[0]==v[0])and[Y:=[p:=8in v]+Y]or[p:=Y.pop()])*0+[v.pop(0)-w//4*2or(f<=sum(v)*f<9)*p*8for w in[*v]]or v for*v,in g]

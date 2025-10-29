@@ -1,0 +1,1 @@
+p=lambda g,n=8:n and[[(c+c*d,c&7>>n//8or(d>2)*3)[4<n]for c,d in zip(v,[0]+v)]for*v,in zip(*p(g,n-1)[::-1])]or g

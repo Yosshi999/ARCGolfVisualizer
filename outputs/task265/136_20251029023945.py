@@ -1,1 +1,0 @@
-p=lambda g,j=0:[exec('if(5in g[i+1][s:=slice(j,j+2)]+g[i][s])<(i*g[8][10]!=16):g[i+1][s]=g[i][s]=2,2\nj+=1\n'*17)for i in range(17)]*0+g

@@ -1,0 +1,1 @@
+p=eval('lambda g:[[(c:=max(max(g)),5,5)[min(max(i-x,x-i,j-y,y-j)'+'for %s in range(10)%s'*4%(*'x y','if g[x][y])%(3-(f"{c}, 0, {c}"in str(g)))]',*'j]i]'))

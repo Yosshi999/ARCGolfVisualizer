@@ -1,0 +1,1 @@
+p=lambda g:exec('g[::-1]=[(b:=0)or[b:=a*(a!=3)or 4-(25>>max(v,key=v.count)&(b!=4))for a in v]for*v,in zip(*g)];'*24)or g

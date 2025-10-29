@@ -1,0 +1,1 @@
+p=eval('lambda g:[[(0,1,5,0)[min(3,*((Y-y)**2+(X-x)**2'+'for %s in range(9)%s'*4%(*'Y X','if g[Y][X]))]',*'x]y]'))

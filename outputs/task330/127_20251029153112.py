@@ -1,0 +1,1 @@
+p=lambda g,n=24,i=1:n and p([[((c:=v[~j])and(c|v[-j]*(j>0),(~c%7<1)+1)[n<2],i:=i*8)[c&1]for v in g]for j in range(10)],n-1)or g
