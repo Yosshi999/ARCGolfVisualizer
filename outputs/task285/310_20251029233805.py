@@ -1,0 +1,1 @@
+def p(g,n=16):l=len(g)-1;[(D:=lambda h,y,x:-1<x<l>y>=0<g[i][j]==h[y][x]and(exec('h[y][x]=0;g[2*i+1-y][x]|=g[i+1][j]')or[D(h,y+a%3-1,x+a//3-1)for a in range(9)]))(eval(str(g)),i,j)for k in range(l*l)if 3<len({*g[i:=k//l][(j:=k%l):j+2]+g[i+1][j:j+2]})];return n and p([*map(list,zip(*g[::2*(n%8<1)-1]))],n-1)or g

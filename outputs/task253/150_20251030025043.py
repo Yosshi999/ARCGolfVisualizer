@@ -1,0 +1,1 @@
+p=eval('lambda g:[[sum(sorted(u:=g[x][y:y+2]+g[x+1][y:y+2])[1]>u[3-(i&2)-j//2]and u[i%2*2+j%2]'+'for %s in range(12)%s'*4%(*'x y)j',s:='[:4]]','i',s))

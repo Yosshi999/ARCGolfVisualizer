@@ -1,0 +1,2 @@
+r=range(10)
+p=lambda g:any((I:=2*i+e-1,J:=2*j+e-1)for e in[3,2]for i in r for j in r if all(all(v[j:j+e])for v in g[i:i+e]))*[(k:=2*i-I,l:=2*j-J,exec('k,l=-l,k;g[I+k>>1][J+l>>1]=c;'*3))for i in r for j in r if(c:=g[i][j])]*0+g

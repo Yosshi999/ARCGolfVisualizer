@@ -1,0 +1,1 @@
+p=lambda g,d=4:d and p([*zip(*([[0]*10]*(i:=str(g).find('8')>>5)+[[*map(max,*g[:i+d//4]*2)]]+g[i+1:])[::-1])],d-1)or g

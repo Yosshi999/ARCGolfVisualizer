@@ -1,0 +1,1 @@
+def p(g):u=str(g).rfind('5');t=u%62//3;f=1;k=0;exec(('for d in range(5%sg[k//16+d][(j:=k&15):j+5]=%sg[u//62-5+d][t-5:t]%s\n'*2%('):f&=','=[*map(bool,',')]','*f):','','\nk+=1;f=1'))*256);return g

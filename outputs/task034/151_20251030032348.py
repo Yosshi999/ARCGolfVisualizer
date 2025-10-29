@@ -1,0 +1,1 @@
+p=eval('lambda g:[[min((I:=abs(i-x),J:=abs(j-y),-~-(d!=2!=(c:=d)>0<I+J)*(2>I-J>-2))'+'for %s in range(9)%s'*4%(*'x y','if(d:=g[x][y]))[2]*c ',*'j]i]'))
