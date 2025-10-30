@@ -8,12 +8,15 @@ import tokenize
 import io
 import zopfli.zlib as zlib
 
+from .ast_unparse import unparse
 import judge.core
 
 def zip_src(src):
- if len(src) < 100:
-  return src
-
+ if type(src) is bytes:
+  src = src.decode("utf-8")
+ newsrc = unparse(ast.parse(src))
+ if len(newsrc) < len(src):
+  src = newsrc
  # We prefer that compressed source not end in a quotation mark
  compressed = zlib.compress(src)[2:-4]
 
@@ -34,18 +37,26 @@ def zip_src(src):
   return b"" + b_out
 
  # Try all quote types and find the shortest result
- options = []
- 
+ if type(src) is str:
+  src = src.encode()
+ options = [src]
+
  # Option 1: Single quotes with escaping
  sanitized_single = sanitize_for_quote_type(compressed, "'")
- result_single = b"#coding:L1\nimport zlib\nexec(zlib.decompress(bytes('" + sanitized_single + b"','L1'),-8))"
+ if max(sanitized_single) < 128:
+  result_single = b"import zlib\nexec(zlib.decompress(b'" + sanitized_single + b"',-8))"
+ else:
+  result_single = b"#coding:L1\nimport zlib\nexec(zlib.decompress(bytes('" + sanitized_single + b"','L1'),-8))"
  options.append(result_single)
- 
- # Option 2: Double quotes with escaping  
+
+ # Option 2: Double quotes with escaping
  sanitized_double = sanitize_for_quote_type(compressed, '"')
- result_double = b"#coding:L1\nimport zlib\nexec(zlib.decompress(bytes(\"" + sanitized_double + b'","L1"),-8))'
+ if max(sanitized_double) < 128:
+  result_double = b"import zlib\nexec(zlib.decompress(b\"" + sanitized_double + b'",-8))'
+ else:
+  result_double = b"#coding:L1\nimport zlib\nexec(zlib.decompress(bytes(\"" + sanitized_double + b'","L1"),-8))'
  options.append(result_double)
- 
+
  # Option 3: Triple single quotes
  base_sanitized = bytearray()
  for i,b in enumerate(compressed):
@@ -56,16 +67,22 @@ def zip_src(src):
   elif b==ord("\\"): base_sanitized += b"\\\\"
   else: base_sanitized.append(b)
  base_sanitized = b"" + base_sanitized
- 
+
  sanitized_triple_single = sanitize_for_quote_type(base_sanitized, "'''")
- result_triple_single = b"#coding:L1\nimport zlib\nexec(zlib.decompress(bytes('''" + sanitized_triple_single + b"''','L1'),-8))"
+ if max(sanitized_triple_single) < 128:
+  result_triple_single = b"import zlib\nexec(zlib.decompress(b'''" + sanitized_triple_single + b"''',-8))"
+ else:
+  result_triple_single = b"#coding:L1\nimport zlib\nexec(zlib.decompress(bytes('''" + sanitized_triple_single + b"''','L1'),-8))"
  options.append(result_triple_single)
- 
+
  # Option 4: Triple double quotes (original logic)
  sanitized_triple_double = sanitize_for_quote_type(base_sanitized, '"""')
- result_triple_double = b"#coding:L1\nimport zlib\nexec(zlib.decompress(bytes(\"\"\"" + sanitized_triple_double + b'"""","L1"),-8))'
+ if max(sanitized_triple_double) < 128:
+  result_triple_double = b"import zlib\nexec(zlib.decompress(b\"\"\"" + sanitized_triple_double + b'"""",-8))'
+ else:
+  result_triple_double = b"#coding:L1\nimport zlib\nexec(zlib.decompress(bytes(\"\"\"" + sanitized_triple_double + b'"""","L1"),-8))'
  options.append(result_triple_double)
- 
+
  # Return the shortest option
  return min(options, key=len)
 

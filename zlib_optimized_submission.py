@@ -11,7 +11,7 @@ warnings.simplefilter('ignore')
 from zlib_optimizer.optimizer import optimize_code
 from zlib_optimizer.zip_src import zip_src
 from judge.utils import load_problems_from_dir, get_local_shortest_submission
-from judge.core import judge_code, normalize_code
+from judge.core import judge_code, normalize_code, judge_file
 
 
 BASE_DIR = Path(__file__).parent
@@ -37,41 +37,35 @@ for task in all_tasks:
     submission_candidates = []
 
     print(f"--- Task: {task} ---")
-    # original shortest
-    path = get_local_shortest_submission(task, SUBMISSION_DIR, ZLIB_SUBMISSION_DIR).normal_path
-    if path is None:
-        print(f"[FAIL] {task} ❌ No submission found")
+    best_path = get_local_shortest_submission(task, SUBMISSION_DIR, ZLIB_SUBMISSION_DIR).best_path
+    if best_path is None:
+        print(f"[SKIP] {task}: No submission found\n")
         continue
 
-    code = normalize_code(path.read_text("utf-8"))
+    # sanity check
     start_time = time.time()
-    res = judge_code(task, code, problems[task])
+    res = judge_file(task, best_path, problems[task])
     elapsed_time = time.time() - start_time
 
-    # plain input
-    best_score = 0
-    best_candidate = None
-    result = None
-    current_best = 0
     if res.get("success"):
-        best_candidate = code.encode('L1')
-        best_score = max(1, 2500 - len(code.encode('L1')))
+        best_candidate = best_path.read_bytes()
+        best_score = max(1, 2500 - len(best_candidate))
         current_best = best_score
         result = {
             "task": task,
-            "file_name": path.name,
+            "file_name": best_path.name,
             "zlib": False,
             "unfold_renaming": False,
             "variable_renaming": False,
-            "file_size": len(code.encode('L1')),
+            "file_size": len(best_candidate),
             "judge_time": elapsed_time,
         }
-        print(f"[OK] {task} plain (score={best_score}, file={path.name}, time={elapsed_time:.2f}s)")
+        print(f"[OK] {task} plain (score={best_score}, file={best_path.name}, time={elapsed_time:.2f}s)")
     else:
         error_type = res.get("error_type", "unknown")
         msg = res.get("error_message") or str(res)
         msg = msg.split('\n')[0][:200]
-        print(f"[FAIL] {task} plain: {error_type} → {msg} (file={path.name}, time={elapsed_time:.2f}s)")
+        raise Exception(f"[FAIL] {task} sanity check failed: {error_type} → {msg} (file={best_path.name}, time={elapsed_time:.2f}s)")
 
     # zlib optimized
     submission_files = (SUBMISSION_DIR / task).glob("*.py")
@@ -142,6 +136,6 @@ print(f"Total Score: {score}")
 df = pd.DataFrame(results)
 df.to_csv("validation_results.csv", index=False)
 
-with zipfile.ZipFile("submissions.zip", 'w', zipfile.ZIP_DEFLATED) as zip_file:
+with zipfile.ZipFile("submission.zip", 'w', zipfile.ZIP_DEFLATED) as zip_file:
     for file in workspace.glob("*.py"):
         zip_file.write(file, arcname=file.name)
