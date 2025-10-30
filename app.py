@@ -127,18 +127,25 @@ def problem(task):
     if shortest_sub.compressed_path:
         compressed_code = shortest_sub.compressed_path.read_bytes()
         # Decompress the zlib compressed code
-        if compressed_code[0] == ord("#"):
+        if compressed_code[:7] == b"#coding":
             header_len = len(b"#coding:L1\nimport zlib\nexec(zlib.decompress(")
             footer_len = len(b",-8))")
             encoding = "L1"
-        else:
+            compressed_code = compressed_code[header_len:-footer_len]
+            # evaluate bytestring to resolve escapes
+            compressed_code = eval(compressed_code.decode(encoding))
+            decompressed_code = zlib.decompress(compressed_code, -8).decode("utf-8")
+        elif compressed_code[:11] == b"import zlib":
             header_len = len(b"import zlib\nexec(zlib.decompress(")
             footer_len = len(b",-8))")
             encoding = "utf-8"
-        compressed_code = compressed_code[header_len:-footer_len]
-        # evaluate bytestring to resolve escapes
-        compressed_code = eval(compressed_code.decode(encoding))
-        decompressed_code = zlib.decompress(compressed_code, -8).decode("utf-8")
+            compressed_code = compressed_code[header_len:-footer_len]
+            # evaluate bytestring to resolve escapes
+            compressed_code = eval(compressed_code.decode(encoding))
+            decompressed_code = zlib.decompress(compressed_code, -8).decode("utf-8")
+        else:
+            # plaintext
+            decompressed_code = compressed_code.decode("utf-8")
     hints = collect_hints(problems[task])
     comments = comments_manager.get_comments(task)
     comments = sorted(comments,key=lambda c:c.id)
