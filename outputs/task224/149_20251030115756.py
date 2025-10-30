@@ -1,0 +1,1 @@
+p=lambda g,d=8,m=0,f=0:d and p([(v,[w|sum({*v*m*(m:=m+h.count(5)&3)+h}-{5})for w,h in zip(v,g)])[1<(f:=f+f+any(v))<4]for*v,in zip(*g)][::-1],d-1)or g

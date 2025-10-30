@@ -1,0 +1,1 @@
+def p(g):k=8;[g:=[(d:=0)or[d:=(k:=k*8,c|d*(c>0))[c!=8]for c in v]for*v,in zip(*g)][::-1]for _ in g*4];_,*r={*sum(g,[])};return[[8*(i==j)for j in r]for i in r]

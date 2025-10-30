@@ -1,0 +1,1 @@
+p=lambda g:min(h:=[[v[k%2*-~(l:=len(g)//2):][:l]for v in g][k//2*-~l:][:l]for k in range(4)],key=h.count)

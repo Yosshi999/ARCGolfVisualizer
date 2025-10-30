@@ -1,0 +1,1 @@
+p=lambda g,n=48:n and p([[(v.pop(0)|(0<d*4in[w]+v)*2,(w*(w>9)|d//9*16or w,w-w//9*8)[n<5])[n<9]for w,d in zip([*v],[0]+v)]for*v,in zip(*g)][::-1],n-1)or g

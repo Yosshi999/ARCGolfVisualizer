@@ -1,0 +1,1 @@
+p=lambda g,d=8,m=2,b=0:d and p([(m:=m+(f:=b>(b:=v.count(0))))and[c or(m==3<len(w)>m-f*3+w.count(0))*2for c,w in zip(v,g)]for v in zip(*g)][::-1],d-1)or g

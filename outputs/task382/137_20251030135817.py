@@ -1,0 +1,1 @@
+p=lambda g,d=8,s=0:d and p([*zip(*(g,[[v[0],*[0]*(s:=s+(v[0]==2)),*g[0][1:len(v)-s]]for v in g])[0<s!=g[0]>g[1]])][::1|-(d%4>0)],d-1)or g

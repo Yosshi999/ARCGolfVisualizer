@@ -1,0 +1,1 @@
+p=lambda g,l=89:exec("i=l//10\nif g[i+1][j:=l%10]&2:g[i+1][k:=j+g[i][j]%2]=g[i][k]=2\nl-=1\n"*90)or g

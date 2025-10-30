@@ -1,0 +1,1 @@
+p=lambda g:[v[:3]for v in eval('filter(any,zip(*'*2+'g))))')][:3]
