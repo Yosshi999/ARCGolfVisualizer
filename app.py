@@ -4,6 +4,7 @@ from pathlib import Path
 from datetime import datetime
 import urllib.parse
 import re
+import zlib
 from get_global_shortest import get_global_shortests
 from comments_manager import Comment, Comments_manager
 from zlib_optimizer.zip_src import zip_src
@@ -122,6 +123,29 @@ def problem(task):
     global_shortest_byte_top3 = get_cached_global_shortest().get(task, float('inf'))
     shortest_sub = get_local_shortest_submission(task, SUBMISSION, ZLIB_SUBMISSION)
     code = shortest_sub.normal_path.read_text()
+    decompressed_code = ""
+    if shortest_sub.compressed_path:
+        compressed_code = shortest_sub.compressed_path.read_bytes()
+        # Decompress the zlib compressed code
+        if compressed_code[0] == ord("#"):
+            header_len = len(b"#coding:L1\nimport zlib\nexec(zlib.decompress(bytes(")
+            footer_len = len(b",'L1'),-8))")
+        else:
+            header_len = len(b"import zlib\nexec(zlib.decompress(b")
+            footer_len = len(b",-8))")
+        compressed_code = compressed_code[header_len:-footer_len]
+        # remove quotes
+        if compressed_code[0] == ord("'"):
+            while compressed_code[0] == ord("'"):
+                compressed_code = compressed_code[1:]
+            while compressed_code[-1] == ord("'"):
+                compressed_code = compressed_code[:-1]
+        elif compressed_code[0] == ord('"'):
+            while compressed_code[0] == ord('"'):
+                compressed_code = compressed_code[1:]
+            while compressed_code[-1] == ord('"'):
+                compressed_code = compressed_code[:-1]
+        decompressed_code = zlib.decompress(compressed_code, -8).decode("L1")
     hints = collect_hints(problems[task])
     comments = comments_manager.get_comments(task)
     comments = sorted(comments,key=lambda c:c.id)
@@ -130,6 +154,7 @@ def problem(task):
         task=task,
         problem=problems[task],
         code=code,
+        decompressed_code=decompressed_code,
         hints=hints,
         summary=summaries[task_names.index(task)][0],
         hardness=summaries[task_names.index(task)][1],

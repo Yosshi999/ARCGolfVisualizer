@@ -188,6 +188,16 @@
                         </div>
                     </div>
 
+                    <div class="mb-4">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <label for="decompressed" class="form-label">(Decompressed best)</label>
+                            <div class="text-muted">
+                                <span id="submission-length">{{ decompressed_code | length }}</span> chars
+                            </div>
+                        </div>
+                        <textarea class="form-control" rows="5">{{ decompressed_code }}</textarea>
+                    </div>
+
                     <div class="table-responsive">
                         <table class="table table-striped">
                             <thead>
