@@ -31,12 +31,12 @@ jobs:
           mkdir -p problems
           unzip -o ./data/google-code-golf-2025.zip -d ./problems
 
+      # - name: Upload submission
+      #   env:
+      #     KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
+      #     KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
+      #   run: |
+      #     python prepare_submission.py | xargs -I{} kaggle competitions submit -c google-code-golf-2025 -f submission.zip -m "${{ github.sha }}, {}"
+
       - name: Validate submissions
         run: python -W ignore::SyntaxWarning validate.py
-
-      - name: Upload submission
-        env:
-          KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
-          KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
-        run: |
-          python prepare_submission.py | xargs -I{} kaggle competitions submit -c google-code-golf-2025 -f submission.zip -m "$(git rev-parse --short HEAD), {}"
