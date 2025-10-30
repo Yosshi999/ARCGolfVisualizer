@@ -128,24 +128,17 @@ def problem(task):
         compressed_code = shortest_sub.compressed_path.read_bytes()
         # Decompress the zlib compressed code
         if compressed_code[0] == ord("#"):
-            header_len = len(b"#coding:L1\nimport zlib\nexec(zlib.decompress(bytes(")
-            footer_len = len(b",'L1'),-8))")
-        else:
-            header_len = len(b"import zlib\nexec(zlib.decompress(b")
+            header_len = len(b"#coding:L1\nimport zlib\nexec(zlib.decompress(")
             footer_len = len(b",-8))")
+            encoding = "L1"
+        else:
+            header_len = len(b"import zlib\nexec(zlib.decompress(")
+            footer_len = len(b",-8))")
+            encoding = "utf-8"
         compressed_code = compressed_code[header_len:-footer_len]
-        # remove quotes
-        if compressed_code[0] == ord("'"):
-            while compressed_code[0] == ord("'"):
-                compressed_code = compressed_code[1:]
-            while compressed_code[-1] == ord("'"):
-                compressed_code = compressed_code[:-1]
-        elif compressed_code[0] == ord('"'):
-            while compressed_code[0] == ord('"'):
-                compressed_code = compressed_code[1:]
-            while compressed_code[-1] == ord('"'):
-                compressed_code = compressed_code[:-1]
-        decompressed_code = zlib.decompress(compressed_code, -8).decode("L1")
+        # evaluate bytestring to resolve escapes
+        compressed_code = eval(compressed_code.decode(encoding))
+        decompressed_code = zlib.decompress(compressed_code, -8).decode("utf-8")
     hints = collect_hints(problems[task])
     comments = comments_manager.get_comments(task)
     comments = sorted(comments,key=lambda c:c.id)
@@ -183,13 +176,35 @@ def submit():
     if not result.get("success"):
         # Return the structured result in the same shape your original endpoint used
         return jsonify(result), 400
+    
+    # compression attempt
+    compression_attempt = "Not shortened"
+    compressed_score = 0
+    compressed_code = zip_src(code)
+
+    if len(compressed_code) < len(code.encode("utf-8")):
+        subresult = judge_code(task, compressed_code, problems[task]).get("success", False)
+        if subresult:
+            compression_attempt = "OK"
+            compressed_score = max(1, 2500 - len(compressed_code))
+        else:
+            compression_attempt = "Failed"
 
     # everything is fine, save the submission
     if saveFile:
         (SUBMISSION / task).mkdir(exist_ok=True)
         new_sub = SUBMISSION / task / f"{len(code):03d}_{datetime.now().strftime('%Y%m%d%H%M%S')}.py"
         new_sub.write_bytes(code.encode("utf-8"))
-    return jsonify({"success": True, "size": len(code), "score": max(1, 2500 - len(code)), "shortest": len(code) < previous_shortest.normal_bytes})
+        # also save zlib compressed version if it gets shorter
+        if compression_attempt == "OK":
+            (ZLIB_SUBMISSION / task).mkdir(exist_ok=True)
+            new_zlib_sub = ZLIB_SUBMISSION / task / f"{len(compressed_code):03d}_compressed.py"
+            new_zlib_sub.write_bytes(compressed_code)
+
+    return jsonify({
+        "success": True, "size": len(code), "score": max(1, 2500 - len(code)), "shortest": len(code) < previous_shortest.best_bytes or len(compressed_code) < previous_shortest.best_bytes,
+        "compression_attempt": compression_attempt, "compressed_score": compressed_score, "compressed_size": len(compressed_code),
+    })
 
 @app.route('/download')
 def download():

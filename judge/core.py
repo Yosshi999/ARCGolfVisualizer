@@ -62,8 +62,11 @@ def judge_core(module, examples: list) -> Dict[str, Any]:
 
 
 # Main judging function from code string
-def judge_code(task: str, code: str, examples: list) -> Dict[str, Any]:
-    code = normalize_code(code)
+def judge_code(task: str, code: str|bytes, examples: list) -> Dict[str, Any]:
+    if type(code) is str:
+        code = normalize_code(code)
+    else:
+        code = code.decode("L1")
     try:
         task_modname = "task_with_imports"
         spec = importlib.util.spec_from_loader(task_modname, loader=None)

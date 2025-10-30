@@ -381,9 +381,9 @@
                 .then(data => {
                     if (data.success) {
                         if (data.shortest) {
-                            alert(`Submission successful!${saveFile ? "" : " (Submission isn't saved.)"} size: ` + data.size + ', score: ' + data.score);
+                            alert(`Submission successful!${saveFile ? "" : " (Submission isn't saved.)"} size: ` + data.size + ', score: ' + data.score + `, Compression attempt: ${data.compression_attempt}, zlib size: ${data.compressed_size}, zlib score: ${data.compressed_score}`);
                         } else {
-                            alert(`${saveFile ? "Not the shortest but the submission has been saved." : "Correct, though not the shortest."} size: ` + data.size);
+                            alert(`${saveFile ? "Not the shortest but the submission has been saved." : "Correct, though not the shortest."} size: ` + data.size + `, Compression attempt: ${data.compression_attempt}, zlib size: ${data.compressed_size}`);
                         }
                     } else {
                         if (data.error_type === "test") {

@@ -39,6 +39,8 @@ def zip_src(src):
  # Try all quote types and find the shortest result
  if type(src) is str:
   src = src.encode()
+ 
+ assert type(src) is bytes
  options = [src]
 
  # Option 1: Single quotes with escaping
