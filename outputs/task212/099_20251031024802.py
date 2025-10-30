@@ -1,0 +1,1 @@
+p=lambda g:exec('m=g[f:=0];g[::-1]=[m:=[c|d%5&2-(f:=f|c)//4for c,d in zip(v,m)]for v in g];'*2)or g

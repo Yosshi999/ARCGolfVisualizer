@@ -1,0 +1,1 @@
+p=lambda g:[g:=[[max(v[~j::-2-(len({*v,0})-3)%99])for v in g]for j in range(len(g[0]))]for _ in g][3]

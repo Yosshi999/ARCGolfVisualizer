@@ -1,0 +1,1 @@
+p=lambda g,j=1:exec('l=len(g[0])-1;g[~j][j%l^0-j//l%2]=1;j+=1;'*9)or g

@@ -1,0 +1,1 @@
+p=lambda g:[(s:=1)*[-s+(s:=s+w)or(1<s<sum(v)!=v in g[1:9])*9for w in v]for v in g]

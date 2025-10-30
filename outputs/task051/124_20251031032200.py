@@ -1,0 +1,1 @@
+p=lambda g:[g:=[(M:=0)or[w or M&(M:=M|v[j+len({*v[j:j+3]})//3])for j,w in enumerate(v)]for v in zip(*g)][::-1]for _ in g][3]

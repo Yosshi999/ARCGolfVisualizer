@@ -1,0 +1,1 @@
+p=lambda g:[g:=[[v[~j]or(3in v[:~j]*j)*v[-j]for v in g]for j in range(10)]for _ in g*3][23]

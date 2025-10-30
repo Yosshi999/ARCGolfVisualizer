@@ -1,0 +1,1 @@
+p=lambda g:[g:=min(L:=[*zip(*[zip(*g)]*3)],key=lambda x:{(*map(bool,sum(e,e)),)*(e!=x)for e in L})for _ in g][1]

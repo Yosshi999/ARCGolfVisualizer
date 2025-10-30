@@ -1,0 +1,2 @@
+e=enumerate
+p=lambda g:[g:=[[w or(~min([abs(j-k)for k,u in e(v)if u]+[50])%2*any({*v[:j]}-{5})*any(v[j:]))*5or t*(c:=sum(sum({*x[i-(i>0):i+2]}-{5})for x in g[j-(j>0):j+2]))and sum({*sum(g,[])})-5-c for j,w in e(v)]for i,v in e(zip(*g))]for t in[0,0,0,1]][3]

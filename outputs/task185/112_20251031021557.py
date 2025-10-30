@@ -1,0 +1,1 @@
+p=lambda g,y=0:[g:=[[x*(y==(y:=x)in s)for w,x in zip(g,v)if(s:={*w}-{*g[0]})][1:]for v in zip(*g)]for _ in g][1]

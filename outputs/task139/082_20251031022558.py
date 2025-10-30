@@ -1,0 +1,1 @@
+p=lambda g:[[a or(v>g[0]<(w[4:],w[:4])[v>v[5:]])*7for*w,a in zip(*g,v)]for v in g]

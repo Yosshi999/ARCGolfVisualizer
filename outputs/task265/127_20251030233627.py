@@ -1,0 +1,1 @@
+p=lambda g,k=0:exec('if(5in g[i:=k//17][s:=slice(j:=k%17,j+2)]+(v:=g[i+1])[s])<(i*v[10]!=16):v[s]=g[i][s]=2,2\nk+=1\n'*289)or g

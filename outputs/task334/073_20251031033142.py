@@ -1,0 +1,1 @@
+p=lambda g:[[5*(max(max(g))in[y]+x)for x in[g,[1,2],[3]]]for y in[2,1,3]]

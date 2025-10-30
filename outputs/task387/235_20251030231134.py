@@ -1,0 +1,2 @@
+e=enumerate
+p=lambda g:[g:=[[(w>9>t>4)*(sum({*sum(g,[])})-w-5)//12or w or~min([abs(j-k)for k,u in e(v)if u%5]+[9-t%2*8])%2*any(v[:j])*any(v[j:])*5+v[j-(t*v[j-1]%5>0)]%10*11for j,w in e(v)]for v in zip(*g)][::-1]for t in b''][7]
