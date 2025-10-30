@@ -1,0 +1,1 @@
+p=lambda g:[max([sum(i in{*v}&{*w}for w in zip(*g)for v in g),i]for i in range(1,10))[1:]*2]*2
