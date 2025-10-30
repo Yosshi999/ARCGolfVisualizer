@@ -1,0 +1,1 @@
+p=eval('lambda g:[[max((sorted(u:=g[x][y:y+2]+g[x+1][y:y+2])[1]>u[3-(i&2)-j//2])*u[i%2*2+j%2]'+'for %s in range(4*%s)%s'*4%(*'x3 y3)j1]i1]',))
