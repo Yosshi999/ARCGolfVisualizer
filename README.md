@@ -16,6 +16,9 @@ Flask + Jinja2.
 
 <img width="1324" height="923" alt="explorer" src="https://github.com/user-attachments/assets/cb6b34b0-6680-4f9b-a6ff-3e08a51f1cc4" />
 
+<img width="1599" height="897" alt="problem viewer" src="https://github.com/user-attachments/assets/f7c52740-835d-40fd-ae37-80d99347155e" />
+
+
 ## LLM usage
 A little. Claude generated summaries of problems based on [ARC dataset](https://github.com/google/ARC-GEN).
 
