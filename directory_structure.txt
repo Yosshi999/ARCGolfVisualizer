@@ -1,0 +1,17 @@
+.
+./comments
+./comments/task{001..400}
+./zlib_optimizer
+./golfing_dsl
+./golfing_dsl/samples
+./golfing_dsl/arc-dsl
+./problems
+./merger
+./.github
+./.github/workflows
+./judge
+./templates
+./compressed
+./compressed/task{001..400}
+./outputs
+./outputs/task{001..400}
